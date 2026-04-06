@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  createdAt DateTime @default(now())
+
+  @@map("USER")
+}
+
+model Sentence {
+  id  Int @id @default(autoincrement())
+  content String
+  translate String
+  createdAt DateTime @default(now())
+  words Word[]
+  
+
+  @@map("SENTENCE")
+}
+//content는 원문
+
+model Word {
+  id Int @id @default(autoincrement())
+  word String
+  order Int
+  sentenceId Int
+  sentence Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("WORD")
+}
+
+// @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 
+// schema 변경 시 반드시 마이그레이션 필요. 
+// npx prisma migrate dev --name [변경기록이름]
