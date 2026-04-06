@@ -13,35 +13,42 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  createdAt DateTime  @default(now())
 
   @@map("USER")
 }
 
 model Sentence {
-  id  Int @id @default(autoincrement())
-  content String
-  translate String
-  createdAt DateTime @default(now())
-  words Word[]
+  id            Int       @id @default(autoincrement())
+  content       String
+  translate     String
+  createdAt     DateTime  @default(now())
+  sentenceWords SentenceWord[]
   
-
   @@map("SENTENCE")
 }
 //content는 원문
 
 model Word {
-  id Int @id @default(autoincrement())
-  word String
-  order Int
-  sentenceId Int
-  sentence Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id            Int       @id @default(autoincrement())
+  word          String    @unique //중복저장방지
+  meaning       String?           //영영뜻
+  createdAt     DateTime  @default(now())
+  sentenceWords SentenceWord[]
 
   @@map("WORD")
+}
+
+model SentenceWord {
+  id          Int       @id @default(autoincrement())
+  order       Int
+  sentence    Sentence  @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+  sentenceId  Int
+  word        Word      @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  wordId      Int
 }
 
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 
