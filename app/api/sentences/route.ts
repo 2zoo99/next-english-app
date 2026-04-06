@@ -17,15 +17,22 @@ export async function POST(request: Request) {
     const translate: string = body.translate || '';
     // content는 필수, translate는 선택으로 받음. translate가 없으면 빈 문자열로 처리.
 
-    const wordList = content.split(' ').filter(w => w !== '');
-    //공백으로 구분하여 단어 리스트 생성
+    const normalize = (word: string) => {
+        return word
+            .replace(/[^a-zA-Z0-9가-힣]/g, '') // 특수문자, 공백 제거
+            .toLowerCase();                      // 소문자화
+    }
+    const words = content
+        .split(' ')                          // 공백으로 단어 분리
+        .map((word: string) => normalize(word))  // 전처리
+        .filter((word: string) => word.length > 0) // 빈 문자열 제거
 
     const sentence = await prisma.sentence.create({
         data: {
             content,
             translate,
             words: {
-                create: wordList.map((word, index) => ({
+                create: words.map((word, index) => ({
                     word,
                     order: index + 1,
                 }))
