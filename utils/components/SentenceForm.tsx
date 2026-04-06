@@ -7,13 +7,18 @@ import { useState } from 'react'
 type Word = {
     id: number;
     word: string;
-    order: number;
+    meaning: string | null;
 }
-
+type SentenceWord = {
+    id: number;
+    order: number;
+    word: Word;
+}
 type Sentence = {
     id: number;
     content: string;
-    words: Word[];
+    translate: string;
+    sentenceWords: SentenceWord[];
 }
 
 export default function SentenceForm() {
@@ -65,9 +70,6 @@ export default function SentenceForm() {
                     />
                 </label>
 
-                {/* <div className="content-input">
-                    
-                </div> */}
                 <label>번역 입력
                     <input
                         type="text"
@@ -76,10 +78,6 @@ export default function SentenceForm() {
                         placeholder="번역을 입력하세요 (선택)"
                     />
                 </label>
-
-                {/* <div className='translate-input'>
-                    
-                </div> */}
                 <button type="submit">저장</button>
                 <button type="button" onClick={handleReset}>초기화</button>
             </form>
@@ -88,11 +86,12 @@ export default function SentenceForm() {
             {result && (
                 <div>
                     <p>저장된 문장: {result.content}</p>
+                    <p>번역: {result.translate}</p>
                     <p>vocabulary: </p>
                     <ul>
-                        {result.words.map(word => (
-                            <li key={word.id}>
-                                {word.order}. {word.word}
+                        {result.sentenceWords.map(sentenceWord => (
+                            <li key={sentenceWord.id}>
+                                {sentenceWord.order}. {sentenceWord.word.word}
                             </li>
                         ))}
                     </ul>
