@@ -7,7 +7,12 @@ export async function GET(
     const { id } = await params;
     const sentence = await prisma.sentence.findUnique({
         where: { id: Number(id) },
-        include: { words: { orderBy: { order: 'asc' } } }
+        include: {
+            sentenceWords: {
+                orderBy: { order: 'asc' },
+                include: { word: true }
+            }
+        }
     })
     return Response.json(sentence);
 
