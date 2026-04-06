@@ -5,7 +5,12 @@ import { prisma } from "@/lib/prisma";
 // 전체 조회
 export async function GET() {
     const sentences = await prisma.sentence.findMany({
-        include: { words: { orderBy: { order: 'asc' } } }
+        include: {
+            sentenceWords: {
+                orderBy: { order: 'asc' },
+                include: { word: true }
+            }
+        }
     })
     return Response.json(sentences);
 }
@@ -27,20 +32,41 @@ export async function POST(request: Request) {
         .map((word: string) => normalize(word))  // 전처리
         .filter((word: string) => word.length > 0) // 빈 문자열 제거
 
+    // 문장 생성
     const sentence = await prisma.sentence.create({
         data: {
             content,
             translate,
-            words: {
-                create: words.map((word, index) => ({
-                    word,
-                    order: index + 1,
-                }))
+        }
+    });
+
+    // 단어 upsert하고 sentenceWords 테이블에 연결
+    for (const [index, w] of words.entries()) {
+        const word = await prisma.word.upsert({
+            where: { word: w },
+            update: {},
+            create: { word: w }
+        })
+
+        await prisma.sentenceWord.create({
+            data: {
+                sentenceId: sentence.id,
+                wordId: word.id,
+                order: index + 1
             }
-        },
-        include: { words: { orderBy: { order: 'asc' } } }
+        })
+    }
+
+    const result = await prisma.sentence.findUnique({
+        where: { id: sentence.id },
+        include: {
+            sentenceWords: {
+                orderBy: { order: 'asc' },
+                include: { word: true }
+            }
+        }
     })
 
-    return Response.json(sentence, { status: 201 });
+    return Response.json(result, { status: 201 });
 
 }
