@@ -1,18 +1,24 @@
 //utils/components/SentenceList.tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type Word = {
     id: number;
     word: string;
+    meaning: string | null;
+}
+type SentenceWord = {
+    id: number;
     order: number;
+    word: Word;
 }
 
 type Sentence = {
     id: number;
     content: string;
-    words: Word[];
+    translate: string;
+    sentenceWords: SentenceWord[];
 }
 
 export default function SentenceList() {
@@ -20,7 +26,7 @@ export default function SentenceList() {
     const [message, setMessage] = useState('');
 
     //전체 조회
-    const fetchSentences = async () => {
+    const fetchSentences = useCallback(async () => {
         const res = await fetch('./api/sentences');
 
         if (res.ok) {
@@ -30,7 +36,7 @@ export default function SentenceList() {
         else {
             setMessage('조회 실패했습니다')
         }
-    }
+    }, []);
 
     const handleDelete = async (id: number) => {
         const res = await fetch(`./api/sentences/${id}`, {
@@ -50,7 +56,7 @@ export default function SentenceList() {
     //페이지 처음 진입 시 자동 조회 위함.
     useEffect(() => {
         fetchSentences();
-    }, [])
+    }, [fetchSentences]);
 
     return (
         <div>
@@ -63,7 +69,8 @@ export default function SentenceList() {
             <ul>
                 {sentences.map(sentence => (
                     <li key={sentence.id}>
-                        문장 {sentence.id} : {sentence.content}
+                        <p>문장 {sentence.id} : {sentence.content}</p>
+                        <p>번역: {sentence.translate}</p>
                         <button type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
                     </li>
                 ))}
