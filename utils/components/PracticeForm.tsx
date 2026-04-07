@@ -28,7 +28,6 @@ type WordResult = {
 type ShuffledWord = {
     word: string;
     meaning: string | null;
-    originalIndex: number;
 }
 
 export default function PracticeForm() {
@@ -36,7 +35,11 @@ export default function PracticeForm() {
     const [current, setCurrent] = useState<Sentence | null>(null); //현재 연습 중인 문장
     const [input, setInput] = useState(''); //사용자 입력값
     const [results, setResults] = useState<WordResult[]>([]); //단어별 정답 여부
-    const [showHint, setShowHint] = useState(false); //힌트 표시 여부
+    //hint 상태 none|wrong-only|all
+    // const [hintState, setHintState] = useState<'none' | 'wrong-only' | 'all'>('none');
+    const [showWrongHint, setShowWrongHint] = useState(false); //틀린 단어 힌트 표시 여부
+    const [showAllHint, setShowAllHint] = useState(false);
+    //const [showHint, setShowHint] = useState(false); //힌트 표시 여부
     const [message, setMessage] = useState(''); //결과메시지
     const [done, setDone] = useState(false); //연습 완료 여부
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]); //셔플된 단어 목록
@@ -60,7 +63,9 @@ export default function PracticeForm() {
         setCurrent(random);
         setInput('');
         setResults([]);
-        setShowHint(false);
+        // setHintState('none');
+        setShowWrongHint(false);
+        setShowAllHint(false);
         setMessage('');
         setDone(false);
         setShuffled([]);
@@ -81,17 +86,17 @@ export default function PracticeForm() {
         return shuffled;
     }
     //힌트 버튼 클릭 할때 단어 셔풀함. (처음 열때만 셔플하고 이후엔 그대로 유지함.)
-    const handleToggleHint = () => {
-        if (!showHint && shuffled.length === 0 && current) {
-            const words: ShuffledWord[] = current.sentenceWords.map((sw, index) => ({
-                word: sw.word.word,
-                meaning: sw.word.meaning,
-                originalIndex: index,
-            }));
-            setShuffled(shuffleWords(words));
-        }
-        setShowHint(prev => !prev);
-    }
+    // const handleToggleHint = () => {
+    //     if (!showHint && shuffled.length === 0 && current) {
+    //         const words: ShuffledWord[] = current.sentenceWords.map((sw, index) => ({
+    //             word: sw.word.word,
+    //             meaning: sw.word.meaning,
+    //             originalIndex: index,
+    //         }));
+    //         setShuffled(shuffleWords(words));
+    //     }
+    //     setShowHint(prev => !prev);
+    // }
 
     //특수문자 전처리, 소문자화
     const normalize = (word: string) => {
@@ -99,7 +104,7 @@ export default function PracticeForm() {
     }
 
     const handleSubmit = () => {
-        if (!current) return;
+        if (!current || done) return;
 
         const inputWords = input.trim().split(' ').filter(w => w !== '');
         //DB에 저장된 정답 단어 목록
@@ -112,33 +117,92 @@ export default function PracticeForm() {
             const answerWord = normalize(answerWords[i]); //정답값
 
             if (inputWord === answerWord) {
-                wordResults.push({ word: answerWords[i], status: 'correct' });
+                wordResults.push({ word: inputWords[i], status: 'correct' });
             }
             else {
-                wordResults.push({ word: answerWord, status: 'wrong' });
+                //틀린 단어는 사용자가 입력한 단어 그대로 보여줌.
+                wordResults.push({ word: inputWords[i] || '', status: 'wrong' });
                 firstWrong = i;
-                break;  //첫번째 틀린 단어에서 비교 중단
+                break;
             }
         }
-        //틀린 단어 이후 단어들 hidden 처리
-        if (firstWrong !== -1) {
-            for (let i = firstWrong + 1; i < answerWords.length; i++) {
-                wordResults.push({ word: answerWords[i], status: 'hidden' });
-            }
-            setMessage('틀린 단어가 있어요.');
-        } else {
-            setMessage('정답입니다!');
-            setDone(true);
-        }
+
         setResults(wordResults);
         setShuffled([]); //힌트용 셔플 초기화
-        setShowHint(false); //힌트 숨김
+        //setShowHint(false); //힌트 숨김
+        // setHintState('none'); //힌트 상태 초기화
+        setShowAllHint(false);
+        setShowWrongHint(false);
+
+        //틀린 단어 이후 단어들 hidden 처리
+        if (firstWrong === -1) {
+            setMessage('정답입니다!');
+            setDone(true);
+        } else {
+            setMessage('틀린 단어가 있어요.');
+            const correctWords = inputWords.slice(0, firstWrong);
+            setInput(correctWords.length > 0 ? correctWords.join(' ') + ' ' : ''); //틀린 단어 이전까지만 입력창에 남김
+        }
 
     }
     //틀린 단어 find
-    const wrongWord = results.find(r => r.status === 'wrong');
+    // const wrongWord = results.find(r => r.status === 'wrong');
     const wrongIndex = results.findIndex(r => r.status === 'wrong');
-    // const hintMeaning = wrongIndex !== -1 ? current?.sentenceWords[wrongIndex]?.word.meaning : null;
+    const hintWord = wrongIndex !== -1 ? current?.sentenceWords[wrongIndex]?.word.word : null;
+
+    // handleWrongHint랑 handleAllHint로 분리해서 힌트 상태 관리
+    // const handleHint = () => {
+    //     if (!current) return;
+
+    //     if (hintState === 'none') {
+    //         //틀린 단어 정답만
+    //         setHintState('wrong-only');
+    //     }
+    //     else if (hintState === 'wrong-only') {
+    //         //틀린 단어 제외한 나머지 단어들
+    //         const otherWords: ShuffledWord[] = current.sentenceWords.filter((_, idx) => idx !== wrongIndex).map(sw => ({
+    //             word: sw.word.word,
+    //             meaning: sw.word.meaning,
+    //         }));
+    //         setShuffled(shuffleWords(otherWords));
+    //         setHintState('all');
+    //     }
+    //     else {
+    //         //힌트 닫기
+    //         setHintState('none');
+    //         setShuffled([]);
+    //     }
+    // }
+
+    const handleWrongHint = () => {
+        setShowWrongHint(prev => !prev);
+    }
+
+    const handleAllHint = () => {
+        if (!showAllHint && shuffled.length === 0 && current) {
+            const otherWords: ShuffledWord[] = current.sentenceWords.filter((_, idx) => idx !== wrongIndex).map(sw => ({
+                word: sw.word.word,
+                meaning: sw.word.meaning,
+            }));
+            setShuffled(shuffleWords(otherWords));
+        }
+        setShowAllHint(prev => !prev);
+    }
+
+    //힌트 버튼 활성화 조건: 틀린 단어가 존재할 때
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(e.target.value);
+        setShowWrongHint(false);
+        setShowAllHint(false);
+        setShuffled([]);
+
+    }
+
+    // const hintButtonLabel = () => {
+    //     if (hintState === 'none') return '힌트 보기';
+    //     else if (hintState === 'wrong-only') return '나머지 단어 힌트';
+    //     else return '힌트 숨기기';
+    // }
 
     //문장 로딩중 표시
     if (!current) return <p>문장을 불러오는 중입니다...</p>
@@ -151,8 +215,12 @@ export default function PracticeForm() {
             <input
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()} //엔터키로 제출 가능하게 하는 이벤트 핸들러
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSubmit();
+                    if (e.key === 'Control') handleWrongHint();
+                    if (e.key === 'Alt') handleAllHint();
+                }} //엔터키로 제출 가능하게 하는 이벤트 핸들러
                 placeholder="영문을 입력하세요"
                 disabled={done} //연습 완료 시 입력 비활성화
             />
@@ -164,36 +232,42 @@ export default function PracticeForm() {
             {results.length > 0 && (
                 <div>
                     <p>
-                        {results.map((r, idx) => {
-                            if (r.status === 'correct') {
-                                //맞은 단어는 초록색
-                                return <span key={idx} style={{ color: 'green' }}>{r.word} </span>
-                            }
-                            else if (r.status === 'wrong') {
-                                //틀린 단어는 빨간색
-                                return <span key={idx} style={{ color: 'red' }}>{r.word} </span>
-                            }
-                            else {
-                                //hidden단어는 표시 안함
-                                return null
-                            }
-                        })}
+                        {results.map((r, idx) => (
+                            <span key={idx} style={{ color: r.status === 'correct' ? 'green' : 'red' }}>
+                                {r.word + ' '}
+                            </span>
+                        ))}
                     </p>
                     {   //틀린 단어가 있을때 (= wrongWord가 존재(true)할때) 힌트 버튼 활성화
-                        wrongWord && (
+                        wrongIndex !== -1 && (
                             <div>
-                                <button type="button" onClick={() => setShowHint(!showHint)}>{showHint ? '힌트 숨기기' : '힌트 보기'}</button>
-                                { //showHint가 true일때 힌트 표시
-                                    showHint && (
-                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                <button type="button" onClick={handleWrongHint}>
+                                    {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
+                                </button>
+                                <button type="button" onClick={handleAllHint}>
+                                    {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                                </button>
+
+                                { //틀린단어 정답
+                                    showWrongHint && hintWord && (
+                                        <p>
+                                            틀린 단어 정답: <span style={{ color: 'blue' }}>{hintWord}</span>
+                                            {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
+                                        </p>
+                                    )}
+                                {
+                                    showAllHint && (
+                                        <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                             {shuffled.map((sw, idx) => (
-                                                <li key={idx} style={{ fontWeight: sw.originalIndex === wrongIndex ? 'bold' : 'normal', color: sw.originalIndex === wrongIndex ? 'red' : 'inherit' }}>
+                                                <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
                                                     {sw.word}
-                                                    {sw.meaning ? ` - ${sw.meaning}` : ''}
+                                                    {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
                                                 </li>
                                             ))}
                                         </ul>
-                                    )}
+                                    )
+                                }
+
                             </div>
                         )
                     }
