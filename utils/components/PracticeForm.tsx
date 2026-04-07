@@ -24,6 +24,12 @@ type WordResult = {
     word: string;
     status: 'correct' | 'wrong' | 'hidden';
 }
+//힌트용 셔플 단어
+type ShuffledWord = {
+    word: string;
+    meaning: string | null;
+    originalIndex: number;
+}
 
 export default function PracticeForm() {
     const [sentences, setSentences] = useState<Sentence[]>([]); //전체 문장 목록
@@ -33,6 +39,7 @@ export default function PracticeForm() {
     const [showHint, setShowHint] = useState(false); //힌트 표시 여부
     const [message, setMessage] = useState(''); //결과메시지
     const [done, setDone] = useState(false); //연습 완료 여부
+    const [shuffled, setShuffled] = useState<ShuffledWord[]>([]); //셔플된 단어 목록
 
     //전체 문장 조회 후 랜덤 문장 선택
     //useCallback은 매 렌더링마다 새로 생성되지 않도록 메모이제이션하는데에 사용됨.
@@ -56,6 +63,7 @@ export default function PracticeForm() {
         setShowHint(false);
         setMessage('');
         setDone(false);
+        setShuffled([]);
     }
 
     //컴포넌트 처음 마운트때 전체 문장 조회
@@ -63,9 +71,31 @@ export default function PracticeForm() {
         fetchSentences();
     }, [fetchSentences]);
 
+    //셔플 알고리즘 로직
+    const shuffleWords = <T,>(array: T[]): T[] => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+    //힌트 버튼 클릭 할때 단어 셔풀함. (처음 열때만 셔플하고 이후엔 그대로 유지함.)
+    const handleToggleHint = () => {
+        if (!showHint && shuffled.length === 0 && current) {
+            const words: ShuffledWord[] = current.sentenceWords.map((sw, index) => ({
+                word: sw.word.word,
+                meaning: sw.word.meaning,
+                originalIndex: index,
+            }));
+            setShuffled(shuffleWords(words));
+        }
+        setShowHint(prev => !prev);
+    }
+
     //특수문자 전처리, 소문자화
     const normalize = (word: string) => {
-        return word.replace(/[^a-zA-Z0-9가-힣]/g, '').toLowerCase();
+        return word.replace(/[^a-zA-Z0-9가-힣']/g, '').toLowerCase();
     }
 
     const handleSubmit = () => {
@@ -101,12 +131,14 @@ export default function PracticeForm() {
             setDone(true);
         }
         setResults(wordResults);
+        setShuffled([]); //힌트용 셔플 초기화
+        setShowHint(false); //힌트 숨김
 
     }
     //틀린 단어 find
     const wrongWord = results.find(r => r.status === 'wrong');
     const wrongIndex = results.findIndex(r => r.status === 'wrong');
-    const hintMeaning = wrongIndex !== -1 ? current?.sentenceWords[wrongIndex]?.word.meaning : null;
+    // const hintMeaning = wrongIndex !== -1 ? current?.sentenceWords[wrongIndex]?.word.meaning : null;
 
     //문장 로딩중 표시
     if (!current) return <p>문장을 불러오는 중입니다...</p>
@@ -124,7 +156,7 @@ export default function PracticeForm() {
                 placeholder="영문을 입력하세요"
                 disabled={done} //연습 완료 시 입력 비활성화
             />
-            <button type="button" onClick={handleSubmit} disabled={done}>정답확인</button>"
+            <button type="button" onClick={handleSubmit} disabled={done}>정답확인</button>
             <button type="button" onClick={() => pickRandom(sentences)}>다음 문제</button>
 
             {message && <p>{message}</p>}
@@ -153,9 +185,14 @@ export default function PracticeForm() {
                                 <button type="button" onClick={() => setShowHint(!showHint)}>{showHint ? '힌트 숨기기' : '힌트 보기'}</button>
                                 { //showHint가 true일때 힌트 표시
                                     showHint && (
-                                        <p>
-                                            {hintMeaning ? `뜻: ${hintMeaning}` : `원문힌트: ${current.content.split(' ')[wrongIndex]}`}
-                                        </p>
+                                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                                            {shuffled.map((sw, idx) => (
+                                                <li key={idx} style={{ fontWeight: sw.originalIndex === wrongIndex ? 'bold' : 'normal', color: sw.originalIndex === wrongIndex ? 'red' : 'inherit' }}>
+                                                    {sw.word}
+                                                    {sw.meaning ? ` - ${sw.meaning}` : ''}
+                                                </li>
+                                            ))}
+                                        </ul>
                                     )}
                             </div>
                         )
