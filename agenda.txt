@@ -1,0 +1,16 @@
+// agenda.txt
+// 계획 파일
+
+2023-04-07 
+    - working branch
+        - test/component
+
+    - completed
+        - PracticeForm 업데이트
+        - agenda.txt 생성 
+
+    - trouble-shooting
+        - 문장 입력 후 목록은 업데이트되는데, 연습 모듈의 문제가 업데이트되지 않음.
+        - 페이지 height 불편함 문제
+        - 문장 입력 -> 저장 후 수정 기능 추가 안했음. (해야됨)
+        - 브랜치 main에 merge 해야함.
