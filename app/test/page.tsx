@@ -5,6 +5,7 @@ import UserList from "@/utils/components/UserList";
 import UserDetail from "@/utils/components/UserDetail";
 import SentenceForm from "@/utils/components/SentenceForm";
 import SentenceList from "@/utils/components/SentenceList";
+import PracticeForm from "@/utils/components/PracticeForm";
 
 export default function TestPage() {
     return (
@@ -20,6 +21,8 @@ export default function TestPage() {
             <SentenceForm />
             <hr />
             <SentenceList />
+            <hr />
+            <PracticeForm />
         </div>
     )
 }
