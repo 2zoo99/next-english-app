@@ -46,13 +46,15 @@ export default function PracticeForm() {
 
     //전체 문장 조회 후 랜덤 문장 선택
     //useCallback은 매 렌더링마다 새로 생성되지 않도록 메모이제이션하는데에 사용됨.
-    const fetchSentences = useCallback(async () => {
+    const fetchSentences = useCallback(async (isInitial = false) => {
         const res = await fetch('./api/sentences');
 
         if (res.ok) {
             const data = await res.json();
             setSentences(data);
-            pickRandom(data);
+            if (isInitial) {
+                pickRandom(data);
+            }
         }
     }, []);
 
@@ -73,7 +75,13 @@ export default function PracticeForm() {
 
     //컴포넌트 처음 마운트때 전체 문장 조회
     useEffect(() => {
-        fetchSentences();
+        fetchSentences(true); //페이지 접속 시 최초 1회 전체 조회
+
+        const interval = setInterval(() => {
+            fetchSentences(false); //이후 30초마다 전체 조회하여 새로운 문장 반영
+        }, 5000);
+
+        return () => clearInterval(interval); //컴포넌트 언마운트 시 인터벌 정리
     }, [fetchSentences]);
 
     //셔플 알고리즘 로직
