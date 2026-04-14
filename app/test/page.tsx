@@ -9,7 +9,7 @@ import PracticeForm from "@/utils/components/PracticeForm";
 
 export default function TestPage() {
     return (
-        <div style={{ paddingBottom: '16px' }}>
+        <div className="pb-24">
             <h1>사용자 정보 입력</h1>
             <UserForm />
             <hr />
@@ -20,7 +20,9 @@ export default function TestPage() {
             <PracticeForm />
             <hr />
             <h1>문장 입력</h1>
-            <SentenceForm />
+            <div className="max-h-64 overflow-y-auto">
+                <SentenceForm />
+            </div>
             <hr />
             <SentenceList />
 
