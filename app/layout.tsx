@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+// html, body 만 담당 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
