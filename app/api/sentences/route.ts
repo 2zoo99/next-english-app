@@ -24,13 +24,15 @@ export async function POST(request: Request) {
 
     const normalize = (word: string) => {
         return word
-            .replace(/[^a-zA-Z0-9가-힣]/g, '') // 특수문자, 공백 제거
+            .replace(/[^a-zA-Z0-9가-힣']/g, '') // 특수문자, 공백 제거
             .toLowerCase();                      // 소문자화
     }
     const words = content
         .split(' ')                          // 공백으로 단어 분리
         .map((word: string) => normalize(word))  // 전처리
         .filter((word: string) => word.length > 0) // 빈 문자열 제거
+
+    console.log('추출된 단어들:', words); // 임시 코드
 
     // 문장 생성
     const sentence = await prisma.sentence.create({
