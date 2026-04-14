@@ -2,6 +2,17 @@
 // 계획 파일
 // 내림차순 (날짜)
 
+generator client {
+  provider = "prisma-client"
+  
+}
+
+datasource db {
+  provider  = "postgresql"
+  //url       = env("DATABASE_URL")
+  //directUrl = env("DIRECT_URL")
+}
+
 ----------------------------------------------------
 2026-04-14
     - working-branch 
