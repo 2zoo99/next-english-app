@@ -1,6 +1,25 @@
 // agenda.txt
 // 계획 파일
 // 내림차순 (날짜)
+----------------------------------------------------
+2026-04-16
+    - to do # 1
+        - sentence list page
+            - add 'make quiz' component 
+                - drawer function
+                - choose sentence from sentence list
+                - click eng word and drag toward a trans word
+                - store the pair of two words to quiz table
+                - add hint block and button
+                - every hint can be the eng meaning of the words 
+    - to do # 2
+        - sentence quiz page    
+            - based on the pair of word and trans blank quiz start
+            - be able to switch mode which could be normal or random
+            - words should have 품사 feature on table in db
+            - 품사 will be displayed when user want to see a hint
+            - the quiz has choosing mode, writing mode 
+----------------------------------------------------
 
 generator client {
   provider = "prisma-client"
