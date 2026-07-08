@@ -14,7 +14,8 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
 }
-// 인터페이스는 SideBar 컴포넌트가 받는 props의 타입을 정의함. isOpen은 사이드바가 열려있는지 여부를 나타내는 boolean, onClose는 사이드바를 닫는 함수입니다.
+// 인터페이스는 SideBar 컴포넌트가 받는 props의 타입을 정의함. 
+// isOpen은 사이드바가 열려있는지 여부를 나타내는 boolean, onClose는 사이드바를 닫는 함수입니다.
 
 export default function SideBar({ isOpen, onClose }: Props) {
     const pathname = usePathname();

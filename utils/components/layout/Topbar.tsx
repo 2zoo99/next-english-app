@@ -19,7 +19,7 @@ export default function Topbar({ onMenuClick }: Props) {
                     <span className="block h-0.5 bg-gray-700 rounded" />
                 </div>
             </button>
-            <span className="font-medium">MyApp</span>
+            <span className="font-medium">English-sentence study App for Korean</span>
         </header>
     )
 }

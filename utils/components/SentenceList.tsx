@@ -100,7 +100,7 @@ export default function SentenceList() {
 
     return (
         <div>
-            <h2>문장 목록</h2>
+            <h2>"문장목록"</h2>
             <button type="button" onClick={() => {
                 fetchSentences()
                 setMessage('')
