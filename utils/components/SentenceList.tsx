@@ -21,12 +21,27 @@ type Sentence = {
     sentenceWords: SentenceWord[];
 }
 
+function SentenceSkeleton() {
+    // skeleton UI를 보여주기 위한 컴포넌트
+    return (
+        <li className="animate-pulse p-4 border rounded-md">
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
+            <div className="flex gap-2">
+                <div className="h-7 bg-gray-200 rounded w-10" />
+                <div className="h-7 bg-gray-200 rounded w-10" />
+            </div>
+        </li>
+    )
+}
+
 export default function SentenceList() {
     const [sentences, setSentences] = useState<Sentence[]>([]);
     const [message, setMessage] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedContent, setEditedContent] = useState('');
     const [editedTranslate, setEditedTranslate] = useState('');
+    const [loading, setLoading] = useState(true);
 
     //전체 조회
     const fetchSentences = useCallback(async () => {
@@ -39,6 +54,7 @@ export default function SentenceList() {
         else {
             setMessage('조회 실패했습니다')
         }
+        setLoading(false);
     }, []);
 
     // 삭제 기능
@@ -97,6 +113,15 @@ export default function SentenceList() {
     useEffect(() => {
         fetchSentences();
     }, [fetchSentences]);
+
+    if (loading) return (
+        <div>
+            <h2>"문장목록"</h2>
+            <ul className="flex flex-col gap-2">
+                {[1, 2, 3, 4, 5].map(i => <SentenceSkeleton key={i} />)}
+            </ul>
+        </div>
+    )
 
     return (
         <div>
