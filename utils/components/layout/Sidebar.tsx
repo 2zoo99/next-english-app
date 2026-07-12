@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
     { path: '/', label: 'Home' },
     { path: '/test', label: 'Test' },
+    { path: '/create-sentence', label: 'Create Sentence' },
     // 다른 페이지들도 여기에 추가 가능
 ];
 
@@ -18,7 +19,7 @@ interface Props {
 // isOpen은 사이드바가 열려있는지 여부를 나타내는 boolean, onClose는 사이드바를 닫는 함수입니다.
 
 export default function SideBar({ isOpen, onClose }: Props) {
-    const pathname = usePathname();
+    const pathname = usePathname(); // usePathname 훅을 사용하여 현재 경로를 가져옵니다. 이를 통해 현재 페이지가 어떤 페이지인지 확인할 수 있습니다.
 
     return (
         <>
