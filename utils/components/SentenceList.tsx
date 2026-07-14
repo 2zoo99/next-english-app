@@ -116,7 +116,6 @@ export default function SentenceList() {
 
     if (loading) return (
         <div>
-            <span className="text-3xl">문장목록</span>
             <ul className="flex flex-col gap-2">
                 {[1, 2, 3, 4, 5].map(i => <SentenceSkeleton key={i} />)}
             </ul>
@@ -125,7 +124,7 @@ export default function SentenceList() {
 
     return (
         <div>
-            <h2>"문장목록"</h2>
+            <span className="text-3xl">문장목록</span>
             <button type="button" onClick={() => {
                 fetchSentences()
                 setMessage('')
