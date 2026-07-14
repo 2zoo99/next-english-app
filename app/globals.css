@@ -27,7 +27,7 @@ body {
 
 button:hover {
   /* 모든 버튼 hover 일때 배경과 글자색 반전 */
-  background-color: var(--foreground);
-  color: var(--background);
+  /* background-color: var(--foreground);
+  color: var(--background); */
   cursor: pointer;
 }

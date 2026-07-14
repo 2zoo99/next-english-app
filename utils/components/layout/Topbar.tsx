@@ -19,7 +19,7 @@ export default function Topbar({ onMenuClick }: Props) {
                     <span className="block h-0.5 bg-gray-700 rounded" />
                 </div>
             </button>
-            <span className="font-medium">English-sentence study App for Korean</span>
+            <span className="font-bold text-2xl">English-sentence study App for Korean</span>
             <div className="ml-auto flex items-center gap-2">
                 <button className="px-3 py-1.5 text-sm text-grey-600 hover:bg-gray-100 rounded-md transition-colors">
                     로그인
