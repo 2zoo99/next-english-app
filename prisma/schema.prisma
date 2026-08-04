@@ -53,6 +53,34 @@ model SentenceWord {
   wordId      Int
 }
 
+model NewsArticle {
+  id          Int       @id @default(autoincrement())
+  title       String
+  url         String    @unique
+  body        String
+  press       String?   // 언론사 (예: "BBC", "CNN")
+  author      String?   // 기자명
+  category    String?   // 예: "정치", "경제", "기술"
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@map("NEWS_ARTICLE")
+}
+
+model TedTalk {
+  id           Int       @id @default(autoincrement())
+  title        String
+  url          String    @unique
+  transcript   String    // 강연 스크립트 원문
+  speaker      String?   // 발표자 이름
+  durationSec  Int?      // 영상 길이(초)
+  videoUrl     String?   // 영상 링크
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@map("TED_TALK")
+}
+
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 
 // schema 변경 시 반드시 마이그레이션 필요. 
 // npx prisma migrate dev --name [변경기록이름]
