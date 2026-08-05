@@ -32,43 +32,54 @@ export async function POST(request: Request) {
         .map((word: string) => normalize(word))  // 전처리
         .filter((word: string) => word.length > 0) // 빈 문자열 제거
 
-    console.log('추출된 단어들:', words); // 임시 코드
-
-    // 문장 생성
-    const sentence = await prisma.sentence.create({
-        data: {
-            content,
-            translate,
-        }
-    });
-
-    // 단어 upsert하고 sentenceWords 테이블에 연결
-    for (const [index, w] of words.entries()) {
-        const word = await prisma.word.upsert({
-            where: { word: w },
-            update: {},
-            create: { word: w }
-        })
-
-        await prisma.sentenceWord.create({
+    try {
+        // 문장 생성
+        const sentence = await prisma.sentence.create({
             data: {
-                sentenceId: sentence.id,
-                wordId: word.id,
-                order: index + 1
+                content,
+                translate,
+            }
+        });
+        // 단어 upsert하고 sentenceWords 테이블에 연결
+        for (const [index, w] of words.entries()) {
+            const word = await prisma.word.upsert({
+                where: { word: w },
+                update: {},
+                create: { word: w }
+            })
+
+            await prisma.sentenceWord.create({
+                data: {
+                    sentenceId: sentence.id,
+                    wordId: word.id,
+                    order: index + 1
+                }
+            })
+        }
+
+        const result = await prisma.sentence.findUnique({
+            where: { id: sentence.id },
+            include: {
+                sentenceWords: {
+                    orderBy: { order: 'asc' },
+                    include: { word: true }
+                }
             }
         })
-    }
 
-    const result = await prisma.sentence.findUnique({
-        where: { id: sentence.id },
-        include: {
-            sentenceWords: {
-                orderBy: { order: 'asc' },
-                include: { word: true }
-            }
+        return Response.json(result, { status: 201 });
+
+    } catch (error: any) {
+        if (error.code === 'P2002') {
+            return Response.json(
+                { error: '이미 등록된 문장이에요.' },
+                { status: 409 } // 409: Conflict (충돌)
+            );
         }
-    })
-
-    return Response.json(result, { status: 201 });
-
-}
+        console.error(error);
+        return Response.json(
+            { error: '문장 저장 중 오류가 발생했어요.' },
+            { status: 500 }
+        );
+    }
+} 
