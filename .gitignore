@@ -42,3 +42,50 @@ next-env.d.ts
 
 agenda.txt
 
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python compiled extensions
+*.so
+
+# Python packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+
+# Pytest
+.pytest_cache/
+
+# Type checker
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# SQLite
+*.sqlite3
+*.db
+
+# VS Code (선택)
+.vscode/
+
+# JetBrains IDE
+.idea/
