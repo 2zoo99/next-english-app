@@ -14,24 +14,34 @@ DATABASE_URL = os.getenv("DATABASE_URL")        # getenv는 환경변수에서 �
 def import_sentences(limit=10): # limit 기본값 10 (=매개변수 미지정 시 자동 10)
     conn = psycopg2.connect(DATABASE_URL)  # PostgreSQL 데이터베이스에 접속(=로그인)
     cur = conn.cursor()                 # 커서 생성 (=SQL 문을 실행할 수 있는 객체)
-    count = 0
+
+    inserted = 0
+    skipped = 0
+    checked = 0
+
     for sentence, translation in ParallelCorpus("eng", "kor"):
-        if count >= limit:
+        if inserted >= limit:
             break
+        checked +=1
     
         cur.execute(        # SQL 문 실행
             'INSERT INTO "SENTENCE" (content, translate, "createdAt")'
-            'VALUES (%s, %s, NOW())',       # %s는 나중에 값을 바인딩할 자리 표시자
+            'VALUES (%s, %s, NOW())'        # %s는 나중에 값을 바인딩할 자리 표시자
                                             # sql 인젝션 보안 공격 방지를 위해 사용
+            'ON CONFLICT (content) DO NOTHING',
             (sentence.text, translation.text)
         )
-        count += 1
-        print(f"[{count}] {sentence.text} -> {translation.text}")
+
+        if cur.rowcount == 0:
+            skipped += 1
+        else:
+            inserted += 1
+            print(f"[{inserted}] 저장 : {sentence.text}")
 
     conn.commit()  # 변경사항 DB에 완전히 저장
     cur.close()    # 커서 닫기
     conn.close()   # 연결 닫기
-    print(f"\n 총 {count}개의 문장을 데이터베이스에 저장했습니다.")
+    print(f"\n 총 {checked}개 확인함. {inserted}개 저장, {skipped}개 건너뜀.")
 
 if __name__ == "__main__":  # 이 파일이 직접 실행될 때만* 아래 코드 실행
     import_sentences(limit=10)  # limit 값을 조정하여 저장할 문장 수를 변경 가능
