@@ -24,7 +24,7 @@ export default function Topbar({ onMenuClick }: Props) {
                 <button className="px-3 py-1.5 text-sm text-grey-600 hover:bg-gray-100 rounded-md transition-colors">
                     로그인
                 </button>
-                <button className="px-3 py-1.5 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-md transition-colors">
+                <button className="px-3 py-1.5 text-sm text-white bg-green-500 hover:bg-green-600 rounded-md transition-colors">
                     회원가입
                 </button>
             </div>

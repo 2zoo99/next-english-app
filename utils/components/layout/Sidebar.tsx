@@ -8,6 +8,7 @@ const navItems = [
     { path: '/', label: 'Home' },
     { path: '/test', label: 'Test' },
     { path: '/create-sentence', label: 'Create Sentence' },
+    { path: '/practice', label: 'Practice' },
     // 다른 페이지들도 여기에 추가 가능
 ];
 
@@ -33,9 +34,9 @@ export default function SideBar({ isOpen, onClose }: Props) {
 
             {/* 사이드바 */}
             <nav
-                className={`fixed top-0 left-0 h-full w-56 bg-white border-r z-20 transform transition-transform duration-250 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+                className={`fixed top-0 left-0 h-full w-56 bg-white z-20 transform transition-transform duration-250 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
             >
-                <div className="p-4 border-b text-sm text-grey-400 font-medium">메뉴</div>
+                <div className="p-4 text-base text-grey-400 font-bold">메뉴</div>
                 <ul className="p-2 space-y-1">
                     {navItems.map((item) => (
                         <li key={item.path}>

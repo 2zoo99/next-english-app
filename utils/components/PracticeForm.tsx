@@ -31,13 +31,18 @@ type ShuffledWord = {
 }
 
 export default function PracticeForm() {
-    const [sentences, setSentences] = useState<Sentence[]>([]); //전체 문장 목록
-    const [current, setCurrent] = useState<Sentence | null>(null); //현재 연습 중인 문장
-    const [input, setInput] = useState(''); //사용자 입력값
-    const [results, setResults] = useState<WordResult[]>([]); //단어별 정답 여부
+    //전체 문장 목록
+    const [sentences, setSentences] = useState<Sentence[]>([]);
+    //현재 연습 중인 문장
+    const [current, setCurrent] = useState<Sentence | null>(null);
+    //사용자 입력값
+    const [input, setInput] = useState('');
+    //단어별 정답 여부
+    const [results, setResults] = useState<WordResult[]>([]);
     //hint 상태 none|wrong-only|all
     // const [hintState, setHintState] = useState<'none' | 'wrong-only' | 'all'>('none');
-    const [showWrongHint, setShowWrongHint] = useState(false); //틀린 단어 힌트 표시 여부
+    //틀린 단어 힌트 표시 여부
+    const [showWrongHint, setShowWrongHint] = useState(false);
     const [showAllHint, setShowAllHint] = useState(false);
     //const [showHint, setShowHint] = useState(false); //힌트 표시 여부
     const [message, setMessage] = useState(''); //결과메시지
@@ -45,6 +50,7 @@ export default function PracticeForm() {
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]); //셔플된 단어 목록
 
     //전체 문장 조회 후 랜덤 문장 선택
+    //sentences table에서 문장데이터 가져옴.
     //useCallback은 매 렌더링마다 새로 생성되지 않도록 메모이제이션하는데에 사용됨.
     const fetchSentences = useCallback(async (isInitial = false) => {
         const res = await fetch('/api/sentences');
@@ -75,7 +81,8 @@ export default function PracticeForm() {
 
     //컴포넌트 처음 마운트때 전체 문장 조회
     useEffect(() => {
-        fetchSentences(true); //페이지 접속 시 최초 1회 전체 조회
+        //페이지 접속 시 최초 1회 전체 조회
+        fetchSentences(true);
 
         const interval = setInterval(() => {
             fetchSentences(false); //이후 30초마다 전체 조회하여 새로운 문장 반영
@@ -231,9 +238,10 @@ export default function PracticeForm() {
                 }} //엔터키로 제출 가능하게 하는 이벤트 핸들러
                 placeholder="영문을 입력하세요"
                 disabled={done} //연습 완료 시 입력 비활성화
+                className="w-full p-2 border rounded mb-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button type="button" onClick={handleSubmit} disabled={done}>정답확인</button>
-            <button type="button" onClick={() => pickRandom(sentences)}>다음 문제</button>
+            <button type="button" onClick={handleSubmit} disabled={done} className="hover:bg-gray-200 p-2 rounded">정답확인</button>
+            <button type="button" onClick={() => pickRandom(sentences)} className="hover:bg-gray-200 p-2 rounded">다음 문제</button>
 
             {message && <p>{message}</p>}
 
