@@ -10,6 +10,8 @@
  */
 export type * from './models/User'
 export type * from './models/Sentence'
+export type * from './models/Tag'
+export type * from './models/SentenceTag'
 export type * from './models/Word'
 export type * from './models/SentenceWord'
 export type * from './commonInputTypes'

@@ -386,6 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Sentence: 'Sentence',
+  Tag: 'Tag',
+  SentenceTag: 'SentenceTag',
   Word: 'Word',
   SentenceWord: 'SentenceWord'
 } as const
@@ -403,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "word" | "sentenceWord"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -552,6 +554,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SentenceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SentenceCountAggregateOutputType> | number
+        }
+      }
+    }
+    Tag: {
+      payload: Prisma.$TagPayload<ExtArgs>
+      fields: Prisma.TagFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TagFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TagFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        findFirst: {
+          args: Prisma.TagFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TagFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        findMany: {
+          args: Prisma.TagFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        create: {
+          args: Prisma.TagCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        createMany: {
+          args: Prisma.TagCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TagCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        delete: {
+          args: Prisma.TagDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        update: {
+          args: Prisma.TagUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        deleteMany: {
+          args: Prisma.TagDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TagUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TagUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>[]
+        }
+        upsert: {
+          args: Prisma.TagUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TagPayload>
+        }
+        aggregate: {
+          args: Prisma.TagAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTag>
+        }
+        groupBy: {
+          args: Prisma.TagGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TagGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TagCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TagCountAggregateOutputType> | number
+        }
+      }
+    }
+    SentenceTag: {
+      payload: Prisma.$SentenceTagPayload<ExtArgs>
+      fields: Prisma.SentenceTagFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SentenceTagFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SentenceTagFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        findFirst: {
+          args: Prisma.SentenceTagFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SentenceTagFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        findMany: {
+          args: Prisma.SentenceTagFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>[]
+        }
+        create: {
+          args: Prisma.SentenceTagCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        createMany: {
+          args: Prisma.SentenceTagCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SentenceTagCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>[]
+        }
+        delete: {
+          args: Prisma.SentenceTagDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        update: {
+          args: Prisma.SentenceTagUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        deleteMany: {
+          args: Prisma.SentenceTagDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SentenceTagUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SentenceTagUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>[]
+        }
+        upsert: {
+          args: Prisma.SentenceTagUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentenceTagPayload>
+        }
+        aggregate: {
+          args: Prisma.SentenceTagAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSentenceTag>
+        }
+        groupBy: {
+          args: Prisma.SentenceTagGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SentenceTagGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SentenceTagCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SentenceTagCountAggregateOutputType> | number
         }
       }
     }
@@ -762,6 +912,24 @@ export const SentenceScalarFieldEnum = {
 export type SentenceScalarFieldEnum = (typeof SentenceScalarFieldEnum)[keyof typeof SentenceScalarFieldEnum]
 
 
+export const TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+export const SentenceTagScalarFieldEnum = {
+  id: 'id',
+  sentenceId: 'sentenceId',
+  tagId: 'tagId'
+} as const
+
+export type SentenceTagScalarFieldEnum = (typeof SentenceTagScalarFieldEnum)[keyof typeof SentenceTagScalarFieldEnum]
+
+
 export const WordScalarFieldEnum = {
   id: 'id',
   word: 'word',
@@ -964,6 +1132,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   sentence?: Prisma.SentenceOmit
+  tag?: Prisma.TagOmit
+  sentenceTag?: Prisma.SentenceTagOmit
   word?: Prisma.WordOmit
   sentenceWord?: Prisma.SentenceWordOmit
 }

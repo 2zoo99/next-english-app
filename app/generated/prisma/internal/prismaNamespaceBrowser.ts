@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Sentence: 'Sentence',
+  Tag: 'Tag',
+  SentenceTag: 'SentenceTag',
   Word: 'Word',
   SentenceWord: 'SentenceWord'
 } as const
@@ -91,6 +93,24 @@ export const SentenceScalarFieldEnum = {
 } as const
 
 export type SentenceScalarFieldEnum = (typeof SentenceScalarFieldEnum)[keyof typeof SentenceScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+export const SentenceTagScalarFieldEnum = {
+  id: 'id',
+  sentenceId: 'sentenceId',
+  tagId: 'tagId'
+} as const
+
+export type SentenceTagScalarFieldEnum = (typeof SentenceTagScalarFieldEnum)[keyof typeof SentenceTagScalarFieldEnum]
 
 
 export const WordScalarFieldEnum = {

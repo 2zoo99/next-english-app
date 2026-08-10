@@ -28,6 +28,16 @@ export type User = Prisma.UserModel
  */
 export type Sentence = Prisma.SentenceModel
 /**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
+ * Model SentenceTag
+ * 
+ */
+export type SentenceTag = Prisma.SentenceTagModel
+/**
  * Model Word
  * 
  */

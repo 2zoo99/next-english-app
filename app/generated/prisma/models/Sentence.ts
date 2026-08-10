@@ -209,6 +209,7 @@ export type SentenceWhereInput = {
   translate?: Prisma.StringFilter<"Sentence"> | string
   createdAt?: Prisma.DateTimeFilter<"Sentence"> | Date | string
   sentenceWords?: Prisma.SentenceWordListRelationFilter
+  sentenceTags?: Prisma.SentenceTagListRelationFilter
 }
 
 export type SentenceOrderByWithRelationInput = {
@@ -217,18 +218,20 @@ export type SentenceOrderByWithRelationInput = {
   translate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentenceWords?: Prisma.SentenceWordOrderByRelationAggregateInput
+  sentenceTags?: Prisma.SentenceTagOrderByRelationAggregateInput
 }
 
 export type SentenceWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  content?: string
   AND?: Prisma.SentenceWhereInput | Prisma.SentenceWhereInput[]
   OR?: Prisma.SentenceWhereInput[]
   NOT?: Prisma.SentenceWhereInput | Prisma.SentenceWhereInput[]
-  content?: Prisma.StringFilter<"Sentence"> | string
   translate?: Prisma.StringFilter<"Sentence"> | string
   createdAt?: Prisma.DateTimeFilter<"Sentence"> | Date | string
   sentenceWords?: Prisma.SentenceWordListRelationFilter
-}, "id">
+  sentenceTags?: Prisma.SentenceTagListRelationFilter
+}, "id" | "content">
 
 export type SentenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -257,6 +260,7 @@ export type SentenceCreateInput = {
   translate: string
   createdAt?: Date | string
   sentenceWords?: Prisma.SentenceWordCreateNestedManyWithoutSentenceInput
+  sentenceTags?: Prisma.SentenceTagCreateNestedManyWithoutSentenceInput
 }
 
 export type SentenceUncheckedCreateInput = {
@@ -265,6 +269,7 @@ export type SentenceUncheckedCreateInput = {
   translate: string
   createdAt?: Date | string
   sentenceWords?: Prisma.SentenceWordUncheckedCreateNestedManyWithoutSentenceInput
+  sentenceTags?: Prisma.SentenceTagUncheckedCreateNestedManyWithoutSentenceInput
 }
 
 export type SentenceUpdateInput = {
@@ -272,6 +277,7 @@ export type SentenceUpdateInput = {
   translate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentenceWords?: Prisma.SentenceWordUpdateManyWithoutSentenceNestedInput
+  sentenceTags?: Prisma.SentenceTagUpdateManyWithoutSentenceNestedInput
 }
 
 export type SentenceUncheckedUpdateInput = {
@@ -280,6 +286,7 @@ export type SentenceUncheckedUpdateInput = {
   translate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentenceWords?: Prisma.SentenceWordUncheckedUpdateManyWithoutSentenceNestedInput
+  sentenceTags?: Prisma.SentenceTagUncheckedUpdateManyWithoutSentenceNestedInput
 }
 
 export type SentenceCreateManyInput = {
@@ -336,6 +343,20 @@ export type SentenceScalarRelationFilter = {
   isNot?: Prisma.SentenceWhereInput
 }
 
+export type SentenceCreateNestedOneWithoutSentenceTagsInput = {
+  create?: Prisma.XOR<Prisma.SentenceCreateWithoutSentenceTagsInput, Prisma.SentenceUncheckedCreateWithoutSentenceTagsInput>
+  connectOrCreate?: Prisma.SentenceCreateOrConnectWithoutSentenceTagsInput
+  connect?: Prisma.SentenceWhereUniqueInput
+}
+
+export type SentenceUpdateOneRequiredWithoutSentenceTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.SentenceCreateWithoutSentenceTagsInput, Prisma.SentenceUncheckedCreateWithoutSentenceTagsInput>
+  connectOrCreate?: Prisma.SentenceCreateOrConnectWithoutSentenceTagsInput
+  upsert?: Prisma.SentenceUpsertWithoutSentenceTagsInput
+  connect?: Prisma.SentenceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SentenceUpdateToOneWithWhereWithoutSentenceTagsInput, Prisma.SentenceUpdateWithoutSentenceTagsInput>, Prisma.SentenceUncheckedUpdateWithoutSentenceTagsInput>
+}
+
 export type SentenceCreateNestedOneWithoutSentenceWordsInput = {
   create?: Prisma.XOR<Prisma.SentenceCreateWithoutSentenceWordsInput, Prisma.SentenceUncheckedCreateWithoutSentenceWordsInput>
   connectOrCreate?: Prisma.SentenceCreateOrConnectWithoutSentenceWordsInput
@@ -350,10 +371,57 @@ export type SentenceUpdateOneRequiredWithoutSentenceWordsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SentenceUpdateToOneWithWhereWithoutSentenceWordsInput, Prisma.SentenceUpdateWithoutSentenceWordsInput>, Prisma.SentenceUncheckedUpdateWithoutSentenceWordsInput>
 }
 
+export type SentenceCreateWithoutSentenceTagsInput = {
+  content: string
+  translate: string
+  createdAt?: Date | string
+  sentenceWords?: Prisma.SentenceWordCreateNestedManyWithoutSentenceInput
+}
+
+export type SentenceUncheckedCreateWithoutSentenceTagsInput = {
+  id?: number
+  content: string
+  translate: string
+  createdAt?: Date | string
+  sentenceWords?: Prisma.SentenceWordUncheckedCreateNestedManyWithoutSentenceInput
+}
+
+export type SentenceCreateOrConnectWithoutSentenceTagsInput = {
+  where: Prisma.SentenceWhereUniqueInput
+  create: Prisma.XOR<Prisma.SentenceCreateWithoutSentenceTagsInput, Prisma.SentenceUncheckedCreateWithoutSentenceTagsInput>
+}
+
+export type SentenceUpsertWithoutSentenceTagsInput = {
+  update: Prisma.XOR<Prisma.SentenceUpdateWithoutSentenceTagsInput, Prisma.SentenceUncheckedUpdateWithoutSentenceTagsInput>
+  create: Prisma.XOR<Prisma.SentenceCreateWithoutSentenceTagsInput, Prisma.SentenceUncheckedCreateWithoutSentenceTagsInput>
+  where?: Prisma.SentenceWhereInput
+}
+
+export type SentenceUpdateToOneWithWhereWithoutSentenceTagsInput = {
+  where?: Prisma.SentenceWhereInput
+  data: Prisma.XOR<Prisma.SentenceUpdateWithoutSentenceTagsInput, Prisma.SentenceUncheckedUpdateWithoutSentenceTagsInput>
+}
+
+export type SentenceUpdateWithoutSentenceTagsInput = {
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  translate?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentenceWords?: Prisma.SentenceWordUpdateManyWithoutSentenceNestedInput
+}
+
+export type SentenceUncheckedUpdateWithoutSentenceTagsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  translate?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentenceWords?: Prisma.SentenceWordUncheckedUpdateManyWithoutSentenceNestedInput
+}
+
 export type SentenceCreateWithoutSentenceWordsInput = {
   content: string
   translate: string
   createdAt?: Date | string
+  sentenceTags?: Prisma.SentenceTagCreateNestedManyWithoutSentenceInput
 }
 
 export type SentenceUncheckedCreateWithoutSentenceWordsInput = {
@@ -361,6 +429,7 @@ export type SentenceUncheckedCreateWithoutSentenceWordsInput = {
   content: string
   translate: string
   createdAt?: Date | string
+  sentenceTags?: Prisma.SentenceTagUncheckedCreateNestedManyWithoutSentenceInput
 }
 
 export type SentenceCreateOrConnectWithoutSentenceWordsInput = {
@@ -383,6 +452,7 @@ export type SentenceUpdateWithoutSentenceWordsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   translate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentenceTags?: Prisma.SentenceTagUpdateManyWithoutSentenceNestedInput
 }
 
 export type SentenceUncheckedUpdateWithoutSentenceWordsInput = {
@@ -390,6 +460,7 @@ export type SentenceUncheckedUpdateWithoutSentenceWordsInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   translate?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentenceTags?: Prisma.SentenceTagUncheckedUpdateManyWithoutSentenceNestedInput
 }
 
 
@@ -399,10 +470,12 @@ export type SentenceUncheckedUpdateWithoutSentenceWordsInput = {
 
 export type SentenceCountOutputType = {
   sentenceWords: number
+  sentenceTags: number
 }
 
 export type SentenceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sentenceWords?: boolean | SentenceCountOutputTypeCountSentenceWordsArgs
+  sentenceTags?: boolean | SentenceCountOutputTypeCountSentenceTagsArgs
 }
 
 /**
@@ -422,6 +495,13 @@ export type SentenceCountOutputTypeCountSentenceWordsArgs<ExtArgs extends runtim
   where?: Prisma.SentenceWordWhereInput
 }
 
+/**
+ * SentenceCountOutputType without action
+ */
+export type SentenceCountOutputTypeCountSentenceTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SentenceTagWhereInput
+}
+
 
 export type SentenceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -429,6 +509,7 @@ export type SentenceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   translate?: boolean
   createdAt?: boolean
   sentenceWords?: boolean | Prisma.Sentence$sentenceWordsArgs<ExtArgs>
+  sentenceTags?: boolean | Prisma.Sentence$sentenceTagsArgs<ExtArgs>
   _count?: boolean | Prisma.SentenceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sentence"]>
 
@@ -456,6 +537,7 @@ export type SentenceSelectScalar = {
 export type SentenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "translate" | "createdAt", ExtArgs["result"]["sentence"]>
 export type SentenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sentenceWords?: boolean | Prisma.Sentence$sentenceWordsArgs<ExtArgs>
+  sentenceTags?: boolean | Prisma.Sentence$sentenceTagsArgs<ExtArgs>
   _count?: boolean | Prisma.SentenceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SentenceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -465,6 +547,7 @@ export type $SentencePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Sentence"
   objects: {
     sentenceWords: Prisma.$SentenceWordPayload<ExtArgs>[]
+    sentenceTags: Prisma.$SentenceTagPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -866,6 +949,7 @@ readonly fields: SentenceFieldRefs;
 export interface Prisma__SentenceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sentenceWords<T extends Prisma.Sentence$sentenceWordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Sentence$sentenceWordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SentenceWordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentenceTags<T extends Prisma.Sentence$sentenceTagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Sentence$sentenceTagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SentenceTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1313,6 +1397,30 @@ export type Sentence$sentenceWordsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.SentenceWordScalarFieldEnum | Prisma.SentenceWordScalarFieldEnum[]
+}
+
+/**
+ * Sentence.sentenceTags
+ */
+export type Sentence$sentenceTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SentenceTag
+   */
+  select?: Prisma.SentenceTagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SentenceTag
+   */
+  omit?: Prisma.SentenceTagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SentenceTagInclude<ExtArgs> | null
+  where?: Prisma.SentenceTagWhereInput
+  orderBy?: Prisma.SentenceTagOrderByWithRelationInput | Prisma.SentenceTagOrderByWithRelationInput[]
+  cursor?: Prisma.SentenceTagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SentenceTagScalarFieldEnum | Prisma.SentenceTagScalarFieldEnum[]
 }
 
 /**
