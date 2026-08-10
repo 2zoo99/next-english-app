@@ -15,21 +15,32 @@ type SentenceWord = {
     order: number;
     word: Word;
 }
+type Tag = {
+    id: number;
+    name: string;
+}
+type SentenceTag = {
+    id: number;
+    tag: Tag;
+}
 type Sentence = {
     id: number;
     content: string;
     translate: string;
     sentenceWords: SentenceWord[];
+    sentenceTags: SentenceTag[];
 }
 
 export default function SentenceForm() {
     const [content, setContent] = useState('');
     const [translate, setTranslate] = useState('');
+    const [tagInput, setTagInput] = useState(''); // 태그 입력 상태 추가
     const [result, setResult] = useState<Sentence | null>(null);
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false); // 성공 여부를 나타내는 상태 추가
     const translateRef = useRef<HTMLInputElement>(null);  // 포커스 이동용
     const contentRef = useRef<HTMLInputElement>(null);
+    const tagRef = useRef<HTMLInputElement>(null); // 태그 입력 필드에 대한 ref 추가
 
 
 
@@ -37,12 +48,14 @@ export default function SentenceForm() {
     const handleSubmit = async () => {
         if (!content.trim()) return; // content가 비어있으면 제출하지 않음
 
+        const tags = tagInput.split(',').map(t => t.trim()).filter(t => t.length > 0); // 태그 입력값을 쉼표로 분리하고 공백 제거
+
         const res = await fetch('./api/sentences', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ content, translate }),
+            body: JSON.stringify({ content, translate, tags }),
         });
 
         if (res.ok) {
@@ -50,6 +63,7 @@ export default function SentenceForm() {
             setResult(data);
             setContent('');
             setTranslate('');
+            setTagInput(''); // 태그 입력 초기화
             setMessage('문장이 저장되었습니다.');
             setIsSuccess(true); // 성공 상태로 설정
             contentRef.current?.focus(); // content input에 포커스 이동
@@ -63,6 +77,7 @@ export default function SentenceForm() {
     const handleReset = () => {
         setContent('');
         setTranslate('');
+        setTagInput(''); // 태그 입력 초기화
         setResult(null);
         setMessage('');
         contentRef.current?.focus(); // content input에 포커스 이동
@@ -103,6 +118,23 @@ export default function SentenceForm() {
                         placeholder="한국어 번역을 입력하세요 (선택)"
                         className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
+                </div>
+
+                {/* 태그 입력 */}
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-gray-600">태그</label>
+                    <input
+                        ref={tagRef}
+                        type="text"
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSubmit()  // 엔터 → 바로 저장
+                        }}
+                        placeholder="태그를 입력하세요 (쉼표로 구분)"
+                        className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                    />
+
                 </div>
 
                 {/* 버튼 */}
@@ -146,6 +178,17 @@ export default function SentenceForm() {
                             ))}
                         </div>
                     )}
+                    <div>
+                        {result.sentenceTags.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                                {result.sentenceTags.map(st => (
+                                    <span key={st.id} className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
+                                        {st.tag.name}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

@@ -9,6 +9,9 @@ export async function GET() {
             sentenceWords: {
                 orderBy: { order: 'asc' },
                 include: { word: true }
+            },
+            sentenceTags: {
+                include: { tag: true }
             }
         }
     })
@@ -21,6 +24,7 @@ export async function POST(request: Request) {
     const content: string = body.content;
     const translate: string = body.translate || '';
     // content는 필수, translate는 선택으로 받음. translate가 없으면 빈 문자열로 처리.
+    const tagNames: string[] = body.tags || []; // 태그 이름 배열, 없으면 빈 배열로 처리
 
     const normalize = (word: string) => {
         return word
@@ -57,12 +61,34 @@ export async function POST(request: Request) {
             })
         }
 
+        const cleanTagNames = [...new Set(
+            tagNames.map(t => t.trim()).filter(t => t.length > 0)
+        )]; // 중복 제거 및 공백 제거
+
+        for (const tagName of cleanTagNames) {
+            const tag = await prisma.tag.upsert({
+                where: { name: tagName },
+                update: {},
+                create: { name: tagName }
+            });
+
+            await prisma.sentenceTag.create({
+                data: {
+                    sentenceId: sentence.id,
+                    tagId: tag.id
+                }
+            });
+        }
+
         const result = await prisma.sentence.findUnique({
             where: { id: sentence.id },
             include: {
                 sentenceWords: {
                     orderBy: { order: 'asc' },
                     include: { word: true }
+                },
+                sentenceTags: {
+                    include: { tag: true }
                 }
             }
         })
