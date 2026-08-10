@@ -12,6 +12,18 @@ from tatoebatools import ParallelCorpus     # 데이터를 수집하는 모듈 (
 load_dotenv()   # 환경변수(.env) 파일 읽어오는 메서드. 안하면 os.getenv 가 none 반환
 DATABASE_URL = os.getenv("DATABASE_URL")        # getenv는 환경변수에서 값을 가져오는 함수. 코드안에 존재하는 비밀번호 노출을 방지하기 위해 주로 사용함.
 
+def clean_typography(text:str) -> str:
+    replacements = {
+        '\u2018': "'", '\u2019': "'",   # 곡선 작은따옴표 -> 일반 따옴표
+        '\u201c': '"', '\u201d': '"',   # 곡선 큰따옴표 -> 일반 따옴표
+        '\u2013': '-', '\u2014': '-',   # en/em dash -> 하이픈
+        '\u2026': '...',                 # 말줄임표(한 글자) -> 마침표 세 개
+        '\u00a0': ' ',                   # 줄바꿈 없는 공백 -> 일반 공백
+    }
+    for original, replacement in replacements.items():
+        text = text.replace(original, replacement)
+    return text
+
 def normalize(word:str) -> str:
     word = re.sub(r"[^a-zA-Z0-9가-힣]", "", word) 
     return word.lower()  # 소문자로 변환
@@ -41,6 +53,10 @@ def import_sentences(limit=10): # limit 기본값 10 (=매개변수 미지정 �
         if inserted >= limit:
             break
         checked +=1
+
+         # 저장 전에 특수 문자부터 정제
+        cleaned_content = clean_typography(sentence.text)
+        cleaned_translate = clean_typography(translation.text)
     
         cur.execute(        # SQL 문 실행
             'INSERT INTO "SENTENCE" (content, translate, "createdAt") '
@@ -48,7 +64,7 @@ def import_sentences(limit=10): # limit 기본값 10 (=매개변수 미지정 �
                                             # sql 인젝션 보안 공격 방지를 위해 사용
             'ON CONFLICT (content) DO NOTHING '
             'RETURNING id',
-            (sentence.text, translation.text)
+            (cleaned_content, cleaned_translate)
         )
         result = cur.fetchone()  # SQL 실행 결과 가져오기
 
