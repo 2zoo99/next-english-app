@@ -83,7 +83,7 @@ export default function PracticeForm() {
     //전역 스페이스바 감지
     useEffect(() => {
         const handleGlobalKeyDown = (e: KeyboardEvent) => {
-            if (e.key === ' ') return;  // 스페이스바는 무시
+            if (e.key !== ' ') return;  // 스페이스바는 무시
             if (done) return;
             if (document.activeElement === inputRef.current) return;
 
@@ -99,6 +99,19 @@ export default function PracticeForm() {
             window.removeEventListener('keydown', handleGlobalKeyDown);
         }
     }, [done]);
+
+    //정답을 맞혔을때 enter를 누르면 다음 문제로 넘어가도록
+    useEffect(() => {
+        const handleEnterForNext = (e: KeyboardEvent) => {
+            if (e.key !== 'Enter') return;
+            if (!done) return;
+
+            e.preventDefault();
+            pickRandom(sentences);
+        }
+        window.addEventListener('keydown', handleEnterForNext);
+        return () => window.removeEventListener('keydown', handleEnterForNext);
+    }, [done, sentences]);
 
     //힌트 관련 상태를 한 번에 초기화 (기존에 3곳에서 반복되던 로직을 묶음)
     const resetHints = () => {
@@ -196,8 +209,8 @@ export default function PracticeForm() {
 
     return (
         <div>
-            <h2>영어 문장 연습</h2>
-            <p>영작문제: {current?.translate}</p>
+            <h2 className="text-xl font-bold mb-2">영어 문장 연습</h2>
+            <p className="text-lg mb-2 mt-8">{current?.translate}</p>
 
             <input
                 ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
@@ -209,7 +222,7 @@ export default function PracticeForm() {
                     if (e.key === 'Control') handleWrongHint();
                     if (e.key === 'Alt') handleAllHint();
                 }}
-                placeholder="영문을 입력하세요"
+                placeholder="한국어를 읽고 영문으로 영작해 보세요."
                 disabled={done}
                 className="w-full p-2 border rounded mb-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -229,10 +242,18 @@ export default function PracticeForm() {
                     </p>
                     {wrongIndex !== -1 && (
                         <div>
-                            <button type="button" onClick={handleWrongHint} className="hover: bg-gray-200 p-2 rounded">
+                            <button
+                                type="button"
+                                onClick={handleWrongHint}
+                                title="Ctrl"
+                                className="hover:bg-gray-200 p-2 rounded">
                                 {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
                             </button>
-                            <button type="button" onClick={handleAllHint} className="hover:bg-gray-200 p-2 rounded">
+                            <button
+                                type="button"
+                                onClick={handleAllHint}
+                                title="Alt"
+                                className="hover:bg-gray-200 p-2 rounded">
                                 {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
                             </button>
 
