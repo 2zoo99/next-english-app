@@ -1,7 +1,7 @@
 //utils/components/PracticeForm.tsx
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 
 type Word = {
     id: number;
@@ -53,6 +53,27 @@ export default function PracticeForm() {
     const [message, setMessage] = useState('');
     const [done, setDone] = useState(false);
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]);
+    const inputRef = useRef<HTMLInputElement>(null);    //입력 참조용
+
+    //컴포넌트가 처음 마운트될 때 input에 포커스
+    useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (e.key === ' ') return;  // 스페이스바는 무시
+            if (done) return;
+            if (document.activeElement === inputRef.current) return;
+
+            e.preventDefault(); // preventDefault()를 호출하여 기본 브라우저 동작(=스크롤)을 막음
+            inputRef.current?.focus();
+
+            const len = inputRef.current?.value.length ?? 0;    //커서 위치를 맨 뒤로 이동
+            inputRef.current?.setSelectionRange(len, len);
+        };
+
+        window.addEventListener('keydown', handleGlobalKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleGlobalKeyDown);
+        }
+    }, [done]);
 
     //힌트 관련 상태를 한 번에 초기화 (기존에 3곳에서 반복되던 로직을 묶음)
     const resetHints = () => {
@@ -143,7 +164,7 @@ export default function PracticeForm() {
     const handleAllHint = () => {
         if (!showAllHint && shuffled.length === 0 && current) {
             const otherWords: ShuffledWord[] = current.sentenceWords
-                .filter((_, idx) => idx !== wrongIndex)
+                .filter((_, idx) => idx >= wrongIndex)
                 .map(sw => ({
                     word: sw.word.word,
                     meaning: sw.word.meaning,
@@ -155,7 +176,7 @@ export default function PracticeForm() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
-        resetHints();
+        //resetHints();
     }
 
     if (!current) return <p>문장을 불러오는 중입니다...</p>
@@ -166,6 +187,7 @@ export default function PracticeForm() {
             <p>영작문제: {current?.translate}</p>
 
             <input
+                ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
                 type="text"
                 value={input}
                 onChange={handleInputChange}
@@ -194,10 +216,10 @@ export default function PracticeForm() {
                     </p>
                     {wrongIndex !== -1 && (
                         <div>
-                            <button type="button" onClick={handleWrongHint}>
+                            <button type="button" onClick={handleWrongHint} className="hover: bg-gray-200 p-2 rounded">
                                 {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
                             </button>
-                            <button type="button" onClick={handleAllHint}>
+                            <button type="button" onClick={handleAllHint} className="hover:bg-gray-200 p-2 rounded">
                                 {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
                             </button>
 
