@@ -1,12 +1,14 @@
 'use client'
 
 import Link from "next/link";
+import { useRefresh } from "@/utils/context/RefreshContext";
 
 interface Props {
     onMenuClick: () => void
 }
 
 export default function Topbar({ onMenuClick }: Props) {
+    const { triggerRefresh } = useRefresh();
     return (
         <header className="h-14 border-b bg-white flex items-center px-4 gap-4">
             <button
@@ -21,7 +23,7 @@ export default function Topbar({ onMenuClick }: Props) {
                     <span className="block h-0.5 bg-gray-700 rounded" />
                 </div>
             </button>
-            <Link href="/">
+            <Link href="/" onClick={triggerRefresh} className="flex items-center gap-2">
                 <span className="font-bold text-2xl">English-sentence study App for Korean</span>
             </Link>
             <div className="ml-auto flex items-center gap-2">

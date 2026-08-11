@@ -2,6 +2,7 @@
 'use client';
 
 import { useCallback, useState, useEffect, useRef } from 'react';
+import { useRefresh } from '@/utils/context/RefreshContext';
 
 type Word = {
     id: number;
@@ -54,8 +55,32 @@ export default function PracticeForm() {
     const [done, setDone] = useState(false);
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);    //입력 참조용
+    const { refreshKey } = useRefresh(); // 새로고침 키를 가져옴
 
-    //컴포넌트가 처음 마운트될 때 input에 포커스
+    //전체 문장 조회 후 랜덤 문장 선택
+    const fetchSentences = useCallback(async (isInitial = false) => {
+        const res = await fetch('/api/sentences');
+
+        if (res.ok) {
+            const data = await res.json();
+            setSentences(data);
+            if (isInitial) {
+                pickRandom(data);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchSentences(true);
+
+        const interval = setInterval(() => {
+            fetchSentences(false);
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [fetchSentences, refreshKey]); // refreshKey가 변경될 때마다 fetchSentences를 호출하여 문장 목록을 새로고침
+
+    //전역 스페이스바 감지
     useEffect(() => {
         const handleGlobalKeyDown = (e: KeyboardEvent) => {
             if (e.key === ' ') return;  // 스페이스바는 무시
@@ -82,18 +107,6 @@ export default function PracticeForm() {
         setShuffled([]);
     }
 
-    //전체 문장 조회 후 랜덤 문장 선택
-    const fetchSentences = useCallback(async (isInitial = false) => {
-        const res = await fetch('/api/sentences');
-
-        if (res.ok) {
-            const data = await res.json();
-            setSentences(data);
-            if (isInitial) {
-                pickRandom(data);
-            }
-        }
-    }, []);
 
     //문장 목록에서 랜덤으로 하나를 선택하는 함수
     const pickRandom = (data: Sentence[]) => {

@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRefresh } from "@/utils/context/RefreshContext";
 
 const navItems = [
     { path: '/', label: 'Home' },
@@ -21,6 +22,12 @@ interface Props {
 
 export default function SideBar({ isOpen, onClose }: Props) {
     const pathname = usePathname(); // usePathname 훅을 사용하여 현재 경로를 가져옵니다. 이를 통해 현재 페이지가 어떤 페이지인지 확인할 수 있습니다.
+    const { triggerRefresh } = useRefresh(); // useRefresh 훅을 사용하여 triggerRefresh 함수를 가져옵니다. 이 함수는 페이지를 새로고침하는 역할을 합니다.
+
+    const handleNavClick = () => {
+        onClose(); // 사이드바를 닫는 함수 호출
+        triggerRefresh(); // 페이지 새로고침 함수 호출
+    }
 
     return (
         <>
@@ -42,7 +49,7 @@ export default function SideBar({ isOpen, onClose }: Props) {
                         <li key={item.path}>
                             <Link
                                 href={item.path}
-                                onClick={onClose}
+                                onClick={handleNavClick}
                                 className={`block px-3 py-2 rounded-md text-sm transition-colors ${pathname === item.path ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700 hover:bg-gray-100'}`}
                             >{item.label}</Link>
                         </li>))}
