@@ -113,7 +113,7 @@ export default function ExpressionList() {
     }
 
     const handleDelete = async (id: number) => {
-        if (!confirm('이 표현을 삭제할까요? 연결된 예문 목록에서도 사라져요.')) return;
+        if (!confirm('이 표현을 삭제할까요? 등록된 예문 목록에서도 사라져요.')) return;
 
         const res = await fetch(`/api/expressions/${id}`, { method: 'DELETE' });
 

@@ -124,12 +124,12 @@ export default function SentenceList() {
 
     return (
         <div>
-            <div className="flex flex-col justify-between items-start gap-2 pb-2">
+            <div className="flex flex-row justify-between items-start gap-2 pb-2">
                 <span className="text-3xl">문장목록</span>
                 <button className="" type="button" onClick={() => {
                     fetchSentences()
                     setMessage('')
-                }}><img className="w-6 h-6 hover:bg-gray-300 border rounded broder-none" src="/reload-ui-svgrepo-com.svg" alt="새로고침" /></button>
+                }}><img className="w-12 h-12 mx-2 px-2 py-2 hover:bg-gray-300 rounded broder-none" src="/reload-ui-svgrepo-com.svg" alt="새로고침" /></button>
             </div>
 
             {message && <p>{message}</p>}
