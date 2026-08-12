@@ -83,3 +83,32 @@ export async function POST(
         );
     }
 }
+// 삭제 API
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    const expressionId = Number(id);
+    const body = await request.json();
+    const sentenceId: number = body.sentenceId;
+
+    if (!sentenceId) {
+        return Response.json({ error: 'sentenceId가 필요해요.' }, { status: 400 });
+    }
+
+    try {
+        await prisma.expressionSentence.deleteMany({
+            where: { expressionId, sentenceId }
+        });
+
+        return Response.json({ message: '예문 연결이 해제되었어요.' });
+
+    } catch (error) {
+        console.error(error);
+        return Response.json(
+            { error: '예문 연결 해제 중 오류가 발생했어요.' },
+            { status: 500 }
+        );
+    }
+}
