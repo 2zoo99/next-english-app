@@ -7,7 +7,6 @@ import { useRefresh } from "@/utils/context/RefreshContext";
 
 const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/test', label: 'Test' },
     { path: '/create-sentence', label: 'Create Sentence' },
     { path: '/practice', label: 'Practice' },
     // 다른 페이지들도 여기에 추가 가능
