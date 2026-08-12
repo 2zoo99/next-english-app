@@ -3,10 +3,19 @@
 
 import { prisma } from "@/lib/prisma";   // Prisma 클라이언트: DB에 접속하는 객체 임포트
 
-// 전체 데이터 조회
-export async function GET() {       // 비동기로 GET 요청을 처리하는 함수 정의
+const PAGE_SIZE = 10;
+
+// 전체 데이터 조회: 커서 기반 페이지네이션 사용 
+export async function GET(request: Request) {       // 비동기로 GET 요청을 처리하는 함수 정의
+    const { searchParams } = new URL(request.url);    // URL 클래스는 자바스크립트 기본 클래스로, 주소를 분석 / 주소의 쿼리 파라미터를 다룰때 사용
+    const cursor = searchParams.get('cursor');
     const expressions = await prisma.expression.findMany({
         // 데이터를 가져오는 시간을 await 로 기다림
+        take: PAGE_SIZE,
+        ...(cursor && {
+            skip: 1,
+            cursor: { id: Number(cursor) }
+        }),
         orderBy: { createdAt: 'desc' }, // 생성일 기준 내림차순 정렬
         include: {
             exampleLinks: {
@@ -14,7 +23,10 @@ export async function GET() {       // 비동기로 GET 요청을 처리하는 �
             }
         }
     });
-    return Response.json(expressions);
+    const nextCursor = expressions.length === PAGE_SIZE
+        ? expressions[expressions.length - 1].id
+        : null;     // 더 가져올 데이터가 없으면 null 저장
+    return Response.json({ expressions, nextCursor });
 }
 
 export async function POST(request: Request) { // 비동기로 POST 요청을 처리하는 함수 정의
