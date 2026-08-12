@@ -47,3 +47,13 @@ export type Word = Prisma.WordModel
  * 
  */
 export type SentenceWord = Prisma.SentenceWordModel
+/**
+ * Model Expression
+ * 
+ */
+export type Expression = Prisma.ExpressionModel
+/**
+ * Model ExpressionSentence
+ * 
+ */
+export type ExpressionSentence = Prisma.ExpressionSentenceModel

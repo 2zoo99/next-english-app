@@ -389,7 +389,9 @@ export const ModelName = {
   Tag: 'Tag',
   SentenceTag: 'SentenceTag',
   Word: 'Word',
-  SentenceWord: 'SentenceWord'
+  SentenceWord: 'SentenceWord',
+  Expression: 'Expression',
+  ExpressionSentence: 'ExpressionSentence'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +855,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Expression: {
+      payload: Prisma.$ExpressionPayload<ExtArgs>
+      fields: Prisma.ExpressionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExpressionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExpressionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        findFirst: {
+          args: Prisma.ExpressionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExpressionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        findMany: {
+          args: Prisma.ExpressionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>[]
+        }
+        create: {
+          args: Prisma.ExpressionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        createMany: {
+          args: Prisma.ExpressionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExpressionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>[]
+        }
+        delete: {
+          args: Prisma.ExpressionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        update: {
+          args: Prisma.ExpressionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExpressionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExpressionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExpressionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExpressionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionPayload>
+        }
+        aggregate: {
+          args: Prisma.ExpressionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpression>
+        }
+        groupBy: {
+          args: Prisma.ExpressionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExpressionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExpressionSentence: {
+      payload: Prisma.$ExpressionSentencePayload<ExtArgs>
+      fields: Prisma.ExpressionSentenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExpressionSentenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExpressionSentenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        findFirst: {
+          args: Prisma.ExpressionSentenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExpressionSentenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        findMany: {
+          args: Prisma.ExpressionSentenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>[]
+        }
+        create: {
+          args: Prisma.ExpressionSentenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        createMany: {
+          args: Prisma.ExpressionSentenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExpressionSentenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>[]
+        }
+        delete: {
+          args: Prisma.ExpressionSentenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        update: {
+          args: Prisma.ExpressionSentenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExpressionSentenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExpressionSentenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExpressionSentenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>[]
+        }
+        upsert: {
+          args: Prisma.ExpressionSentenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionSentencePayload>
+        }
+        aggregate: {
+          args: Prisma.ExpressionSentenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpressionSentence>
+        }
+        groupBy: {
+          args: Prisma.ExpressionSentenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionSentenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExpressionSentenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionSentenceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -948,6 +1098,25 @@ export const SentenceWordScalarFieldEnum = {
 } as const
 
 export type SentenceWordScalarFieldEnum = (typeof SentenceWordScalarFieldEnum)[keyof typeof SentenceWordScalarFieldEnum]
+
+
+export const ExpressionScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  meaning: 'meaning',
+  createdAt: 'createdAt'
+} as const
+
+export type ExpressionScalarFieldEnum = (typeof ExpressionScalarFieldEnum)[keyof typeof ExpressionScalarFieldEnum]
+
+
+export const ExpressionSentenceScalarFieldEnum = {
+  id: 'id',
+  expressionId: 'expressionId',
+  sentenceId: 'sentenceId'
+} as const
+
+export type ExpressionSentenceScalarFieldEnum = (typeof ExpressionSentenceScalarFieldEnum)[keyof typeof ExpressionSentenceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1136,6 +1305,8 @@ export type GlobalOmitConfig = {
   sentenceTag?: Prisma.SentenceTagOmit
   word?: Prisma.WordOmit
   sentenceWord?: Prisma.SentenceWordOmit
+  expression?: Prisma.ExpressionOmit
+  expressionSentence?: Prisma.ExpressionSentenceOmit
 }
 
 /* Types for Logging */
