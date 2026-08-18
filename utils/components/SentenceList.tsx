@@ -146,11 +146,11 @@ export default function SentenceList() {
                         ) : (
                             <div>
                                 <div className="flex flex-col gap-1 border rounded-md p-2 mb-2">
-                                    <p>	&#91;문장&#93; {sentence.content}</p>
-                                    <p>&#91;번역&#93; {sentence.translate}</p>
-                                    <div className="w-fit align-items flex gap-2 border rounded-md p-1">
-                                        <button className="bg-gray-200 text-black font-bold py-1 px-2 rounded" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
-                                        <button className="bg-red-200 text-black font-bold py-1 px-2 rounded" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
+                                    <p>{sentence.content}</p>
+                                    <p>{sentence.translate}</p>
+                                    <div className="w-fit align-items flex gap-2 rounded-md p-1">
+                                        <button className="bg-gray-200 text-black font-bold py-1 px-2 rounded hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
+                                        <button className="bg-red-200 text-black font-bold py-1 px-2 rounded hover:bg-red-300" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
                                     </div>
                                 </div>
 
