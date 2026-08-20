@@ -209,74 +209,76 @@ export default function PracticeForm() {
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-2">영어 문장 연습</h2>
-            <p className="text-lg mb-2 mt-8">{current?.translate}</p>
+            <h2 className="text-lg sm:text-xl font-bold mb-8">영어 문장 연습</h2>
+            <div className="w-full border rounded-xl shadow-sm border-gray-200 px-2 py-4">
+                <p className="text-lg mb-2 mt-2">{current?.translate}</p>
 
-            <input
-                ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
-                type="text"
-                value={input}
-                onChange={handleInputChange}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSubmit();
-                    if (e.key === 'Control') handleWrongHint();
-                    if (e.key === 'Alt') handleAllHint();
-                }}
-                placeholder="한국어를 읽고 영문으로 영작해 보세요."
-                disabled={done}
-                className="w-full p-2 border rounded mb-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button type="button" onClick={handleSubmit} disabled={done} className="hover:bg-gray-200 p-2 rounded">정답확인</button>
-            <button type="button" onClick={() => pickRandom(sentences)} className="hover:bg-gray-200 p-2 rounded">다음 문제</button>
+                <input
+                    ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
+                    type="text"
+                    value={input}
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSubmit();
+                        if (e.key === 'Control') handleWrongHint();
+                        if (e.key === 'Alt') handleAllHint();
+                    }}
+                    placeholder="한국어를 읽고 영문으로 영작해 보세요."
+                    disabled={done}
+                    className="w-full p-2 border border-gray-200 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+                <button type="button" onClick={handleSubmit} disabled={done} className="hover:bg-gray-200 p-2 rounded">정답확인</button>
+                <button type="button" onClick={() => pickRandom(sentences)} className="hover:bg-gray-200 p-2 rounded">다음 문제</button>
 
-            {message && <p>{message}</p>}
+                {message && <p>{message}</p>}
 
-            {results.length > 0 && (
-                <div>
-                    <p>
-                        {results.map((r, idx) => (
-                            <span key={idx} style={{ color: r.status === 'correct' ? 'green' : 'red' }}>
-                                {r.word + ' '}
-                            </span>
-                        ))}
-                    </p>
-                    {wrongIndex !== -1 && (
-                        <div>
-                            <button
-                                type="button"
-                                onClick={handleWrongHint}
-                                title="Ctrl"
-                                className="hover:bg-gray-200 p-2 rounded">
-                                {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleAllHint}
-                                title="Alt"
-                                className="hover:bg-gray-200 p-2 rounded">
-                                {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
-                            </button>
+                {results.length > 0 && (
+                    <div>
+                        <p>
+                            {results.map((r, idx) => (
+                                <span key={idx} style={{ color: r.status === 'correct' ? 'green' : 'red' }}>
+                                    {r.word + ' '}
+                                </span>
+                            ))}
+                        </p>
+                        {wrongIndex !== -1 && (
+                            <div>
+                                <button
+                                    type="button"
+                                    onClick={handleWrongHint}
+                                    title="Ctrl"
+                                    className="hover:bg-gray-200 p-2 rounded">
+                                    {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleAllHint}
+                                    title="Alt"
+                                    className="hover:bg-gray-200 p-2 rounded">
+                                    {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                                </button>
 
-                            {showWrongHint && hintWord && (
-                                <p>
-                                    틀린 단어 정답: <span style={{ color: 'blue' }}>{hintWord}</span>
-                                    {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
-                                </p>
-                            )}
-                            {showAllHint && (
-                                <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                    {shuffled.map((sw, idx) => (
-                                        <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-                                            {sw.word}
-                                            {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    )}
-                </div>
-            )}
+                                {showWrongHint && hintWord && (
+                                    <p>
+                                        틀린 단어 정답: <span style={{ color: 'blue' }}>{hintWord}</span>
+                                        {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
+                                    </p>
+                                )}
+                                {showAllHint && (
+                                    <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                        {shuffled.map((sw, idx) => (
+                                            <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+                                                {sw.word}
+                                                {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

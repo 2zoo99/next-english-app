@@ -24,7 +24,7 @@ export default function Topbar({ onMenuClick }: Props) {
                 </div>
             </button>
             <Link href="/" onClick={triggerRefresh} className="flex items-center gap-2">
-                <span className="font-bold text-2xl">English-sentence study App for Korean</span>
+                <span className="font-bold text-base sm:text-2xl">English-sentence study App for Korean</span>
             </Link>
             <div className="ml-auto flex items-center gap-2">
                 <button className="px-3 py-1.5 text-sm text-grey-600 hover:bg-gray-100 rounded-md transition-colors">
