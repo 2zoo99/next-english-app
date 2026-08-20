@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Gaegu, Nanum_Pen_Script } from "next/font/google";
 import "./globals.css";
 
+const handwriting = Nanum_Pen_Script({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-nanumpen',  // 변수 이름은 그대로 재사용 가능
+});
+
 // html, body 만 담당 
+const gaegu = Gaegu({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-gaegu',
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +38,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${handwriting.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-system">{children}</body>
     </html>
   );
 }

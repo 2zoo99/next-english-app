@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 // 전체 조회
 export async function GET() {
     const sentences = await prisma.sentence.findMany({
+        orderBy: { createdAt: 'desc' },
         include: {
             sentenceWords: {
                 orderBy: { order: 'asc' },

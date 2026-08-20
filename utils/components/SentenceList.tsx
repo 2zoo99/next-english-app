@@ -1,6 +1,7 @@
 //utils/components/SentenceList.tsx
 'use client'
 
+import { Tag } from '@/app/generated/prisma/client';
 import { useCallback, useEffect, useState } from 'react'
 
 type Word = {
@@ -13,12 +14,15 @@ type SentenceWord = {
     order: number;
     word: Word;
 }
-
+type SentenceTag = {
+    tag: Tag;
+}
 type Sentence = {
     id: number;
     content: string;
     translate: string;
     sentenceWords: SentenceWord[];
+    sentenceTags: SentenceTag[];
 }
 
 function SentenceSkeleton() {
@@ -126,7 +130,7 @@ export default function SentenceList() {
         <div>
             <div className="flex flex-row justify-between items-start gap-2 pb-2">
                 <span className="text-3xl">문장목록</span>
-                <button className="" type="button" onClick={() => {
+                <button className="" title="새로고침" type="button" onClick={() => {
                     fetchSentences()
                     setMessage('')
                 }}><img className="w-12 h-12 mx-2 px-2 py-2 hover:bg-gray-300 rounded broder-none" src="/reload-ui-svgrepo-com.svg" alt="새로고침" /></button>
@@ -136,28 +140,55 @@ export default function SentenceList() {
             <ul>
                 {sentences.map(sentence => (
                     <li key={sentence.id}>
-                        {editingId === sentence.id ? (
-                            <div>
-                                <input type="text" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
-                                <input type="text" value={editedTranslate} onChange={(e) => setEditedTranslate(e.target.value)} />
-                                <button type="button" onClick={() => handleEditSave(sentence.id)}>수정완료</button>
-                                <button type="button" onClick={handleEditCancle}>수정취소</button>
-                            </div>
-                        ) : (
-                            <div>
-                                <div className="flex flex-col gap-1 border rounded-md p-2 mb-2">
-                                    <p>{sentence.content}</p>
-                                    <p>{sentence.translate}</p>
-                                    <div className="w-fit align-items flex gap-2 rounded-md p-1">
-                                        <button className="bg-gray-200 text-black font-bold py-1 px-2 rounded hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
-                                        <button className="bg-red-200 text-black font-bold py-1 px-2 rounded hover:bg-red-300" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
-                                    </div>
+                        <div className="flex flex-col gap-1 border rounded-md p-2 mb-2">
+                            {sentence.sentenceTags && sentence.sentenceTags.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {sentence.sentenceTags.map((st) => (
+                                        <span key={st.tag.id} className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
+                                            # {st.tag.name}
+                                        </span>
+                                    ))}
                                 </div>
+                            )}
+                            {editingId === sentence.id ? (
+                                <>
+                                    <input
+                                        type="text"
+                                        value={editedContent}
+                                        onChange={(e) => setEditedContent(e.target.value)}
+                                        className="w-full p-1 border border-gray-200 rounded text-base" />
+                                    <input
+                                        type="text"
+                                        value={editedTranslate}
+                                        onChange={(e) => setEditedTranslate(e.target.value)}
+                                        className="w-full p-1 border border-gray-200 rounded text-base" />
+                                    <div className="w-fit align-items flex gap-2 rounded-md p-1">
+                                        <button
+                                            className="bg-blue-200 text-black text-sm py-1 px-2 rounded-full hover:bg-blue-300"
+                                            type="button"
+                                            onClick={() => handleEditSave(sentence.id)}>수정하기</button>
+                                        <button
+                                            className="bg-gray-200 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300"
+                                            type="button"
+                                            onClick={handleEditCancle}>수정취소</button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex flex-col gap-1 border-none rounded-md px-2 ">
+                                        <p >{sentence.content}</p>
+                                        <p >{sentence.translate}</p>
+                                        <div className="w-fit align-items flex gap-2 rounded-md py-1 pt-2">
+                                            <button className="bg-gray-200 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
+                                            <button className="bg-red-200 text-black text-sm py-1 px-2 rounded-full hover:bg-red-300" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
+                                        </div>
+                                    </div>
 
 
 
-                            </div>
-                        )}
+                                </>
+                            )}
+                        </div>
                     </li>
                 ))}
             </ul>
