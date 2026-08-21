@@ -206,9 +206,9 @@ export default function PracticeForm() {
 
     return (
         <div>
-            <h2 className="text-lg sm:text-xl font-bold mb-8">영어 문장 연습</h2>
-            <div className="w-full border rounded-xl shadow-sm border-gray-200 px-2 py-4">
-                <p className="text-lg mb-2 mt-2">{current?.translate}</p>
+            <h2 className="text-lg sm:text-xl font-bold mb-8 dark:text-gray-300">영어 문장 연습</h2>
+            <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-2 py-4">
+                <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
 
                 <input
                     ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
@@ -241,32 +241,39 @@ export default function PracticeForm() {
                     }}
                     placeholder="한국어를 읽고 영문으로 영작해 보세요."
                     disabled={done}
-                    className="w-full p-2 border border-gray-200 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
                 <div className="flex gap-2">
                     <button
                         type="button"
                         onClick={handleSubmit}
+                        title="Ctrl+Enter"
                         disabled={done}     //done이 True 면 비활성화 => 정답이 아니면 활성화
-                        className="hover:text-green-500 p-2 rounded">정답확인</button>
+                        className="hover:text-green-500 dark:text-gray-300 dark:hover:text-green-400 p-2 rounded">정답확인</button>
                     <button
                         type="button"
-                        onClick={() => pickRandom(sentences)} className="hover:text-blue-500 p-2 rounded">다음 문제</button>
+                        onClick={() => pickRandom(sentences)}
+                        title="Enter"
+                        className="hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 p-2 rounded">다음 문제</button>
                     <button
                         type="button"
                         onClick={handleAllHint}
                         title="Alt"
-                        className="hover:bg-gray-200 p-2 rounded"
+                        className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
                     >
                         {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
                     </button>
                 </div>
                 {showAllHint && (
-                    <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }} className="mt-2">
+                    <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
                         {shuffled.map((sw, idx) => (
-                            <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+                            <li
+                                key={idx}
+                                className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
                                 {sw.word}
-                                {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
+                                {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
+                                    ({sw.meaning})
+                                </span>)}
                             </li>
                         ))}
                     </ul>
@@ -278,7 +285,13 @@ export default function PracticeForm() {
                     <div>
                         <p>
                             {results.map((r, idx) => (
-                                <span key={idx} style={{ color: r.status === 'correct' ? 'green' : 'red' }}>
+                                <span
+                                    key={idx}
+                                    className={
+                                        r.status === 'correct'
+                                            ? 'text-green-600 dark:text-green-400'
+                                            : 'text-red-600 dark:text-red-400'
+                                    }>
                                     {r.word + ' '}
                                 </span>
                             ))}
@@ -289,14 +302,14 @@ export default function PracticeForm() {
                                     type="button"
                                     onClick={handleWrongHint}
                                     title="Ctrl"
-                                    className="hover:bg-gray-200 p-2 rounded">
+                                    className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded">
                                     {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
                                 </button>
 
 
                                 {showWrongHint && hintWord && (
                                     <p>
-                                        틀린 단어 정답: <span style={{ color: 'blue' }}>{hintWord}</span>
+                                        틀린 단어 정답: <span className="text-blue-600 dark:text-blue-400">{hintWord}</span>
                                         {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
                                     </p>
                                 )}

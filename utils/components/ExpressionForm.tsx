@@ -85,41 +85,41 @@ export default function ExpressionForm({ onCreated }: Props) {
         }
     }
     return (
-        <div className="max-w-lg mx-auto p-6 bg-white rounded-xl shadow-sm border">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">표현 추가</h2>
+        <div className="mx-auto p-6 bg-background rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">표현 추가</h2>
 
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-600">표현</label>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300">표현</label>
                     <input
                         type="text"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="예: kick the bucket"
-                        className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                 </div>
 
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-600">뜻</label>
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300">뜻</label>
                     <input
                         type="text"
                         value={meaning}
                         onChange={(e) => setMeaning(e.target.value)}
                         placeholder="예: 죽다"
-                        className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                 </div>
 
                 {/* 동적으로 추가되는 예문 입력칸들 */}
                 {examples.map((example, index) => (
-                    <div key={index} className="flex flex-col gap-2 p-3 bg-gray-50 rounded-lg border">
+                    <div key={index} className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-gray-500">예문 {index + 1}</span>
+                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">예문 {index + 1}</span>
                             <button
                                 type="button"
                                 onClick={() => handleRemoveExampleField(index)}
-                                className="text-xs text-red-500 hover:underline"
+                                className="text-xs text-red-500 dark:text-red-400 hover:underline"
                             >
                                 삭제
                             </button>
@@ -129,14 +129,14 @@ export default function ExpressionForm({ onCreated }: Props) {
                             value={example.content}
                             onChange={(e) => handleExampleChange(index, 'content', e.target.value)}
                             placeholder="예문 (영어)"
-                            className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                         <input
                             type="text"
                             value={example.translate}
                             onChange={(e) => handleExampleChange(index, 'translate', e.target.value)}
                             placeholder="번역 (선택)"
-                            className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                 ))}
@@ -144,7 +144,7 @@ export default function ExpressionForm({ onCreated }: Props) {
                 <button
                     type="button"
                     onClick={handleAddExampleField}
-                    className="text-sm text-blue-600 hover:underline text-left"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline text-left"
                 >
                     + 예문 추가하기
                 </button>
@@ -153,14 +153,14 @@ export default function ExpressionForm({ onCreated }: Props) {
                     type="button"
                     onClick={handleSubmit}
                     disabled={!content.trim() || !meaning.trim() || submitting}
-                    className="py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+                    className="py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                 >
                     {submitting ? '저장 중...' : '저장'}
                 </button>
             </div>
 
             {message && (
-                <p className={`mt-3 text-sm ${isSuccess ? 'text-green-600' : 'text-red-500'}`}>
+                <p className={`mt-3 text-sm ${isSuccess ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                     {message}
                 </p>
             )}

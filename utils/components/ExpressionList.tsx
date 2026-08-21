@@ -144,56 +144,54 @@ export default function ExpressionList() {
 
 
     return (
-        <div className="max-w-lg mx-auto mt-8 flex flex-col gap-3">
+        <div className="mx-auto mt-8 flex flex-col gap-3">
             {items.map((exp) => (
-                <div key={exp.id} className="p-4 bg-white rounded-xl border shadow-sm">
+                <div key={exp.id} className="p-4 bg-background border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
                     {editingId === exp.id ? (
-                        // 🆕 수정 모드 화면
                         <div className="flex flex-col gap-2">
                             <input
                                 type="text"
                                 value={editContent}
                                 onChange={(e) => setEditContent(e.target.value)}
-                                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
                             <input
                                 type="text"
                                 value={editMeaning}
                                 onChange={(e) => setEditMeaning(e.target.value)}
-                                className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => saveEdit(exp.id)}
-                                    className="px-3 py-1.5 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                                    className="px-3 py-1.5 text-sm text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-md"
                                 >
                                     저장
                                 </button>
                                 <button
                                     onClick={cancelEdit}
-                                    className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 border rounded-md"
+                                    className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md"
                                 >
                                     취소
                                 </button>
                             </div>
                         </div>
                     ) : (
-                        // 기본 보기 모드
                         <div className="flex items-start justify-between">
                             <div>
-                                <p className="font-semibold text-gray-800">{exp.content}</p>
-                                <p className="text-gray-500 text-sm mt-0.5">{exp.meaning}</p>
+                                <p className="font-semibold text-gray-800 dark:text-gray-200">{exp.content}</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">{exp.meaning}</p>
                             </div>
                             <div className="flex gap-1 shrink-0">
                                 <button
                                     onClick={() => startEdit(exp)}
-                                    className="text-xs text-gray-400 hover:text-blue-600 px-2 py-1"
+                                    className="text-xs text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 px-2 py-1"
                                 >
                                     수정
                                 </button>
                                 <button
                                     onClick={() => handleDelete(exp.id)}
-                                    className="text-xs text-gray-400 hover:text-red-500 px-2 py-1"
+                                    className="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 px-2 py-1"
                                 >
                                     삭제
                                 </button>
@@ -202,18 +200,18 @@ export default function ExpressionList() {
                     )}
 
                     {exp.exampleLinks.length > 0 && (
-                        <div className="mt-3 pl-3 border-l-2 border-blue-100 flex flex-col gap-1.5">
+                        <div className="mt-3 pl-3 border-l-2 border-blue-100 dark:border-blue-900 flex flex-col gap-1.5">
                             {exp.exampleLinks.map((link) => (
                                 <div key={link.id} className="flex items-start justify-between text-sm group">
                                     <div>
-                                        <p className="text-gray-700">{link.sentence.content}</p>
+                                        <p className="text-gray-700 dark:text-gray-300">{link.sentence.content}</p>
                                         {link.sentence.translate && (
-                                            <p className="text-gray-400 text-xs">{link.sentence.translate}</p>
+                                            <p className="text-gray-400 dark:text-gray-500 text-xs">{link.sentence.translate}</p>
                                         )}
                                     </div>
                                     <button
                                         onClick={() => handleRemoveExample(exp.id, link.sentence.id)}
-                                        className="text-xs text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity px-1"
+                                        className="text-xs text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity px-1"
                                     >
                                         ✕
                                     </button>
@@ -227,10 +225,10 @@ export default function ExpressionList() {
             <div ref={observerRef} className="h-4" />
 
             {loading && (
-                <p className="text-center text-sm text-gray-400 py-4">불러오는 중...</p>
+                <p className="text-center text-sm text-gray-400 dark:text-gray-500 py-4">불러오는 중...</p>
             )}
             {!hasMore && items.length > 0 && (
-                <p className="text-center text-sm text-gray-400 py-4">모든 표현을 다 봤어요.</p>
+                <p className="text-center text-sm text-gray-400 dark:text-gray-500 py-4">모든 표현을 다 봤어요.</p>
             )}
         </div>
     )
