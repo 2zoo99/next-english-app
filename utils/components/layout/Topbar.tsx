@@ -10,8 +10,8 @@ interface Props {
 export default function Topbar({ onMenuClick }: Props) {
     const { triggerRefresh } = useRefresh();
     return (
-        <header className="bg-white dark:bg-gray-800">
-            <div className="border-b border-gray-200 dark:border-gray-800">
+        <header className="bg-background">
+            <div className="border-b border-gray-200 dark:border-gray-800 dark:bg-gray-800">
                 <div className="h-14 flex items-center px-4 gap-4">
                     <button
                         onClick={onMenuClick}
