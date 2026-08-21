@@ -127,24 +127,33 @@ export default function SentenceList() {
     )
 
     return (
-        <div>
+        <div className="bg-background">
             <div className="flex flex-row justify-between items-start gap-2 pb-2">
-                <span className="text-3xl">문장목록</span>
-                <button className="" title="새로고침" type="button" onClick={() => {
-                    fetchSentences()
-                    setMessage('')
-                }}><img className="w-12 h-12 mx-2 px-2 py-2 hover:bg-gray-300 rounded broder-none" src="/reload-ui-svgrepo-com.svg" alt="새로고침" /></button>
+                <span className="text-3xl dark:text-gray-300">문장목록</span>
+                <button
+                    className="w-12 h-12 mx-2 p-2 hover:bg-gray-300 dark:hover:bg-gray-700 rounded border-none text-gray-700 dark:text-gray-300"
+                    title="새로고침"
+                    type="button"
+                    onClick={() => {
+                        fetchSentences()
+                        setMessage('')
+                    }}
+                >
+                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                        <path d="M23,12A11,11,0,1,1,12,1a10.9,10.9,0,0,1,5.882,1.7l1.411-1.411A1,1,0,0,1,21,2V6a1,1,0,0,1-1,1H16a1,1,0,0,1-.707-1.707L16.42,4.166A8.9,8.9,0,0,0,12,3a9,9,0,1,0,9,9,1,1,0,0,1,2,0Z" />
+                    </svg>
+                </button>
             </div>
 
             {message && <p>{message}</p>}
             <ul>
                 {sentences.map(sentence => (
                     <li key={sentence.id}>
-                        <div className="flex flex-col gap-1 border rounded-md p-2 mb-2">
+                        <div className="flex flex-col gap-1 border border-gray-100  dark:border-gray-600 rounded-xl p-4 mb-2">
                             {sentence.sentenceTags && sentence.sentenceTags.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                     {sentence.sentenceTags.map((st) => (
-                                        <span key={st.tag.id} className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
+                                        <span key={st.tag.id} className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-300">
                                             # {st.tag.name}
                                         </span>
                                     ))}
@@ -176,11 +185,11 @@ export default function SentenceList() {
                             ) : (
                                 <>
                                     <div className="flex flex-col gap-1 border-none rounded-md px-2 ">
-                                        <p >{sentence.content}</p>
-                                        <p >{sentence.translate}</p>
+                                        <p className="dark:text-gray-300">{sentence.content}</p>
+                                        <p className="dark:text-gray-300">{sentence.translate}</p>
                                         <div className="w-fit align-items flex gap-2 rounded-md py-1 pt-2">
-                                            <button className="bg-gray-200 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
-                                            <button className="bg-red-200 text-black text-sm py-1 px-2 rounded-full hover:bg-red-300" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
+                                            <button className="bg-gray-200 dark:bg-gray-400 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
+                                            <button className="bg-red-200 dark:bg-red-300 text-black text-sm py-1 px-2 rounded-full hover:bg-red-300 dark:hover:bg-red-400" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
                                         </div>
                                     </div>
 

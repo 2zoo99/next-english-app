@@ -11,32 +11,30 @@ export default function Topbar({ onMenuClick }: Props) {
     const { triggerRefresh } = useRefresh();
     return (
         <header className="bg-background">
-            <div className="border-b border-gray-200 dark:border-gray-800 dark:bg-gray-800">
-                <div className="h-14 flex items-center px-4 gap-4">
-                    <button
-                        onClick={onMenuClick}
-                        className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                        aria-label="메뉴 열기"
-                    >
-                        <div className="w-5 flex flex-col gap-1.5">
-                            <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
-                            <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
-                            <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
-                        </div>
-                    </button>
-
-                    <Link href="/" onClick={triggerRefresh} className="flex items-center gap-2 min-w-0 flex-1">
-                        <span className="font-bold text-base sm:text-2xl truncate dark:text-gray-300">Practice Making Sentence</span>
-                    </Link>
-
-                    <div className="hidden sm:flex items-center gap-2 shrink-0">
-                        <button className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors whitespace-nowrap">
-                            로그인
-                        </button>
-                        <button className="px-3 py-1.5 text-sm text-white bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 rounded-md transition-colors whitespace-nowrap">
-                            회원가입
-                        </button>
+            <div className="h-14 flex items-center px-4 gap-4 dark:bg-gray-800 shadow-md">
+                <button
+                    onClick={onMenuClick}
+                    className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    aria-label="메뉴 열기"
+                >
+                    <div className="w-5 flex flex-col gap-1.5">
+                        <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
+                        <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
+                        <span className="block h-0.5 bg-gray-700 dark:bg-gray-300 rounded" />
                     </div>
+                </button>
+
+                <Link href="/" onClick={triggerRefresh} className="flex items-center gap-2 min-w-0 shrink truncate">
+                    <span className="font-bold text-base sm:text-2xl truncate dark:text-gray-300">Practice Making Sentence</span>
+                </Link>
+                <div className="flex-1" />
+                <div className="hidden sm:flex items-center gap-2 shrink-0">
+                    <button className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors whitespace-nowrap">
+                        로그인
+                    </button>
+                    <button className="px-3 py-1.5 text-sm text-white bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 rounded-md transition-colors whitespace-nowrap">
+                        회원가입
+                    </button>
                 </div>
             </div>
 
