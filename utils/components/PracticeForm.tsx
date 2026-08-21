@@ -86,10 +86,11 @@ export default function PracticeForm() {
     //전역 스페이스바 감지
     useEffect(() => {
         const handleGlobalKeyDown = (e: KeyboardEvent) => {
-            if (e.key !== ' ') return;  // 스페이스바는 무시
-            if (e.repeat) return;
-            if (done) return;
+            if (e.key !== ' ') return;  // 스페이스바가 아니면 무시
+            if (e.repeat) return;       // 키가 반복이면 무시
+            if (done) return;           // 정답을 맞춘후면 무시
             if (document.activeElement === inputRef.current) return;
+            // 이미 input에 포커스되어 있으면 무시
 
             e.preventDefault(); // preventDefault()를 호출하여 기본 브라우저 동작(=스크롤)을 막음
             inputRef.current?.focus();
@@ -218,15 +219,20 @@ export default function PracticeForm() {
                         if (e.repeat) return;
 
                         if (e.key === 'Enter' && e.ctrlKey) {
+                            e.preventDefault();
                             ctrlComboRef.current = true;
                             handleSubmit();
                             return;
                         }
 
-                        if (e.key === 'Alt') handleAllHint();
+                        if (e.key === 'Alt') {
+                            e.preventDefault();
+                            handleAllHint();
+                        }
                     }}
                     onKeyUp={(e) => {
                         if (e.key === 'Control') {
+                            e.preventDefault();
                             if (!ctrlComboRef.current) {
                                 handleWrongHint();
                             }
