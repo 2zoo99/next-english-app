@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
     const normalize = (word: string) => {
         return word
-            .replace(/[^a-zA-Z0-9가-힣']/g, '') // 특수문자, 공백 제거
+            .replace(/[^a-zA-Z0-9가-힣]/g, '') // 공백 제거
             .toLowerCase();                      // 소문자화
     }
     const words = content

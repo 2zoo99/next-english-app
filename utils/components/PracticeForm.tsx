@@ -31,7 +31,9 @@ type ShuffledWord = {
 
 //특수문자 전처리, 소문자화 (컴포넌트 바깥으로 이동: 리렌더링과 무관한 순수 함수라서)
 const normalize = (word: string) => {
-    return word.replace(/[^a-zA-Z0-9가-힣']/g, '').toLowerCase();
+    return word
+        .replace(/[^a-zA-Z0-9가-힣]/g, '')
+        .toLowerCase();
 }
 
 //셔플 알고리즘 로직 (마찬가지로 컴포넌트 바깥으로 이동)
@@ -56,6 +58,7 @@ export default function PracticeForm() {
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);    //입력 참조용
     const { refreshKey } = useRefresh(); // 새로고침 키를 가져옴
+    const ctrlComboRef = useRef(false);
 
     //전체 문장 조회 후 랜덤 문장 선택
     const fetchSentences = useCallback(async (isInitial = false) => {
@@ -69,7 +72,7 @@ export default function PracticeForm() {
             }
         }
     }, []);
-
+    //컴포넌트 처음 마운트때 전체 문장 조회
     useEffect(() => {
         fetchSentences(true);
 
@@ -84,6 +87,7 @@ export default function PracticeForm() {
     useEffect(() => {
         const handleGlobalKeyDown = (e: KeyboardEvent) => {
             if (e.key !== ' ') return;  // 스페이스바는 무시
+            if (e.repeat) return;
             if (done) return;
             if (document.activeElement === inputRef.current) return;
 
@@ -103,8 +107,10 @@ export default function PracticeForm() {
     //정답을 맞혔을때 enter를 누르면 다음 문제로 넘어가도록
     useEffect(() => {
         const handleEnterForNext = (e: KeyboardEvent) => {
-            if (e.key !== 'Enter') return;
             if (!done) return;
+            if (e.key !== 'Enter') return;
+            if (e.repeat) return;
+            if (e.ctrlKey) return;  // ctrl이 아직 눌려있으면 다음문제로 넘기지 않음
 
             e.preventDefault();
             pickRandom(sentences);
@@ -130,19 +136,9 @@ export default function PracticeForm() {
         setResults([]);
         setMessage('');
         setDone(false);
-        resetHints();
+        resetHints();   // 다음문제로 넘어갈때만 초기화
     }
 
-    //컴포넌트 처음 마운트때 전체 문장 조회
-    useEffect(() => {
-        fetchSentences(true);
-
-        const interval = setInterval(() => {
-            fetchSentences(false);
-        }, 30000);
-
-        return () => clearInterval(interval);
-    }, [fetchSentences]);
 
     //정답 확인 로직
     const handleSubmit = () => {
@@ -168,7 +164,7 @@ export default function PracticeForm() {
         }
 
         setResults(wordResults);
-        resetHints();
+        //resetHints();
 
         if (firstWrong === -1) {
             setMessage('정답입니다!');
@@ -187,15 +183,15 @@ export default function PracticeForm() {
         setShowWrongHint(prev => !prev);
     }
 
+    // 모든 힌트 출력 
     const handleAllHint = () => {
         if (!showAllHint && shuffled.length === 0 && current) {
-            const otherWords: ShuffledWord[] = current.sentenceWords
-                .filter((_, idx) => idx >= wrongIndex)
+            const allWords: ShuffledWord[] = current.sentenceWords
                 .map(sw => ({
                     word: sw.word.word,
                     meaning: sw.word.meaning,
                 }));
-            setShuffled(shuffleWords(otherWords));
+            setShuffled(shuffleWords(allWords));
         }
         setShowAllHint(prev => !prev);
     }
@@ -219,20 +215,60 @@ export default function PracticeForm() {
                     value={input}
                     onChange={handleInputChange}
                     onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSubmit();
-                        if (e.key === 'Control') handleWrongHint();
+                        if (e.repeat) return;
+
+                        if (e.key === 'Enter' && e.ctrlKey) {
+                            ctrlComboRef.current = true;
+                            handleSubmit();
+                            return;
+                        }
+
                         if (e.key === 'Alt') handleAllHint();
+                    }}
+                    onKeyUp={(e) => {
+                        if (e.key === 'Control') {
+                            if (!ctrlComboRef.current) {
+                                handleWrongHint();
+                            }
+                            ctrlComboRef.current = false;
+                        }
                     }}
                     placeholder="한국어를 읽고 영문으로 영작해 보세요."
                     disabled={done}
                     className="w-full p-2 border border-gray-200 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
-                <button type="button" onClick={handleSubmit} disabled={done} className="hover:bg-gray-200 p-2 rounded">정답확인</button>
-                <button type="button" onClick={() => pickRandom(sentences)} className="hover:bg-gray-200 p-2 rounded">다음 문제</button>
-
+                <div className="flex gap-2">
+                    <button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={done}     //done이 True 면 비활성화 => 정답이 아니면 활성화
+                        className="hover:text-green-500 p-2 rounded">정답확인</button>
+                    <button
+                        type="button"
+                        onClick={() => pickRandom(sentences)} className="hover:text-blue-500 p-2 rounded">다음 문제</button>
+                    <button
+                        type="button"
+                        onClick={handleAllHint}
+                        title="Alt"
+                        className="hover:bg-gray-200 p-2 rounded"
+                    >
+                        {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                    </button>
+                </div>
+                {showAllHint && (
+                    <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }} className="mt-2">
+                        {shuffled.map((sw, idx) => (
+                            <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+                                {sw.word}
+                                {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
+                            </li>
+                        ))}
+                    </ul>
+                )}
                 {message && <p>{message}</p>}
 
                 {results.length > 0 && (
+                    // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
                     <div>
                         <p>
                             {results.map((r, idx) => (
@@ -250,13 +286,7 @@ export default function PracticeForm() {
                                     className="hover:bg-gray-200 p-2 rounded">
                                     {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={handleAllHint}
-                                    title="Alt"
-                                    className="hover:bg-gray-200 p-2 rounded">
-                                    {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
-                                </button>
+
 
                                 {showWrongHint && hintWord && (
                                     <p>
@@ -264,16 +294,7 @@ export default function PracticeForm() {
                                         {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
                                     </p>
                                 )}
-                                {showAllHint && (
-                                    <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                        {shuffled.map((sw, idx) => (
-                                            <li key={idx} style={{ padding: '4px 10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-                                                {sw.word}
-                                                {sw.meaning && <span style={{ color: '#888', fontSize: '0.85em' }}>({sw.meaning})</span>}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
+
                             </div>
                         )}
                     </div>
