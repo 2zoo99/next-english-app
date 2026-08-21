@@ -149,7 +149,7 @@ export default function SentenceList() {
             <ul>
                 {sentences.map(sentence => (
                     <li key={sentence.id}>
-                        <div className="flex flex-col gap-1 border border-gray-100  dark:border-gray-600 rounded-xl p-4 mb-2">
+                        <div className="flex flex-col gap-1 border border-gray-200  dark:border-gray-600 rounded-xl p-4 mb-2">
                             {sentence.sentenceTags && sentence.sentenceTags.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                     {sentence.sentenceTags.map((st) => (
