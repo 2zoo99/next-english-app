@@ -1113,7 +1113,9 @@ export type ExpressionScalarFieldEnum = (typeof ExpressionScalarFieldEnum)[keyof
 export const ExpressionSentenceScalarFieldEnum = {
   id: 'id',
   expressionId: 'expressionId',
-  sentenceId: 'sentenceId'
+  sentenceId: 'sentenceId',
+  startIndex: 'startIndex',
+  endIndex: 'endIndex'
 } as const
 
 export type ExpressionSentenceScalarFieldEnum = (typeof ExpressionSentenceScalarFieldEnum)[keyof typeof ExpressionSentenceScalarFieldEnum]

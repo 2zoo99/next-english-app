@@ -1,6 +1,7 @@
 // app/api/expressions/[id]/sentences/route.ts
 
 import { prisma } from '@/lib/prisma'
+import { start } from 'repl';
 
 const normalize = (word: string) => {
     return word.replace(/[^a-zA-Z0-9가-힣']/g, '').toLowerCase();
@@ -17,6 +18,8 @@ export async function POST(
     const sentenceId: number | undefined = body.sentenceId; // 기존 문장을 연결
     const content: string | undefined = body.content;       // 새 문장을 만들때
     const translate: string = body.translate || '';
+    const startIndex: number | undefined = body.startIndex;
+    const endIndex: number | undefined = body.endIndex;
 
     if (!sentenceId && !content) {
         return Response.json(
@@ -25,8 +28,21 @@ export async function POST(
         )
     }
 
+    if (
+        typeof startIndex !== 'number' ||
+        typeof endIndex !== 'number' ||
+        startIndex < 0 ||
+        startIndex >= endIndex
+    ) {
+        return Response.json(
+            { error: '표현 위치 (startIndex, endIndex) 가 올바르지 않습니다' },
+            { status: 400 }
+        )
+    }
+
     try {
         let targetSentenceId = sentenceId;
+        let targetContent = content;
         // 새 문장을 입력하는 경우에 sentence 데이터를 생성
         if (!targetSentenceId && content) {
             const words = content
@@ -53,12 +69,31 @@ export async function POST(
                 });
             }
             targetSentenceId = sentence.id;
+        } else if (targetSentenceId) {
+            // 기존 문장을 쓰는 경우, 실제 문장 길이 안에 범위가 있는지 검증
+            const existing = await prisma.sentence.findUnique({
+                where: { id: targetSentenceId },
+                select: { content: true }
+            });
+            if (!existing) {
+                return Response.json({ error: '존재하지 않는 문장입니다.' }, { status: 404 });
+            }
+            targetContent = existing.content;
         }
+        if (targetContent && endIndex > targetContent.length) {
+            return Response.json(
+                { error: '표현 위치가 문장 길이를 벗어났습니다.' },
+                { status: 400 }
+            );
+        }
+
         //expression이랑 sentence 연결시키기
         await prisma.expressionSentence.create({
             data: {
                 expressionId,
-                sentenceId: targetSentenceId!
+                sentenceId: targetSentenceId!,
+                startIndex,
+                endIndex
             }
         });
 

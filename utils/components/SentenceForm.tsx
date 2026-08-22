@@ -84,7 +84,7 @@ export default function SentenceForm() {
     }
 
     return (
-        <div className="mx-auto mt-4 p-6 bg-background rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+        <div className="mx-auto mt-8 p-6 bg-background rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">문장 추가</h2>
 
             <div className="flex flex-col gap-3">

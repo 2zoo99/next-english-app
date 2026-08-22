@@ -30,30 +30,40 @@ export type ExpressionSentenceAvgAggregateOutputType = {
   id: number | null
   expressionId: number | null
   sentenceId: number | null
+  startIndex: number | null
+  endIndex: number | null
 }
 
 export type ExpressionSentenceSumAggregateOutputType = {
   id: number | null
   expressionId: number | null
   sentenceId: number | null
+  startIndex: number | null
+  endIndex: number | null
 }
 
 export type ExpressionSentenceMinAggregateOutputType = {
   id: number | null
   expressionId: number | null
   sentenceId: number | null
+  startIndex: number | null
+  endIndex: number | null
 }
 
 export type ExpressionSentenceMaxAggregateOutputType = {
   id: number | null
   expressionId: number | null
   sentenceId: number | null
+  startIndex: number | null
+  endIndex: number | null
 }
 
 export type ExpressionSentenceCountAggregateOutputType = {
   id: number
   expressionId: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
   _all: number
 }
 
@@ -62,30 +72,40 @@ export type ExpressionSentenceAvgAggregateInputType = {
   id?: true
   expressionId?: true
   sentenceId?: true
+  startIndex?: true
+  endIndex?: true
 }
 
 export type ExpressionSentenceSumAggregateInputType = {
   id?: true
   expressionId?: true
   sentenceId?: true
+  startIndex?: true
+  endIndex?: true
 }
 
 export type ExpressionSentenceMinAggregateInputType = {
   id?: true
   expressionId?: true
   sentenceId?: true
+  startIndex?: true
+  endIndex?: true
 }
 
 export type ExpressionSentenceMaxAggregateInputType = {
   id?: true
   expressionId?: true
   sentenceId?: true
+  startIndex?: true
+  endIndex?: true
 }
 
 export type ExpressionSentenceCountAggregateInputType = {
   id?: true
   expressionId?: true
   sentenceId?: true
+  startIndex?: true
+  endIndex?: true
   _all?: true
 }
 
@@ -179,6 +199,8 @@ export type ExpressionSentenceGroupByOutputType = {
   id: number
   expressionId: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
   _count: ExpressionSentenceCountAggregateOutputType | null
   _avg: ExpressionSentenceAvgAggregateOutputType | null
   _sum: ExpressionSentenceSumAggregateOutputType | null
@@ -208,6 +230,8 @@ export type ExpressionSentenceWhereInput = {
   id?: Prisma.IntFilter<"ExpressionSentence"> | number
   expressionId?: Prisma.IntFilter<"ExpressionSentence"> | number
   sentenceId?: Prisma.IntFilter<"ExpressionSentence"> | number
+  startIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
+  endIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
   expression?: Prisma.XOR<Prisma.ExpressionScalarRelationFilter, Prisma.ExpressionWhereInput>
   sentence?: Prisma.XOR<Prisma.SentenceScalarRelationFilter, Prisma.SentenceWhereInput>
 }
@@ -216,6 +240,8 @@ export type ExpressionSentenceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
   expression?: Prisma.ExpressionOrderByWithRelationInput
   sentence?: Prisma.SentenceOrderByWithRelationInput
 }
@@ -228,6 +254,8 @@ export type ExpressionSentenceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ExpressionSentenceWhereInput | Prisma.ExpressionSentenceWhereInput[]
   expressionId?: Prisma.IntFilter<"ExpressionSentence"> | number
   sentenceId?: Prisma.IntFilter<"ExpressionSentence"> | number
+  startIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
+  endIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
   expression?: Prisma.XOR<Prisma.ExpressionScalarRelationFilter, Prisma.ExpressionWhereInput>
   sentence?: Prisma.XOR<Prisma.SentenceScalarRelationFilter, Prisma.SentenceWhereInput>
 }, "id" | "expressionId_sentenceId">
@@ -236,6 +264,8 @@ export type ExpressionSentenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
   _count?: Prisma.ExpressionSentenceCountOrderByAggregateInput
   _avg?: Prisma.ExpressionSentenceAvgOrderByAggregateInput
   _max?: Prisma.ExpressionSentenceMaxOrderByAggregateInput
@@ -250,9 +280,13 @@ export type ExpressionSentenceScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"ExpressionSentence"> | number
   expressionId?: Prisma.IntWithAggregatesFilter<"ExpressionSentence"> | number
   sentenceId?: Prisma.IntWithAggregatesFilter<"ExpressionSentence"> | number
+  startIndex?: Prisma.IntWithAggregatesFilter<"ExpressionSentence"> | number
+  endIndex?: Prisma.IntWithAggregatesFilter<"ExpressionSentence"> | number
 }
 
 export type ExpressionSentenceCreateInput = {
+  startIndex: number
+  endIndex: number
   expression: Prisma.ExpressionCreateNestedOneWithoutExampleLinksInput
   sentence: Prisma.SentenceCreateNestedOneWithoutExpressionSentencesInput
 }
@@ -261,9 +295,13 @@ export type ExpressionSentenceUncheckedCreateInput = {
   id?: number
   expressionId: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceUpdateInput = {
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
   expression?: Prisma.ExpressionUpdateOneRequiredWithoutExampleLinksNestedInput
   sentence?: Prisma.SentenceUpdateOneRequiredWithoutExpressionSentencesNestedInput
 }
@@ -272,22 +310,29 @@ export type ExpressionSentenceUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   expressionId?: Prisma.IntFieldUpdateOperationsInput | number
   sentenceId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceCreateManyInput = {
   id?: number
   expressionId: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceUpdateManyMutationInput = {
-
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   expressionId?: Prisma.IntFieldUpdateOperationsInput | number
   sentenceId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceListRelationFilter = {
@@ -309,30 +354,40 @@ export type ExpressionSentenceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
 }
 
 export type ExpressionSentenceAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
 }
 
 export type ExpressionSentenceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
 }
 
 export type ExpressionSentenceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
 }
 
 export type ExpressionSentenceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   expressionId?: Prisma.SortOrder
   sentenceId?: Prisma.SortOrder
+  startIndex?: Prisma.SortOrder
+  endIndex?: Prisma.SortOrder
 }
 
 export type ExpressionSentenceCreateNestedManyWithoutSentenceInput = {
@@ -420,12 +475,16 @@ export type ExpressionSentenceUncheckedUpdateManyWithoutExpressionNestedInput = 
 }
 
 export type ExpressionSentenceCreateWithoutSentenceInput = {
+  startIndex: number
+  endIndex: number
   expression: Prisma.ExpressionCreateNestedOneWithoutExampleLinksInput
 }
 
 export type ExpressionSentenceUncheckedCreateWithoutSentenceInput = {
   id?: number
   expressionId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceCreateOrConnectWithoutSentenceInput = {
@@ -461,15 +520,21 @@ export type ExpressionSentenceScalarWhereInput = {
   id?: Prisma.IntFilter<"ExpressionSentence"> | number
   expressionId?: Prisma.IntFilter<"ExpressionSentence"> | number
   sentenceId?: Prisma.IntFilter<"ExpressionSentence"> | number
+  startIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
+  endIndex?: Prisma.IntFilter<"ExpressionSentence"> | number
 }
 
 export type ExpressionSentenceCreateWithoutExpressionInput = {
+  startIndex: number
+  endIndex: number
   sentence: Prisma.SentenceCreateNestedOneWithoutExpressionSentencesInput
 }
 
 export type ExpressionSentenceUncheckedCreateWithoutExpressionInput = {
   id?: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceCreateOrConnectWithoutExpressionInput = {
@@ -501,39 +566,55 @@ export type ExpressionSentenceUpdateManyWithWhereWithoutExpressionInput = {
 export type ExpressionSentenceCreateManySentenceInput = {
   id?: number
   expressionId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceUpdateWithoutSentenceInput = {
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
   expression?: Prisma.ExpressionUpdateOneRequiredWithoutExampleLinksNestedInput
 }
 
 export type ExpressionSentenceUncheckedUpdateWithoutSentenceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   expressionId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceUncheckedUpdateManyWithoutSentenceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   expressionId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceCreateManyExpressionInput = {
   id?: number
   sentenceId: number
+  startIndex: number
+  endIndex: number
 }
 
 export type ExpressionSentenceUpdateWithoutExpressionInput = {
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
   sentence?: Prisma.SentenceUpdateOneRequiredWithoutExpressionSentencesNestedInput
 }
 
 export type ExpressionSentenceUncheckedUpdateWithoutExpressionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sentenceId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ExpressionSentenceUncheckedUpdateManyWithoutExpressionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sentenceId?: Prisma.IntFieldUpdateOperationsInput | number
+  startIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  endIndex?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -542,6 +623,8 @@ export type ExpressionSentenceSelect<ExtArgs extends runtime.Types.Extensions.In
   id?: boolean
   expressionId?: boolean
   sentenceId?: boolean
+  startIndex?: boolean
+  endIndex?: boolean
   expression?: boolean | Prisma.ExpressionDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.SentenceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expressionSentence"]>
@@ -550,6 +633,8 @@ export type ExpressionSentenceSelectCreateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   expressionId?: boolean
   sentenceId?: boolean
+  startIndex?: boolean
+  endIndex?: boolean
   expression?: boolean | Prisma.ExpressionDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.SentenceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expressionSentence"]>
@@ -558,6 +643,8 @@ export type ExpressionSentenceSelectUpdateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   expressionId?: boolean
   sentenceId?: boolean
+  startIndex?: boolean
+  endIndex?: boolean
   expression?: boolean | Prisma.ExpressionDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.SentenceDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expressionSentence"]>
@@ -566,9 +653,11 @@ export type ExpressionSentenceSelectScalar = {
   id?: boolean
   expressionId?: boolean
   sentenceId?: boolean
+  startIndex?: boolean
+  endIndex?: boolean
 }
 
-export type ExpressionSentenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "expressionId" | "sentenceId", ExtArgs["result"]["expressionSentence"]>
+export type ExpressionSentenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "expressionId" | "sentenceId" | "startIndex" | "endIndex", ExtArgs["result"]["expressionSentence"]>
 export type ExpressionSentenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   expression?: boolean | Prisma.ExpressionDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.SentenceDefaultArgs<ExtArgs>
@@ -592,6 +681,8 @@ export type $ExpressionSentencePayload<ExtArgs extends runtime.Types.Extensions.
     id: number
     expressionId: number
     sentenceId: number
+    startIndex: number
+    endIndex: number
   }, ExtArgs["result"]["expressionSentence"]>
   composites: {}
 }
@@ -1020,6 +1111,8 @@ export interface ExpressionSentenceFieldRefs {
   readonly id: Prisma.FieldRef<"ExpressionSentence", 'Int'>
   readonly expressionId: Prisma.FieldRef<"ExpressionSentence", 'Int'>
   readonly sentenceId: Prisma.FieldRef<"ExpressionSentence", 'Int'>
+  readonly startIndex: Prisma.FieldRef<"ExpressionSentence", 'Int'>
+  readonly endIndex: Prisma.FieldRef<"ExpressionSentence", 'Int'>
 }
     
 

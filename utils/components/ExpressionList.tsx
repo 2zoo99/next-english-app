@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import AddExampleForm from './AddExampleForm'
 
 type Sentence = {
     id: number;
@@ -34,6 +35,7 @@ export default function ExpressionList() {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editContent, setEditContent] = useState('');
     const [editMeaning, setEditMeaning] = useState('');
+    const [addingExampleFor, setAddingExampleFor] = useState<number | null>(null);
 
     const loadMore = useCallback(async (reset = false) => {
         if (loadingRef.current) return;
@@ -195,6 +197,12 @@ export default function ExpressionList() {
                                 >
                                     삭제
                                 </button>
+                                <button
+                                    onClick={() => setAddingExampleFor(exp.id)}
+                                    className="text-xs text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 px-2 py-1"
+                                >
+                                    예문 추가
+                                </button>
                             </div>
                         </div>
                     )}
@@ -218,6 +226,16 @@ export default function ExpressionList() {
                                 </div>
                             ))}
                         </div>
+                    )}
+                    {addingExampleFor === exp.id && (
+                        <AddExampleForm
+                            expressionId={exp.id}
+                            onCancel={() => setAddingExampleFor(null)}
+                            onAdded={(updated) => {
+                                setItems(prev => prev.map(item => item.id === updated.id ? updated : item));
+                                setAddingExampleFor(null);
+                            }}
+                        />
                     )}
                 </div>
             ))}
