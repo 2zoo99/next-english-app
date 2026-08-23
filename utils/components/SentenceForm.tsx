@@ -41,12 +41,15 @@ export default function SentenceForm() {
     const translateRef = useRef<HTMLInputElement>(null);  // 포커스 이동용
     const contentRef = useRef<HTMLInputElement>(null);
     const tagRef = useRef<HTMLInputElement>(null); // 태그 입력 필드에 대한 ref 추가
+    const [submitting, setSubmitting] = useState(false);
 
 
 
 
     const handleSubmit = async () => {
-        if (!content.trim()) return; // content가 비어있으면 제출하지 않음
+        if (!content.trim() || submitting) return; // content가 비어있으면 제출하지 않음
+
+        setSubmitting(true);
 
         const tags = tagInput.split(',').map(t => t.trim()).filter(t => t.length > 0); // 태그 입력값을 쉼표로 분리하고 공백 제거
 
@@ -73,6 +76,7 @@ export default function SentenceForm() {
             setMessage(data.error || '문장 저장에 실패했습니다.');
             setIsSuccess(false); // 실패 상태로 설정
         }
+        setSubmitting(false);
     }
 
     const handleReset = () => {
@@ -142,10 +146,10 @@ export default function SentenceForm() {
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        disabled={!content.trim()}
+                        disabled={!content.trim() || submitting}
                         className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                     >
-                        저장
+                        {submitting ? '저장 중 ...' : '저장되었습니다.'}
                     </button>
                     <button
                         type="button"

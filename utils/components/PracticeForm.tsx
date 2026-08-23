@@ -208,7 +208,7 @@ export default function PracticeForm() {
         //resetHints();
 
         if (firstWrong === -1) {
-            setMessage('정답입니다!');
+            setMessage('Good Job !');
             setDone(true);
         } else {
             setMessage('틀린 단어가 있어요.');
@@ -352,20 +352,25 @@ export default function PracticeForm() {
                         </button>
                     </div>
                     {showAllHint && (
-                        <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
-                            {shuffled.map((sw, idx) => (
-                                <li
-                                    key={idx}
-                                    className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
-                                    {sw.word}
-                                    {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
-                                        ({sw.meaning})
-                                    </span>)}
-                                </li>
-                            ))}
-                        </ul>
+                        // showAllHint 가 True일때 shuffled 배열의 모든 요소 보이기
+                        // 조건부 렌더링 방식 : {조건 && 보여줄것}
+                        <div className="border rounded bg-yellow-50 border-gray-200 shadow-sm  flex px-2 pb-2">
+                            <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
+                                {shuffled.map((sw, idx) => (
+                                    // 
+                                    <li
+                                        key={idx}
+                                        className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
+                                        {sw.word}
+                                        {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
+                                            ({sw.meaning})
+                                        </span>)}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )}
-                    {message && <p>{message}</p>}
+                    {message && <p className='py-2'>{message}</p>}
 
                     {results.length > 0 && (
                         // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
