@@ -36,6 +36,8 @@ export default function ExpressionList() {
     const [editContent, setEditContent] = useState('');
     const [editMeaning, setEditMeaning] = useState('');
     const [addingExampleFor, setAddingExampleFor] = useState<number | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const loadMore = useCallback(async (reset = false) => {
         if (loadingRef.current) return;
@@ -43,9 +45,12 @@ export default function ExpressionList() {
 
         loadingRef.current = true;
         setLoading(true);
-        const url = reset || !cursor
-            ? '/api/expressions'
-            : `/api/expressions?cursor=${cursor}`;
+
+        const params = new URLSearchParams();
+        if (!reset && cursor) params.set('cursor', String(cursor));
+        if (searchQuery.trim()) params.set('q', searchQuery.trim());
+
+        const url = `/api/expressions?${params.toString()}`;
 
         const res = await fetch(url);
         if (res.ok) {
@@ -57,13 +62,22 @@ export default function ExpressionList() {
         setLoading(false);
         loadingRef.current = false;
         setInitialized(true);
-    }, [cursor, hasMore, loading]);
+    }, [cursor, hasMore, loading, searchQuery]);
 
-    // 처음 마운트 시 첫 페이지 로드
+    // 검색어가 바뀔 때마다 (또는 처음 마운트 시) 첫 페이지부터 다시 조회
     useEffect(() => {
-        loadMore(true);
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+
+        debounceRef.current = setTimeout(() => {
+            loadMore(true);
+        }, 300);
+        // 타이핑 멈춘 뒤 300ms 후 검색 : 300ms 후 추가 입력이 없을때만 검색하면 서버 부담 및 비용이 감소함.
+
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [searchQuery]);
 
     // 스크롤 감지: 목록 맨 아래의 감시용 div가 화면에 보이면 다음 페이지 요청
     useEffect(() => {
@@ -147,6 +161,12 @@ export default function ExpressionList() {
 
     return (
         <div className="mx-auto mt-8 flex flex-col gap-3">
+            <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder='Type for searching items... '
+                className='px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400' />
             {items.map((exp) => (
                 <div key={exp.id} className="p-4 bg-background border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
                     {editingId === exp.id ? (

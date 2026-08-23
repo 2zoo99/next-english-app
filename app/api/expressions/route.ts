@@ -6,15 +6,26 @@ import { prisma } from "@/lib/prisma";   // Prisma 클라이언트: DB에 접속
 const PAGE_SIZE = 10;
 
 // 전체 데이터 조회: 커서 기반 페이지네이션 사용 
-export async function GET(request: Request) {       // 비동기로 GET 요청을 처리하는 함수 정의
-    const { searchParams } = new URL(request.url);    // URL 클래스는 자바스크립트 기본 클래스로, 주소를 분석 / 주소의 쿼리 파라미터를 다룰때 사용
+export async function GET(request: Request) {
+    // 비동기로 GET 요청을 처리하는 함수 정의
+    const { searchParams } = new URL(request.url);
+    // URL 클래스는 자바스크립트 기본 클래스로, 주소를 분석 / 주소의 쿼리 파라미터를 다룰때 사용
     const cursor = searchParams.get('cursor');
+    const query = searchParams.get('q')?.trim();      // 검색 기능에 활용
     const expressions = await prisma.expression.findMany({
         // 데이터를 가져오는 시간을 await 로 기다림
         take: PAGE_SIZE,
         ...(cursor && {
             skip: 1,
             cursor: { id: Number(cursor) }
+        }),
+        ...(query && {      // 검색어가 없으면 실행 X 
+            where: {
+                OR: [
+                    { content: { contains: query, mode: 'insensitive' } },
+                    { meaning: { contains: query, mode: 'insensitive' } }
+                ]
+            }
         }),
         orderBy: { createdAt: 'desc' }, // 생성일 기준 내림차순 정렬
         include: {

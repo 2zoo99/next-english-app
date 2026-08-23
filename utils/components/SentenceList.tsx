@@ -3,7 +3,7 @@
 
 import { Tag } from '@/app/generated/prisma/client';
 import TagEditor from './TagEditor';
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 
 type Word = {
     id: number;
@@ -47,6 +47,7 @@ export default function SentenceList() {
     const [editedContent, setEditedContent] = useState('');
     const [editedTranslate, setEditedTranslate] = useState('');
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     //전체 조회
     const fetchSentences = useCallback(async () => {
@@ -61,6 +62,17 @@ export default function SentenceList() {
         }
         setLoading(false);
     }, []);
+
+    // 검색 로직 
+    const filteredSentences = useMemo(() => {
+        const q = searchQuery.trim().toLowerCase();
+        if (!q) return sentences;
+
+        return sentences.filter(s =>
+            s.content.toLowerCase().includes(q) ||
+            s.translate.toLowerCase().includes(q)
+        );
+    }, [sentences, searchQuery])
 
     // 삭제 기능
     const handleDelete = async (id: number) => {
@@ -145,10 +157,21 @@ export default function SentenceList() {
                     </svg>
                 </button>
             </div>
-
+            <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Type for searching items..."
+                className="w-full p-2 mb-3 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
             {message && <p>{message}</p>}
+            {filteredSentences.length === 0 && searchQuery.trim() && (
+                <p className="text-gray-400 dark:text-gray-500 py-4">
+                    &quot;{searchQuery}&quot;에 대한 검색 결과가 없어요.
+                </p>
+            )}
             <ul>
-                {sentences.map(sentence => (
+                {filteredSentences.map(sentence => (
                     <li key={sentence.id}>
                         <div className="flex flex-col gap-1 border border-gray-200  dark:border-gray-600 rounded-xl p-4 mb-2">
                             {sentence.sentenceTags && sentence.sentenceTags.length > 0 && (
