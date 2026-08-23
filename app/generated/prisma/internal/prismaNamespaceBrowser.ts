@@ -91,7 +91,8 @@ export const SentenceScalarFieldEnum = {
   id: 'id',
   content: 'content',
   translate: 'translate',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SentenceScalarFieldEnum = (typeof SentenceScalarFieldEnum)[keyof typeof SentenceScalarFieldEnum]
