@@ -2,6 +2,7 @@
 'use client'
 
 import { Tag } from '@/app/generated/prisma/client';
+import TagEditor from './TagEditor';
 import { useCallback, useEffect, useState } from 'react'
 
 type Word = {
@@ -171,6 +172,15 @@ export default function SentenceList() {
                                         value={editedTranslate}
                                         onChange={(e) => setEditedTranslate(e.target.value)}
                                         className="w-full p-1 border border-gray-200 rounded text-base" />
+                                    <TagEditor
+                                        sentenceId={sentence.id}
+                                        currentTags={sentence.sentenceTags}
+                                        onUpdate={(updatedTags) => {
+                                            setSentences(prev => prev.map(s =>
+                                                s.id === sentence.id ? { ...s, sentenceTags: updatedTags } : s
+                                            ));
+                                        }}
+                                    />
                                     <div className="w-fit align-items flex gap-2 rounded-md p-1">
                                         <button
                                             className="bg-blue-200 text-black text-sm py-1 px-2 rounded-full hover:bg-blue-300"

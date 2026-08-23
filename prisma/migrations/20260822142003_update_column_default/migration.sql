@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "SENTENCE" ALTER COLUMN "updatedAt" DROP DEFAULT;

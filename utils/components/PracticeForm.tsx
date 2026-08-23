@@ -1,7 +1,7 @@
 //utils/components/PracticeForm.tsx
 'use client';
 
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { useRefresh } from '@/utils/context/RefreshContext';
 
 type Word = {
@@ -18,7 +18,9 @@ type Sentence = {
     id: number;
     content: string;
     translate: string;
+    createdAt: string;
     sentenceWords: SentenceWord[];
+    sentenceTags: SentenceTag[];
 }
 type WordResult = {
     word: string;
@@ -27,6 +29,13 @@ type WordResult = {
 type ShuffledWord = {
     word: string;
     meaning: string | null;
+}
+type TagInfo = {
+    id: number;
+    name: string;
+}
+type SentenceTag = {
+    tag: TagInfo;
 }
 
 //특수문자 전처리, 소문자화 (컴포넌트 바깥으로 이동: 리렌더링과 무관한 순수 함수라서)
@@ -59,29 +68,60 @@ export default function PracticeForm() {
     const inputRef = useRef<HTMLInputElement>(null);    //입력 참조용
     const { refreshKey } = useRefresh(); // 새로고침 키를 가져옴
     const ctrlComboRef = useRef(false);
+    const [allTags, setAllTags] = useState<TagInfo[]>([]);
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
     //전체 문장 조회 후 랜덤 문장 선택
-    const fetchSentences = useCallback(async (isInitial = false) => {
+    const fetchSentences = useCallback(async () => {
         const res = await fetch('/api/sentences');
 
         if (res.ok) {
             const data = await res.json();
             setSentences(data);
-            if (isInitial) {
-                pickRandom(data);
-            }
         }
     }, []);
     //컴포넌트 처음 마운트때 전체 문장 조회
     useEffect(() => {
-        fetchSentences(true);
+        fetchSentences();
 
         const interval = setInterval(() => {
-            fetchSentences(false);
+            fetchSentences();
         }, 30000);
 
         return () => clearInterval(interval);
     }, [fetchSentences, refreshKey]); // refreshKey가 변경될 때마다 fetchSentences를 호출하여 문장 목록을 새로고침
+
+    useEffect(() => {
+        if (filteredSentences.length === 0) {
+            setCurrent(null);
+            return;
+        }
+        pickRandom(filteredSentences);
+    }, [selectedTagIds, sortOrder, sentences.length]);
+
+    // 전체 태그 목록 불러오기
+    useEffect(() => {
+        fetch('/api/tags')
+            .then(res => res.json())
+            .then(setAllTags)
+            .catch(() => { })
+    }, []);
+
+    const filteredSentences = useMemo(() => {
+        let result = sentences;
+
+        if (selectedTagIds.length > 0) {
+            result = result.filter(s =>
+                s.sentenceTags.some(st => selectedTagIds.includes(st.tag.id))
+            );
+        }
+
+        return [...result].sort((a, b) => {
+            const diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+            return sortOrder === 'asc' ? diff : -diff;
+        })
+    }, [sentences, selectedTagIds, sortOrder]);
 
     //전역 스페이스바 감지
     useEffect(() => {
@@ -114,11 +154,11 @@ export default function PracticeForm() {
             if (e.ctrlKey) return;  // ctrl이 아직 눌려있으면 다음문제로 넘기지 않음
 
             e.preventDefault();
-            pickRandom(sentences);
+            pickRandom(filteredSentences);
         }
         window.addEventListener('keydown', handleEnterForNext);
         return () => window.removeEventListener('keydown', handleEnterForNext);
-    }, [done, sentences]);
+    }, [done, filteredSentences]);
 
     //힌트 관련 상태를 한 번에 초기화 (기존에 3곳에서 반복되던 로직을 묶음)
     const resetHints = () => {
@@ -202,123 +242,171 @@ export default function PracticeForm() {
         //resetHints();
     }
 
-    if (!current) return <p>문장을 불러오는 중입니다...</p>
-
     return (
         <div>
             <h2 className="text-lg sm:text-xl font-bold mb-8 dark:text-gray-300">영어 문장 연습</h2>
-            <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-2 py-4">
-                <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
-
-                <input
-                    ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
-                    type="text"
-                    value={input}
-                    onChange={handleInputChange}
-                    onKeyDown={(e) => {
-                        if (e.repeat) return;
-
-                        if (e.key === 'Enter' && e.ctrlKey) {
-                            e.preventDefault();
-                            ctrlComboRef.current = true;
-                            handleSubmit();
-                            return;
-                        }
-
-                        if (e.key === 'Alt') {
-                            e.preventDefault();
-                            handleAllHint();
-                        }
-                    }}
-                    onKeyUp={(e) => {
-                        if (e.key === 'Control') {
-                            e.preventDefault();
-                            if (!ctrlComboRef.current) {
-                                handleWrongHint();
+            <div className="flex flex-wrap gap-2 mb-2">
+                {allTags.map(tag => {
+                    const selected = selectedTagIds.includes(tag.id);
+                    return (
+                        <button
+                            key={tag.id}
+                            type="button"
+                            onClick={() =>
+                                setSelectedTagIds(prev =>
+                                    selected ? prev.filter(id => id !== tag.id) : [...prev, tag.id]
+                                )
                             }
-                            ctrlComboRef.current = false;
-                        }
-                    }}
-                    placeholder="한국어를 읽고 영문으로 영작해 보세요."
-                    disabled={done}
-                    className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <div className="flex gap-2">
+                            className={
+                                `px-2 py-1 text-xs rounded-full border transition-colors ${selected
+                                    ? 'bg-blue-500 text-white border-blue-500'
+                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-transparent'
+                                }`
+                            }>
+                            # {tag.name}
+                        </button>
+                    )
+                })}
+                {selectedTagIds.length > 0 && (
                     <button
                         type="button"
-                        onClick={handleSubmit}
-                        title="Ctrl+Enter"
-                        disabled={done}     //done이 True 면 비활성화 => 정답이 아니면 활성화
-                        className="hover:text-green-500 dark:text-gray-300 dark:hover:text-green-400 p-2 rounded">정답확인</button>
-                    <button
-                        type="button"
-                        onClick={() => pickRandom(sentences)}
-                        title="Enter"
-                        className="hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 p-2 rounded">다음 문제</button>
-                    <button
-                        type="button"
-                        onClick={handleAllHint}
-                        title="Alt"
-                        className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
+                        onClick={() => setSelectedTagIds([])}
+                        className="px-2 py-1 text-xs text-gray-400 hover:text-red-500 dark:hover:text-red-400"
                     >
-                        {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                        필터 초기화
                     </button>
-                </div>
-                {showAllHint && (
-                    <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
-                        {shuffled.map((sw, idx) => (
-                            <li
-                                key={idx}
-                                className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
-                                {sw.word}
-                                {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
-                                    ({sw.meaning})
-                                </span>)}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-                {message && <p>{message}</p>}
-
-                {results.length > 0 && (
-                    // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
-                    <div>
-                        <p>
-                            {results.map((r, idx) => (
-                                <span
-                                    key={idx}
-                                    className={
-                                        r.status === 'correct'
-                                            ? 'text-green-600 dark:text-green-400'
-                                            : 'text-red-600 dark:text-red-400'
-                                    }>
-                                    {r.word + ' '}
-                                </span>
-                            ))}
-                        </p>
-                        {wrongIndex !== -1 && (
-                            <div>
-                                <button
-                                    type="button"
-                                    onClick={handleWrongHint}
-                                    title="Ctrl"
-                                    className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded">
-                                    {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
-                                </button>
-
-
-                                {showWrongHint && hintWord && (
-                                    <p>
-                                        틀린 단어 정답: <span className="text-blue-600 dark:text-blue-400">{hintWord}</span>
-                                        {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
-                                    </p>
-                                )}
-
-                            </div>
-                        )}
-                    </div>
                 )}
             </div>
-        </div>
+            <div className="mb-4">
+                <select
+                    value={sortOrder}
+                    onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                    className="text-sm px-2 py-1 bg-background border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                    <option value="desc">최신순</option>
+                    <option value="asc">오래된순</option>
+                </select>
+            </div>
+            {sentences.length > 0 && filteredSentences.length === 0 ? (
+                <p className="text-gray-400 dark:text-gray-500">선택한 태그에 맞는 문장이 없어요.</p>
+            ) : !current ? (
+                <p>문장을 불러오는 중입니다...</p>
+            ) : (
+                <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-2 py-4">
+                    {/* 기존 연습 카드 내용 그대로 */}
+
+                    <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
+
+                    <input
+                        ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
+                        type="text"
+                        value={input}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                            if (e.repeat) return;
+
+                            if (e.key === 'Enter' && e.ctrlKey) {
+                                e.preventDefault();
+                                ctrlComboRef.current = true;
+                                handleSubmit();
+                                return;
+                            }
+
+                            if (e.key === 'Alt') {
+                                e.preventDefault();
+                                handleAllHint();
+                            }
+                        }}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Control') {
+                                e.preventDefault();
+                                if (!ctrlComboRef.current) {
+                                    handleWrongHint();
+                                }
+                                ctrlComboRef.current = false;
+                            }
+                        }}
+                        placeholder="한국어를 읽고 영문으로 영작해 보세요."
+                        disabled={done}
+                        className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                    <div className="flex gap-2">
+                        <button
+                            type="button"
+                            onClick={handleSubmit}
+                            title="Ctrl+Enter"
+                            disabled={done}     //done이 True 면 비활성화 => 정답이 아니면 활성화
+                            className="hover:text-green-500 dark:text-gray-300 dark:hover:text-green-400 p-2 rounded">정답확인</button>
+                        <button
+                            type="button"
+                            onClick={() => pickRandom(filteredSentences)}
+                            title="Enter"
+                            className="hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 p-2 rounded">다음 문제</button>
+                        <button
+                            type="button"
+                            onClick={handleAllHint}
+                            title="Alt"
+                            className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
+                        >
+                            {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                        </button>
+                    </div>
+                    {showAllHint && (
+                        <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
+                            {shuffled.map((sw, idx) => (
+                                <li
+                                    key={idx}
+                                    className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
+                                    {sw.word}
+                                    {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
+                                        ({sw.meaning})
+                                    </span>)}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {message && <p>{message}</p>}
+
+                    {results.length > 0 && (
+                        // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
+                        <div>
+                            <p>
+                                {results.map((r, idx) => (
+                                    <span
+                                        key={idx}
+                                        className={
+                                            r.status === 'correct'
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : 'text-red-600 dark:text-red-400'
+                                        }>
+                                        {r.word + ' '}
+                                    </span>
+                                ))}
+                            </p>
+                            {wrongIndex !== -1 && (
+                                <div>
+                                    <button
+                                        type="button"
+                                        onClick={handleWrongHint}
+                                        title="Ctrl"
+                                        className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded">
+                                        {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
+                                    </button>
+
+
+                                    {showWrongHint && hintWord && (
+                                        <p>
+                                            틀린 단어 정답: <span className="text-blue-600 dark:text-blue-400">{hintWord}</span>
+                                            {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
+                                        </p>
+                                    )}
+
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div >
     )
 }

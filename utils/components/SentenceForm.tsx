@@ -69,7 +69,8 @@ export default function SentenceForm() {
             contentRef.current?.focus(); // content input에 포커스 이동
         }
         else {
-            setMessage('문장 저장에 실패했습니다.');
+            const data = await res.json();
+            setMessage(data.error || '문장 저장에 실패했습니다.');
             setIsSuccess(false); // 실패 상태로 설정
         }
     }
