@@ -2,16 +2,23 @@
 // 자주 사용하는 표현 목록 조회, 생성 API 
 
 import { prisma } from "@/lib/prisma";   // Prisma 클라이언트: DB에 접속하는 객체 임포트
+import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+import { visibilityWhere } from "@/utils/auth/visibilityWhere";
+
 
 const PAGE_SIZE = 10;
 
 // 전체 데이터 조회: 커서 기반 페이지네이션 사용 
 export async function GET(request: Request) {
+    const currentUser = await getCurrentUser();
     // 비동기로 GET 요청을 처리하는 함수 정의
     const { searchParams } = new URL(request.url);
     // URL 클래스는 자바스크립트 기본 클래스로, 주소를 분석 / 주소의 쿼리 파라미터를 다룰때 사용
     const cursor = searchParams.get('cursor');
     const query = searchParams.get('q')?.trim();      // 검색 기능에 활용
+    const visibility = visibilityWhere(currentUser?.id ?? null);
+
+
     const expressions = await prisma.expression.findMany({
         // 데이터를 가져오는 시간을 await 로 기다림
         take: PAGE_SIZE,
@@ -19,14 +26,17 @@ export async function GET(request: Request) {
             skip: 1,
             cursor: { id: Number(cursor) }
         }),
-        ...(query && {      // 검색어가 없으면 실행 X 
-            where: {
-                OR: [
-                    { content: { contains: query, mode: 'insensitive' } },
-                    { meaning: { contains: query, mode: 'insensitive' } }
-                ]
-            }
-        }),
+        where: {
+            AND: [
+                visibility,
+                ...(query ? [{
+                    OR: [
+                        { content: { contains: query, mode: 'insensitive' as const } },
+                        { meaning: { contains: query, mode: 'insensitive' as const } }
+                    ]
+                }] : [])
+            ]
+        },
         orderBy: { createdAt: 'desc' }, // 생성일 기준 내림차순 정렬
         include: {
             exampleLinks: {
@@ -41,6 +51,14 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) { // 비동기로 POST 요청을 처리하는 함수 정의
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json(
+            { error: '로그인이 필요해요.' },
+            { status: 401 }
+        );
+    }
+
     const body = await request.json();
     const content: string = body.content?.trim(); // 요청 본문에서 content 추출
     const meaning: string = body.meaning?.trim();
@@ -54,7 +72,7 @@ export async function POST(request: Request) { // 비동기로 POST 요청을 �
 
     try {
         const expression = await prisma.expression.create({
-            data: { content, meaning }
+            data: { content, meaning, userId: currentUser.id }   // userId 추가
         });
         return Response.json(expression, { status: 201 });
     } catch (error: any) {

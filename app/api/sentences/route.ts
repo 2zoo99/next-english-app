@@ -1,10 +1,15 @@
 // app/api/sentences/route.ts
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+import { visibilityWhere } from "@/utils/auth/visibilityWhere";
 
 // 전체 조회
 export async function GET() {
+    const currentUser = await getCurrentUser();
+
     const sentences = await prisma.sentence.findMany({
+        where: visibilityWhere(currentUser?.id ?? null),
         orderBy: { createdAt: 'desc' },
         include: {
             sentenceWords: {
@@ -18,19 +23,26 @@ export async function GET() {
     })
     return Response.json(sentences);
 }
-
 // 생성
 export async function POST(request: Request) {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+        return Response.json(
+            { error: '로그인이 필요해요.' },
+            { status: 401 }
+        );
+    }
+
     const body = await request.json();
     const content: string = body.content;
     const translate: string = body.translate || '';
-    // content는 필수, translate는 선택으로 받음. translate가 없으면 빈 문자열로 처리.
-    const tagNames: string[] = body.tags || []; // 태그 이름 배열, 없으면 빈 배열로 처리
+    const tagNames: string[] = body.tags || [];
 
     const normalize = (word: string) => {
         return word
-            .replace(/[^a-zA-Z0-9가-힣]/g, '') // 공백 제거
-            .toLowerCase();                      // 소문자화
+            .replace(/[^a-zA-Z0-9가-힣]/g, '')
+            .toLowerCase();
     }
     const words = content
         .split(' ')                          // 공백으로 단어 분리
@@ -38,11 +50,12 @@ export async function POST(request: Request) {
         .filter((word: string) => word.length > 0) // 빈 문자열 제거
 
     try {
-        // 문장 생성
+        // 문장 생성 (userId 기록)
         const sentence = await prisma.sentence.create({
             data: {
                 content,
                 translate,
+                userId: currentUser.id,   // 추가
             }
         });
         // 단어 upsert하고 sentenceWords 테이블에 연결
