@@ -164,7 +164,6 @@ export default function SentenceList() {
                 placeholder="Type for searching items..."
                 className="w-full p-2 mb-3 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {message && <p>{message}</p>}
             {filteredSentences.length === 0 && searchQuery.trim() && (
                 <p className="text-gray-400 dark:text-gray-500 py-4">
                     &quot;{searchQuery}&quot;에 대한 검색 결과가 없어요.

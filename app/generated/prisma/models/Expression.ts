@@ -28,10 +28,12 @@ export type AggregateExpression = {
 
 export type ExpressionAvgAggregateOutputType = {
   id: number | null
+  userId: number | null
 }
 
 export type ExpressionSumAggregateOutputType = {
   id: number | null
+  userId: number | null
 }
 
 export type ExpressionMinAggregateOutputType = {
@@ -39,6 +41,7 @@ export type ExpressionMinAggregateOutputType = {
   content: string | null
   meaning: string | null
   createdAt: Date | null
+  userId: number | null
 }
 
 export type ExpressionMaxAggregateOutputType = {
@@ -46,6 +49,7 @@ export type ExpressionMaxAggregateOutputType = {
   content: string | null
   meaning: string | null
   createdAt: Date | null
+  userId: number | null
 }
 
 export type ExpressionCountAggregateOutputType = {
@@ -53,16 +57,19 @@ export type ExpressionCountAggregateOutputType = {
   content: number
   meaning: number
   createdAt: number
+  userId: number
   _all: number
 }
 
 
 export type ExpressionAvgAggregateInputType = {
   id?: true
+  userId?: true
 }
 
 export type ExpressionSumAggregateInputType = {
   id?: true
+  userId?: true
 }
 
 export type ExpressionMinAggregateInputType = {
@@ -70,6 +77,7 @@ export type ExpressionMinAggregateInputType = {
   content?: true
   meaning?: true
   createdAt?: true
+  userId?: true
 }
 
 export type ExpressionMaxAggregateInputType = {
@@ -77,6 +85,7 @@ export type ExpressionMaxAggregateInputType = {
   content?: true
   meaning?: true
   createdAt?: true
+  userId?: true
 }
 
 export type ExpressionCountAggregateInputType = {
@@ -84,6 +93,7 @@ export type ExpressionCountAggregateInputType = {
   content?: true
   meaning?: true
   createdAt?: true
+  userId?: true
   _all?: true
 }
 
@@ -178,6 +188,7 @@ export type ExpressionGroupByOutputType = {
   content: string
   meaning: string
   createdAt: Date
+  userId: number
   _count: ExpressionCountAggregateOutputType | null
   _avg: ExpressionAvgAggregateOutputType | null
   _sum: ExpressionSumAggregateOutputType | null
@@ -208,6 +219,8 @@ export type ExpressionWhereInput = {
   content?: Prisma.StringFilter<"Expression"> | string
   meaning?: Prisma.StringFilter<"Expression"> | string
   createdAt?: Prisma.DateTimeFilter<"Expression"> | Date | string
+  userId?: Prisma.IntFilter<"Expression"> | number
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   exampleLinks?: Prisma.ExpressionSentenceListRelationFilter
 }
 
@@ -216,6 +229,8 @@ export type ExpressionOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   meaning?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   exampleLinks?: Prisma.ExpressionSentenceOrderByRelationAggregateInput
 }
 
@@ -227,6 +242,8 @@ export type ExpressionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ExpressionWhereInput | Prisma.ExpressionWhereInput[]
   meaning?: Prisma.StringFilter<"Expression"> | string
   createdAt?: Prisma.DateTimeFilter<"Expression"> | Date | string
+  userId?: Prisma.IntFilter<"Expression"> | number
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   exampleLinks?: Prisma.ExpressionSentenceListRelationFilter
 }, "id" | "content">
 
@@ -235,6 +252,7 @@ export type ExpressionOrderByWithAggregationInput = {
   content?: Prisma.SortOrder
   meaning?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.ExpressionCountOrderByAggregateInput
   _avg?: Prisma.ExpressionAvgOrderByAggregateInput
   _max?: Prisma.ExpressionMaxOrderByAggregateInput
@@ -250,12 +268,14 @@ export type ExpressionScalarWhereWithAggregatesInput = {
   content?: Prisma.StringWithAggregatesFilter<"Expression"> | string
   meaning?: Prisma.StringWithAggregatesFilter<"Expression"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Expression"> | Date | string
+  userId?: Prisma.IntWithAggregatesFilter<"Expression"> | number
 }
 
 export type ExpressionCreateInput = {
   content: string
   meaning: string
   createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutExpressionsInput
   exampleLinks?: Prisma.ExpressionSentenceCreateNestedManyWithoutExpressionInput
 }
 
@@ -264,6 +284,7 @@ export type ExpressionUncheckedCreateInput = {
   content: string
   meaning: string
   createdAt?: Date | string
+  userId: number
   exampleLinks?: Prisma.ExpressionSentenceUncheckedCreateNestedManyWithoutExpressionInput
 }
 
@@ -271,6 +292,7 @@ export type ExpressionUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutExpressionsNestedInput
   exampleLinks?: Prisma.ExpressionSentenceUpdateManyWithoutExpressionNestedInput
 }
 
@@ -279,6 +301,7 @@ export type ExpressionUncheckedUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   exampleLinks?: Prisma.ExpressionSentenceUncheckedUpdateManyWithoutExpressionNestedInput
 }
 
@@ -287,6 +310,7 @@ export type ExpressionCreateManyInput = {
   content: string
   meaning: string
   createdAt?: Date | string
+  userId: number
 }
 
 export type ExpressionUpdateManyMutationInput = {
@@ -300,6 +324,17 @@ export type ExpressionUncheckedUpdateManyInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ExpressionListRelationFilter = {
+  every?: Prisma.ExpressionWhereInput
+  some?: Prisma.ExpressionWhereInput
+  none?: Prisma.ExpressionWhereInput
+}
+
+export type ExpressionOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type ExpressionCountOrderByAggregateInput = {
@@ -307,10 +342,12 @@ export type ExpressionCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   meaning?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type ExpressionAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type ExpressionMaxOrderByAggregateInput = {
@@ -318,6 +355,7 @@ export type ExpressionMaxOrderByAggregateInput = {
   content?: Prisma.SortOrder
   meaning?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type ExpressionMinOrderByAggregateInput = {
@@ -325,15 +363,59 @@ export type ExpressionMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   meaning?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type ExpressionSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type ExpressionScalarRelationFilter = {
   is?: Prisma.ExpressionWhereInput
   isNot?: Prisma.ExpressionWhereInput
+}
+
+export type ExpressionCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput> | Prisma.ExpressionCreateWithoutUserInput[] | Prisma.ExpressionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ExpressionCreateOrConnectWithoutUserInput | Prisma.ExpressionCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ExpressionCreateManyUserInputEnvelope
+  connect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+}
+
+export type ExpressionUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput> | Prisma.ExpressionCreateWithoutUserInput[] | Prisma.ExpressionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ExpressionCreateOrConnectWithoutUserInput | Prisma.ExpressionCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ExpressionCreateManyUserInputEnvelope
+  connect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+}
+
+export type ExpressionUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput> | Prisma.ExpressionCreateWithoutUserInput[] | Prisma.ExpressionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ExpressionCreateOrConnectWithoutUserInput | Prisma.ExpressionCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ExpressionUpsertWithWhereUniqueWithoutUserInput | Prisma.ExpressionUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ExpressionCreateManyUserInputEnvelope
+  set?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  disconnect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  delete?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  connect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  update?: Prisma.ExpressionUpdateWithWhereUniqueWithoutUserInput | Prisma.ExpressionUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ExpressionUpdateManyWithWhereWithoutUserInput | Prisma.ExpressionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ExpressionScalarWhereInput | Prisma.ExpressionScalarWhereInput[]
+}
+
+export type ExpressionUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput> | Prisma.ExpressionCreateWithoutUserInput[] | Prisma.ExpressionUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ExpressionCreateOrConnectWithoutUserInput | Prisma.ExpressionCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ExpressionUpsertWithWhereUniqueWithoutUserInput | Prisma.ExpressionUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ExpressionCreateManyUserInputEnvelope
+  set?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  disconnect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  delete?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  connect?: Prisma.ExpressionWhereUniqueInput | Prisma.ExpressionWhereUniqueInput[]
+  update?: Prisma.ExpressionUpdateWithWhereUniqueWithoutUserInput | Prisma.ExpressionUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ExpressionUpdateManyWithWhereWithoutUserInput | Prisma.ExpressionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ExpressionScalarWhereInput | Prisma.ExpressionScalarWhereInput[]
 }
 
 export type ExpressionCreateNestedOneWithoutExampleLinksInput = {
@@ -350,10 +432,63 @@ export type ExpressionUpdateOneRequiredWithoutExampleLinksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ExpressionUpdateToOneWithWhereWithoutExampleLinksInput, Prisma.ExpressionUpdateWithoutExampleLinksInput>, Prisma.ExpressionUncheckedUpdateWithoutExampleLinksInput>
 }
 
+export type ExpressionCreateWithoutUserInput = {
+  content: string
+  meaning: string
+  createdAt?: Date | string
+  exampleLinks?: Prisma.ExpressionSentenceCreateNestedManyWithoutExpressionInput
+}
+
+export type ExpressionUncheckedCreateWithoutUserInput = {
+  id?: number
+  content: string
+  meaning: string
+  createdAt?: Date | string
+  exampleLinks?: Prisma.ExpressionSentenceUncheckedCreateNestedManyWithoutExpressionInput
+}
+
+export type ExpressionCreateOrConnectWithoutUserInput = {
+  where: Prisma.ExpressionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput>
+}
+
+export type ExpressionCreateManyUserInputEnvelope = {
+  data: Prisma.ExpressionCreateManyUserInput | Prisma.ExpressionCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExpressionUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.ExpressionWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExpressionUpdateWithoutUserInput, Prisma.ExpressionUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.ExpressionCreateWithoutUserInput, Prisma.ExpressionUncheckedCreateWithoutUserInput>
+}
+
+export type ExpressionUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.ExpressionWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExpressionUpdateWithoutUserInput, Prisma.ExpressionUncheckedUpdateWithoutUserInput>
+}
+
+export type ExpressionUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.ExpressionScalarWhereInput
+  data: Prisma.XOR<Prisma.ExpressionUpdateManyMutationInput, Prisma.ExpressionUncheckedUpdateManyWithoutUserInput>
+}
+
+export type ExpressionScalarWhereInput = {
+  AND?: Prisma.ExpressionScalarWhereInput | Prisma.ExpressionScalarWhereInput[]
+  OR?: Prisma.ExpressionScalarWhereInput[]
+  NOT?: Prisma.ExpressionScalarWhereInput | Prisma.ExpressionScalarWhereInput[]
+  id?: Prisma.IntFilter<"Expression"> | number
+  content?: Prisma.StringFilter<"Expression"> | string
+  meaning?: Prisma.StringFilter<"Expression"> | string
+  createdAt?: Prisma.DateTimeFilter<"Expression"> | Date | string
+  userId?: Prisma.IntFilter<"Expression"> | number
+}
+
 export type ExpressionCreateWithoutExampleLinksInput = {
   content: string
   meaning: string
   createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutExpressionsInput
 }
 
 export type ExpressionUncheckedCreateWithoutExampleLinksInput = {
@@ -361,6 +496,7 @@ export type ExpressionUncheckedCreateWithoutExampleLinksInput = {
   content: string
   meaning: string
   createdAt?: Date | string
+  userId: number
 }
 
 export type ExpressionCreateOrConnectWithoutExampleLinksInput = {
@@ -383,9 +519,40 @@ export type ExpressionUpdateWithoutExampleLinksInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutExpressionsNestedInput
 }
 
 export type ExpressionUncheckedUpdateWithoutExampleLinksInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  meaning?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ExpressionCreateManyUserInput = {
+  id?: number
+  content: string
+  meaning: string
+  createdAt?: Date | string
+}
+
+export type ExpressionUpdateWithoutUserInput = {
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  meaning?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exampleLinks?: Prisma.ExpressionSentenceUpdateManyWithoutExpressionNestedInput
+}
+
+export type ExpressionUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  meaning?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exampleLinks?: Prisma.ExpressionSentenceUncheckedUpdateManyWithoutExpressionNestedInput
+}
+
+export type ExpressionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.StringFieldUpdateOperationsInput | string
   meaning?: Prisma.StringFieldUpdateOperationsInput | string
@@ -428,6 +595,8 @@ export type ExpressionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   content?: boolean
   meaning?: boolean
   createdAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   exampleLinks?: boolean | Prisma.Expression$exampleLinksArgs<ExtArgs>
   _count?: boolean | Prisma.ExpressionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expression"]>
@@ -437,6 +606,8 @@ export type ExpressionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   content?: boolean
   meaning?: boolean
   createdAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expression"]>
 
 export type ExpressionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -444,6 +615,8 @@ export type ExpressionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   content?: boolean
   meaning?: boolean
   createdAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expression"]>
 
 export type ExpressionSelectScalar = {
@@ -451,19 +624,26 @@ export type ExpressionSelectScalar = {
   content?: boolean
   meaning?: boolean
   createdAt?: boolean
+  userId?: boolean
 }
 
-export type ExpressionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "meaning" | "createdAt", ExtArgs["result"]["expression"]>
+export type ExpressionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "meaning" | "createdAt" | "userId", ExtArgs["result"]["expression"]>
 export type ExpressionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   exampleLinks?: boolean | Prisma.Expression$exampleLinksArgs<ExtArgs>
   _count?: boolean | Prisma.ExpressionCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ExpressionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ExpressionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ExpressionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type ExpressionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $ExpressionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Expression"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     exampleLinks: Prisma.$ExpressionSentencePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -471,6 +651,7 @@ export type $ExpressionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     content: string
     meaning: string
     createdAt: Date
+    userId: number
   }, ExtArgs["result"]["expression"]>
   composites: {}
 }
@@ -865,6 +1046,7 @@ readonly fields: ExpressionFieldRefs;
  */
 export interface Prisma__ExpressionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   exampleLinks<T extends Prisma.Expression$exampleLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expression$exampleLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionSentencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -899,6 +1081,7 @@ export interface ExpressionFieldRefs {
   readonly content: Prisma.FieldRef<"Expression", 'String'>
   readonly meaning: Prisma.FieldRef<"Expression", 'String'>
   readonly createdAt: Prisma.FieldRef<"Expression", 'DateTime'>
+  readonly userId: Prisma.FieldRef<"Expression", 'Int'>
 }
     
 
@@ -1153,6 +1336,10 @@ export type ExpressionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    */
   data: Prisma.ExpressionCreateManyInput | Prisma.ExpressionCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpressionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1223,6 +1410,10 @@ export type ExpressionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many Expressions to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpressionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

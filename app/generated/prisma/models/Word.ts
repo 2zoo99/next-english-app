@@ -336,10 +336,6 @@ export type WordScalarRelationFilter = {
   isNot?: Prisma.WordWhereInput
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type WordCreateNestedOneWithoutSentenceWordsInput = {
   create?: Prisma.XOR<Prisma.WordCreateWithoutSentenceWordsInput, Prisma.WordUncheckedCreateWithoutSentenceWordsInput>
   connectOrCreate?: Prisma.WordCreateOrConnectWithoutSentenceWordsInput

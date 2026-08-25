@@ -79,8 +79,10 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  supabaseId: 'supabaseId',
   name: 'name',
   email: 'email',
+  role: 'role',
   createdAt: 'createdAt'
 } as const
 
@@ -92,7 +94,8 @@ export const SentenceScalarFieldEnum = {
   content: 'content',
   translate: 'translate',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type SentenceScalarFieldEnum = (typeof SentenceScalarFieldEnum)[keyof typeof SentenceScalarFieldEnum]
@@ -140,7 +143,8 @@ export const ExpressionScalarFieldEnum = {
   id: 'id',
   content: 'content',
   meaning: 'meaning',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  userId: 'userId'
 } as const
 
 export type ExpressionScalarFieldEnum = (typeof ExpressionScalarFieldEnum)[keyof typeof ExpressionScalarFieldEnum]

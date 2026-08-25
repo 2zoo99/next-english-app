@@ -17,10 +17,14 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  createdAt DateTime  @default(now())
+  id          Int       @id @default(autoincrement())
+  supabaseId  String    @unique
+  name        String?
+  email       String    @unique
+  role        String    @default("USER")  // "USER" | "ADMIN"
+  createdAt   DateTime  @default(now())
+  sentences   Sentence[]
+  expressions Expression[]
 
   @@map("USER")
 }
@@ -31,6 +35,8 @@ model Sentence {
   translate     String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
   sentenceWords SentenceWord[]
   sentenceTags  SentenceTag[]
   expressionSentences ExpressionSentence[]
@@ -83,6 +89,8 @@ model Expression {
   content     String    @unique
   meaning     String    
   createdAt   DateTime  @default(now())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
   exampleLinks  ExpressionSentence[]
 
   @@map("EXPRESSION")
