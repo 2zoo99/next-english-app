@@ -5,13 +5,34 @@
 // /app/api/sentences/[id]/tags/route.ts
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+
 
 export async function POST(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
     const { id } = await params;
     const sentenceId = Number(id);
+
+    // 이 문장이 실제로 로그인한 사용자 소유인지(또는 관리자 것인지) 확인
+    const sentence = await prisma.sentence.findUnique({
+        where: { id: sentenceId }
+    });
+
+    if (!sentence) {
+        return Response.json({ error: '존재하지 않는 문장이에요.' }, { status: 404 });
+    }
+
+    const canEdit = sentence.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 문장을 수정할 권한이 없어요.' }, { status: 403 });
+    }
+
     const body = await request.json();
     const tagName: string = body.tagName?.trim();
 
@@ -64,9 +85,24 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
     // 삭제할 문장 id와 태그 이름을 받아온다.
     const { id } = await params;
     const sentenceId = Number(id);
+    const sentence = await prisma.sentence.findUnique({
+        where: { id: sentenceId }
+    });
+    if (!sentence) {
+        return Response.json({ error: '존재하지 않는 문장이에요.' }, { status: 404 });
+    }
+
+    const canEdit = sentence.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 문장을 수정할 권한이 없어요.' }, { status: 403 });
+    }
     const body = await request.json();
     const tagId: number = body.tagId;
 
