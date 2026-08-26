@@ -236,16 +236,17 @@ export type ExpressionOrderByWithRelationInput = {
 
 export type ExpressionWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  content?: string
+  content_userId?: Prisma.ExpressionContentUserIdCompoundUniqueInput
   AND?: Prisma.ExpressionWhereInput | Prisma.ExpressionWhereInput[]
   OR?: Prisma.ExpressionWhereInput[]
   NOT?: Prisma.ExpressionWhereInput | Prisma.ExpressionWhereInput[]
+  content?: Prisma.StringFilter<"Expression"> | string
   meaning?: Prisma.StringFilter<"Expression"> | string
   createdAt?: Prisma.DateTimeFilter<"Expression"> | Date | string
   userId?: Prisma.IntFilter<"Expression"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   exampleLinks?: Prisma.ExpressionSentenceListRelationFilter
-}, "id" | "content">
+}, "id" | "content_userId">
 
 export type ExpressionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -335,6 +336,11 @@ export type ExpressionListRelationFilter = {
 
 export type ExpressionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExpressionContentUserIdCompoundUniqueInput = {
+  content: string
+  userId: number
 }
 
 export type ExpressionCountOrderByAggregateInput = {

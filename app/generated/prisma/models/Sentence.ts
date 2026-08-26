@@ -249,10 +249,11 @@ export type SentenceOrderByWithRelationInput = {
 
 export type SentenceWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  content?: string
+  content_userId?: Prisma.SentenceContentUserIdCompoundUniqueInput
   AND?: Prisma.SentenceWhereInput | Prisma.SentenceWhereInput[]
   OR?: Prisma.SentenceWhereInput[]
   NOT?: Prisma.SentenceWhereInput | Prisma.SentenceWhereInput[]
+  content?: Prisma.StringFilter<"Sentence"> | string
   translate?: Prisma.StringFilter<"Sentence"> | string
   createdAt?: Prisma.DateTimeFilter<"Sentence"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Sentence"> | Date | string
@@ -261,7 +262,7 @@ export type SentenceWhereUniqueInput = Prisma.AtLeast<{
   sentenceWords?: Prisma.SentenceWordListRelationFilter
   sentenceTags?: Prisma.SentenceTagListRelationFilter
   expressionSentences?: Prisma.ExpressionSentenceListRelationFilter
-}, "id" | "content">
+}, "id" | "content_userId">
 
 export type SentenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -368,6 +369,11 @@ export type SentenceListRelationFilter = {
 
 export type SentenceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SentenceContentUserIdCompoundUniqueInput = {
+  content: string
+  userId: number
 }
 
 export type SentenceCountOrderByAggregateInput = {

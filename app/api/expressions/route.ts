@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     // URL 클래스는 자바스크립트 기본 클래스로, 주소를 분석 / 주소의 쿼리 파라미터를 다룰때 사용
     const cursor = searchParams.get('cursor');
     const query = searchParams.get('q')?.trim();      // 검색 기능에 활용
-    const visibility = visibilityWhere(currentUser?.id ?? null);
+    const visibility = visibilityWhere(currentUser ? { id: currentUser.id, role: currentUser.role } : null);
 
 
     const expressions = await prisma.expression.findMany({

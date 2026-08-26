@@ -1,5 +1,7 @@
 // app/api/sentences/[id]/route.ts
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+
 
 //조회
 export async function GET(
@@ -25,7 +27,25 @@ export async function DELETE(
     _: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
+
     const { id } = await params;
+    const sentenceId = Number(id);
+    const sentence = await prisma.sentence.findUnique({
+        where: { id: sentenceId }
+    });
+    if (!sentence) {
+        return Response.json({ error: '존재하지 않는 문장이에요.' }, { status: 404 });
+    }
+
+    const canEdit = sentence.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 문장을 삭제할 권한이 없어요.' }, { status: 403 });
+    }
+
     await prisma.sentence.delete({
         where: { id: Number(id) }
     })
@@ -37,7 +57,25 @@ export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
+
     const { id } = await params;
+    const sentenceId = Number(id);
+    const existingSentence = await prisma.sentence.findUnique({
+        where: { id: sentenceId }
+    });
+    if (!existingSentence) {
+        return Response.json({ error: '존재하지 않는 문장이에요.' }, { status: 404 });
+    }
+
+    const canEdit = existingSentence.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 문장을 수정할 권한이 없어요.' }, { status: 403 });
+    }
+
     const { content, translate } = await request.json();
 
     const normalize = (word: string) => {
@@ -46,7 +84,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.sentence.update({
-        where: { id: Number(id) },
+        where: { id: sentenceId },
         data: {
             //수정되는 것이기 때문에 content와 translate 중 하나만 수정할 수도 있다. 따라서 content와 translate가 존재할 때만 업데이트하도록 조건부로 작성한다.
             ...(content && { content }),
@@ -57,7 +95,7 @@ export async function PATCH(
     //content가 바뀌었으면 sentenceWords도 업데이트한다.
     if (content) {
         await prisma.sentenceWord.deleteMany({
-            where: { sentenceId: Number(id) }
+            where: { sentenceId }
         })
 
         //새 단어로 재생성
@@ -73,7 +111,7 @@ export async function PATCH(
             });
             await prisma.sentenceWord.create({
                 data: {
-                    sentenceId: Number(id),
+                    sentenceId,
                     wordId: word.id,
                     order: index + 1
                 }
@@ -81,7 +119,7 @@ export async function PATCH(
         }
     }
     const result = await prisma.sentence.findUnique({
-        where: { id: Number(id) },
+        where: { id: sentenceId },
         include: {
             sentenceWords: {
                 orderBy: { order: 'asc' },

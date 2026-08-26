@@ -9,7 +9,7 @@ export async function GET() {
     const currentUser = await getCurrentUser();
 
     const sentences = await prisma.sentence.findMany({
-        where: visibilityWhere(currentUser?.id ?? null),
+        where: visibilityWhere(currentUser ? { id: currentUser.id, role: currentUser.role } : null),
         orderBy: { createdAt: 'desc' },
         include: {
             sentenceWords: {

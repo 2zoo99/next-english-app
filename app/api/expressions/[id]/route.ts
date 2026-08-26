@@ -1,14 +1,34 @@
 // app/api/expressions/[id]/route.ts
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+
 
 // 표현 수정 (내용, 뜻)
 export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
+
     const { id } = await params;
     const expressionId = Number(id);
+
+    const expression = await prisma.expression.findUnique({
+        where: { id: expressionId }
+    });
+    if (!expression) {
+        return Response.json({ error: '존재하지 않는 표현이에요.' }, { status: 404 });
+    }
+
+    const canEdit = expression.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 표현을 수정할 권한이 없어요.' }, { status: 403 });
+    }
+
     const body = await request.json();
     const content: string | undefined = body.content?.trim();
     const meaning: string | undefined = body.meaning?.trim();
@@ -60,8 +80,25 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+        return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
+    }
+
     const { id } = await params;
     const expressionId = Number(id);
+
+    const expression = await prisma.expression.findUnique({
+        where: { id: expressionId }
+    });
+    if (!expression) {
+        return Response.json({ error: '존재하지 않는 표현이에요.' }, { status: 404 });
+    }
+
+    const canEdit = expression.userId === currentUser.id || currentUser.role === 'ADMIN';
+    if (!canEdit) {
+        return Response.json({ error: '이 표현을 삭제할 권한이 없어요.' }, { status: 403 });
+    }
 
     try {
         await prisma.expression.delete({

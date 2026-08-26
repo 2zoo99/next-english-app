@@ -31,7 +31,7 @@ model User {
 
 model Sentence {
   id            Int       @id @default(autoincrement())
-  content       String    @unique
+  content       String    // @unique제거
   translate     String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -41,6 +41,7 @@ model Sentence {
   sentenceTags  SentenceTag[]
   expressionSentences ExpressionSentence[]
   
+  @@unique([content, userId])   // 같은 사용자 안에서 중복 문장 금지
   @@map("SENTENCE")
 }
 //content는 원문
@@ -86,13 +87,14 @@ model SentenceWord {
 
 model Expression {
   id          Int       @id @default(autoincrement())
-  content     String    @unique
+  content     String    // @unique제거
   meaning     String    
   createdAt   DateTime  @default(now())
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
   exampleLinks  ExpressionSentence[]
 
+  @@unique([content, userId])   // 같은 사용자 안에서 같은 표현 중복 금지
   @@map("EXPRESSION")
 }
 

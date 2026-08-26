@@ -64,7 +64,7 @@ export async function POST(
         // 새 문장을 입력하는 경우에 sentence 데이터를 생성
         if (!targetSentenceId && content) {
             let sentence = await prisma.sentence.findUnique({
-                where: { content }
+                where: { content_userId: { content, userId: currentUser.id } }
             });
 
             if (!sentence) {
