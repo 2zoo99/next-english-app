@@ -3,6 +3,7 @@
 'use client'
 
 import { useState } from 'react'
+import { AutoResizeTextarea } from './AutoResizeTextarea';
 
 type ExampleInput = {
     content: string;
@@ -91,8 +92,7 @@ export default function ExpressionForm({ onCreated }: Props) {
             <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-600 dark:text-gray-300">표현</label>
-                    <input
-                        type="text"
+                    <AutoResizeTextarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="예: kick the bucket"
@@ -102,8 +102,7 @@ export default function ExpressionForm({ onCreated }: Props) {
 
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-600 dark:text-gray-300">뜻</label>
-                    <input
-                        type="text"
+                    <AutoResizeTextarea
                         value={meaning}
                         onChange={(e) => setMeaning(e.target.value)}
                         placeholder="예: 죽다"
@@ -124,15 +123,13 @@ export default function ExpressionForm({ onCreated }: Props) {
                                 삭제
                             </button>
                         </div>
-                        <input
-                            type="text"
+                        <AutoResizeTextarea
                             value={example.content}
                             onChange={(e) => handleExampleChange(index, 'content', e.target.value)}
                             placeholder="예문 (영어)"
                             className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
-                        <input
-                            type="text"
+                        <AutoResizeTextarea
                             value={example.translate}
                             onChange={(e) => handleExampleChange(index, 'translate', e.target.value)}
                             placeholder="번역 (선택)"

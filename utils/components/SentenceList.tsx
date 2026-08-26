@@ -4,6 +4,7 @@
 import { Tag } from '@/app/generated/prisma/client';
 import TagEditor from './TagEditor';
 import { useCallback, useEffect, useState, useMemo } from 'react'
+import { AutoResizeTextarea } from './AutoResizeTextarea';
 
 type Word = {
     id: number;
@@ -184,13 +185,11 @@ export default function SentenceList() {
                             )}
                             {editingId === sentence.id ? (
                                 <>
-                                    <input
-                                        type="text"
+                                    <AutoResizeTextarea
                                         value={editedContent}
                                         onChange={(e) => setEditedContent(e.target.value)}
                                         className="w-full p-1 border border-gray-200 rounded text-base" />
-                                    <input
-                                        type="text"
+                                    <AutoResizeTextarea
                                         value={editedTranslate}
                                         onChange={(e) => setEditedTranslate(e.target.value)}
                                         className="w-full p-1 border border-gray-200 rounded text-base" />

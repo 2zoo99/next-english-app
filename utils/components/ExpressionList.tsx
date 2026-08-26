@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import AddExampleForm from './AddExampleForm'
+import { AutoResizeTextarea } from './AutoResizeTextarea'
 
 type Sentence = {
     id: number;
@@ -171,14 +172,12 @@ export default function ExpressionList() {
                 <div key={exp.id} className="p-4 bg-background border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm">
                     {editingId === exp.id ? (
                         <div className="flex flex-col gap-2">
-                            <input
-                                type="text"
+                            <AutoResizeTextarea
                                 value={editContent}
                                 onChange={(e) => setEditContent(e.target.value)}
                                 className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
-                            <input
-                                type="text"
+                            <AutoResizeTextarea
                                 value={editMeaning}
                                 onChange={(e) => setEditMeaning(e.target.value)}
                                 className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"

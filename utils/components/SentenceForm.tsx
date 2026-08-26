@@ -5,6 +5,7 @@
 import { useState, useRef } from 'react'
 // useRef는 React에서 DOM 요소나 컴포넌트 인스턴스를 참조하기 위해 사용하는 훅입니다. 이 훅을 사용하면 특정 DOM 요소에 직접 접근하거나, 렌더링 사이클 동안 값이 유지되는 변수를 만들 수 있습니다. useRef를 사용하면 컴포넌트가 다시 렌더링될 때도 참조된 값이 유지되므로, 예를 들어 입력 필드에 포커스를 설정하거나, 이전 상태 값을 저장하는 등의 작업에 유용합니다.
 import TagPicker from './TagPicker'
+import { AutoResizeTextarea } from './AutoResizeTextarea'
 
 type Word = {
     id: number;
@@ -39,8 +40,8 @@ export default function SentenceForm() {
     const [result, setResult] = useState<Sentence | null>(null);
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false); // 성공 여부를 나타내는 상태 추가
-    const translateRef = useRef<HTMLInputElement>(null);  // 포커스 이동용
-    const contentRef = useRef<HTMLInputElement>(null);
+    const translateRef = useRef<HTMLTextAreaElement>(null);
+    const contentRef = useRef<HTMLTextAreaElement>(null);
     const [submitting, setSubmitting] = useState(false);
 
 
@@ -94,29 +95,32 @@ export default function SentenceForm() {
                 {/* 문장 입력 */}
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-600 dark:text-gray-300">문장</label>
-                    <input
-                        ref={contentRef}
-                        type="text"
+                    <AutoResizeTextarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') translateRef.current?.focus()
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                translateRef.current?.focus();
+                            }
                         }}
                         placeholder="영어 문장을 입력하세요"
                         className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+
                     />
                 </div>
 
                 {/* 번역 입력 */}
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-600 dark:text-gray-300">번역</label>
-                    <input
-                        ref={translateRef}
-                        type="text"
+                    <AutoResizeTextarea
                         value={translate}
                         onChange={(e) => setTranslate(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSubmit()
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmit();
+                            }
                         }}
                         placeholder="한국어 번역을 입력하세요 (선택)"
                         className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
