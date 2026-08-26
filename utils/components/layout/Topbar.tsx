@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { User } from '@supabase/supabase-js'
 import { createClient } from "@/utils/supabase/client";
 import { useRefresh } from "@/utils/context/RefreshContext";
+import UserMenu from "./UserMenu";
 
 interface Props {
     onMenuClick: () => void;
@@ -42,18 +43,8 @@ export default function Topbar({ onMenuClick, user }: Props) {
                 </Link>
                 <div className="flex-1" />
                 <div className="hidden sm:flex items-center gap-2 shrink-0">
-                    {user ? (
-                        <>
-                            <span className="text-sm text-gray-500 dark:text-gray-400 max-w-[160px] truncate">
-                                {user.email}
-                            </span>
-                            <button
-                                onClick={handleLogout}
-                                className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors whitespace-nowrap"
-                            >
-                                로그아웃
-                            </button>
-                        </>
+                    {user ? (   //데스크톱 버전
+                        <UserMenu user={user} />
                     ) : (
                         <>
                             <Link
@@ -75,17 +66,7 @@ export default function Topbar({ onMenuClick, user }: Props) {
 
             <div className="sm:hidden flex justify-end gap-2 px-4 py-2">
                 {user ? (
-                    <>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 self-center max-w-[100px] truncate">
-                            {user.email}
-                        </span>
-                        <button
-                            onClick={handleLogout}
-                            className="px-2 py-1 text-xs text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors whitespace-nowrap"
-                        >
-                            로그아웃
-                        </button>
-                    </>
+                    <UserMenu user={user} />
                 ) : (
                     <>
                         <Link

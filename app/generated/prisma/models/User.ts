@@ -226,6 +226,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sentences?: Prisma.SentenceListRelationFilter
   expressions?: Prisma.ExpressionListRelationFilter
+  studyLogs?: Prisma.StudyLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -237,6 +238,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   sentences?: Prisma.SentenceOrderByRelationAggregateInput
   expressions?: Prisma.ExpressionOrderByRelationAggregateInput
+  studyLogs?: Prisma.StudyLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -251,6 +253,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sentences?: Prisma.SentenceListRelationFilter
   expressions?: Prisma.ExpressionListRelationFilter
+  studyLogs?: Prisma.StudyLogListRelationFilter
 }, "id" | "supabaseId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -287,6 +290,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -298,6 +302,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -308,6 +313,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -435,6 +442,20 @@ export type UserUpdateOneRequiredWithoutExpressionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpressionsInput, Prisma.UserUpdateWithoutExpressionsInput>, Prisma.UserUncheckedUpdateWithoutExpressionsInput>
 }
 
+export type UserCreateNestedOneWithoutStudyLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudyLogsInput, Prisma.UserUncheckedCreateWithoutStudyLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudyLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStudyLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudyLogsInput, Prisma.UserUncheckedCreateWithoutStudyLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudyLogsInput
+  upsert?: Prisma.UserUpsertWithoutStudyLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStudyLogsInput, Prisma.UserUpdateWithoutStudyLogsInput>, Prisma.UserUncheckedUpdateWithoutStudyLogsInput>
+}
+
 export type UserCreateWithoutSentencesInput = {
   supabaseId: string
   name?: string | null
@@ -442,6 +463,7 @@ export type UserCreateWithoutSentencesInput = {
   role?: string
   createdAt?: Date | string
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentencesInput = {
@@ -452,6 +474,7 @@ export type UserUncheckedCreateWithoutSentencesInput = {
   role?: string
   createdAt?: Date | string
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentencesInput = {
@@ -477,6 +500,7 @@ export type UserUpdateWithoutSentencesInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentencesInput = {
@@ -487,6 +511,7 @@ export type UserUncheckedUpdateWithoutSentencesInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpressionsInput = {
@@ -496,6 +521,7 @@ export type UserCreateWithoutExpressionsInput = {
   role?: string
   createdAt?: Date | string
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpressionsInput = {
@@ -506,6 +532,7 @@ export type UserUncheckedCreateWithoutExpressionsInput = {
   role?: string
   createdAt?: Date | string
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpressionsInput = {
@@ -531,6 +558,7 @@ export type UserUpdateWithoutExpressionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpressionsInput = {
@@ -541,6 +569,65 @@ export type UserUncheckedUpdateWithoutExpressionsInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutStudyLogsInput = {
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStudyLogsInput = {
+  id?: number
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStudyLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudyLogsInput, Prisma.UserUncheckedCreateWithoutStudyLogsInput>
+}
+
+export type UserUpsertWithoutStudyLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStudyLogsInput, Prisma.UserUncheckedUpdateWithoutStudyLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudyLogsInput, Prisma.UserUncheckedCreateWithoutStudyLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStudyLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStudyLogsInput, Prisma.UserUncheckedUpdateWithoutStudyLogsInput>
+}
+
+export type UserUpdateWithoutStudyLogsInput = {
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStudyLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -551,11 +638,13 @@ export type UserUncheckedUpdateWithoutExpressionsInput = {
 export type UserCountOutputType = {
   sentences: number
   expressions: number
+  studyLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sentences?: boolean | UserCountOutputTypeCountSentencesArgs
   expressions?: boolean | UserCountOutputTypeCountExpressionsArgs
+  studyLogs?: boolean | UserCountOutputTypeCountStudyLogsArgs
 }
 
 /**
@@ -582,6 +671,13 @@ export type UserCountOutputTypeCountExpressionsArgs<ExtArgs extends runtime.Type
   where?: Prisma.ExpressionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStudyLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudyLogWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -592,6 +688,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   sentences?: boolean | Prisma.User$sentencesArgs<ExtArgs>
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
+  studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -626,6 +723,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sentences?: boolean | Prisma.User$sentencesArgs<ExtArgs>
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
+  studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -636,6 +734,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     sentences: Prisma.$SentencePayload<ExtArgs>[]
     expressions: Prisma.$ExpressionPayload<ExtArgs>[]
+    studyLogs: Prisma.$StudyLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1040,6 +1139,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sentences<T extends Prisma.User$sentencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SentencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expressions<T extends Prisma.User$expressionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expressionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studyLogs<T extends Prisma.User$studyLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studyLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudyLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1513,6 +1613,30 @@ export type User$expressionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ExpressionScalarFieldEnum | Prisma.ExpressionScalarFieldEnum[]
+}
+
+/**
+ * User.studyLogs
+ */
+export type User$studyLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudyLog
+   */
+  select?: Prisma.StudyLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudyLog
+   */
+  omit?: Prisma.StudyLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudyLogInclude<ExtArgs> | null
+  where?: Prisma.StudyLogWhereInput
+  orderBy?: Prisma.StudyLogOrderByWithRelationInput | Prisma.StudyLogOrderByWithRelationInput[]
+  cursor?: Prisma.StudyLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudyLogScalarFieldEnum | Prisma.StudyLogScalarFieldEnum[]
 }
 
 /**

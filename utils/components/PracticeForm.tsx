@@ -210,6 +210,9 @@ export default function PracticeForm() {
         if (firstWrong === -1) {
             setMessage('Good Job !');
             setDone(true);
+
+            // 공부 기록 남기기 (실패해도 사용자 경험에 영향 없도록 조용히 처리)
+            fetch('/api/study-logs', { method: 'POST' }).catch(() => { });
         } else {
             setMessage('틀린 단어가 있어요.');
             const correctWords = inputWords.slice(0, firstWrong);

@@ -81,3 +81,8 @@ export type Expression = Prisma.ExpressionModel
  * 
  */
 export type ExpressionSentence = Prisma.ExpressionSentenceModel
+/**
+ * Model StudyLog
+ * 
+ */
+export type StudyLog = Prisma.StudyLogModel

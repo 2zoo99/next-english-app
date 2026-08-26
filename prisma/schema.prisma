@@ -25,6 +25,7 @@ model User {
   createdAt   DateTime  @default(now())
   sentences   Sentence[]
   expressions Expression[]
+  studyLogs     StudyLog[]
 
   @@map("USER")
 }
@@ -109,6 +110,19 @@ model ExpressionSentence {
 
   @@unique([expressionId, sentenceId])    // 같은 조합 중복 방지
   @@map("EXPRESSION_SENTENCE")
+}
+
+model StudyLog {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  date      DateTime  @db.Date   // 시각 없이 날짜만 저장
+  count     Int       @default(1)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, date])
+  @@map("STUDY_LOG")
 }
 
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 

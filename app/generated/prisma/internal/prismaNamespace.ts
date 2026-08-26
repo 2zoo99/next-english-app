@@ -391,7 +391,8 @@ export const ModelName = {
   Word: 'Word',
   SentenceWord: 'SentenceWord',
   Expression: 'Expression',
-  ExpressionSentence: 'ExpressionSentence'
+  ExpressionSentence: 'ExpressionSentence',
+  StudyLog: 'StudyLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StudyLog: {
+      payload: Prisma.$StudyLogPayload<ExtArgs>
+      fields: Prisma.StudyLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudyLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudyLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        findFirst: {
+          args: Prisma.StudyLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudyLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        findMany: {
+          args: Prisma.StudyLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>[]
+        }
+        create: {
+          args: Prisma.StudyLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        createMany: {
+          args: Prisma.StudyLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudyLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>[]
+        }
+        delete: {
+          args: Prisma.StudyLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        update: {
+          args: Prisma.StudyLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudyLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudyLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudyLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudyLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudyLogPayload>
+        }
+        aggregate: {
+          args: Prisma.StudyLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudyLog>
+        }
+        groupBy: {
+          args: Prisma.StudyLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudyLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudyLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudyLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1124,6 +1199,18 @@ export const ExpressionSentenceScalarFieldEnum = {
 } as const
 
 export type ExpressionSentenceScalarFieldEnum = (typeof ExpressionSentenceScalarFieldEnum)[keyof typeof ExpressionSentenceScalarFieldEnum]
+
+
+export const StudyLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  count: 'count',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudyLogScalarFieldEnum = (typeof StudyLogScalarFieldEnum)[keyof typeof StudyLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1314,6 +1401,7 @@ export type GlobalOmitConfig = {
   sentenceWord?: Prisma.SentenceWordOmit
   expression?: Prisma.ExpressionOmit
   expressionSentence?: Prisma.ExpressionSentenceOmit
+  studyLog?: Prisma.StudyLogOmit
 }
 
 /* Types for Logging */

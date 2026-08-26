@@ -58,7 +58,8 @@ export const ModelName = {
   Word: 'Word',
   SentenceWord: 'SentenceWord',
   Expression: 'Expression',
-  ExpressionSentence: 'ExpressionSentence'
+  ExpressionSentence: 'ExpressionSentence',
+  StudyLog: 'StudyLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +160,18 @@ export const ExpressionSentenceScalarFieldEnum = {
 } as const
 
 export type ExpressionSentenceScalarFieldEnum = (typeof ExpressionSentenceScalarFieldEnum)[keyof typeof ExpressionSentenceScalarFieldEnum]
+
+
+export const StudyLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  count: 'count',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudyLogScalarFieldEnum = (typeof StudyLogScalarFieldEnum)[keyof typeof StudyLogScalarFieldEnum]
 
 
 export const SortOrder = {
