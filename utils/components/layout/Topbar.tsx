@@ -39,7 +39,10 @@ export default function Topbar({ onMenuClick, user }: Props) {
 
                 <Link href="/" onClick={triggerRefresh} className="flex items-center gap-2 min-w-0 shrink truncate">
                     <span className="font-bold text-base sm:text-2xl truncate dark:text-gray-300">Youngjak Gym</span>
-                    오늘도 영작 운동!
+                    <div className="flex flex-row justify-between items-center ml-4">
+                        <span className="text-sm">오늘도 영작 운동!</span>
+                        <img src="animal-fighting.png" className="w-10 h-10 mx-2" />
+                    </div>
                 </Link>
                 <div className="flex-1" />
                 <div className="hidden sm:flex items-center gap-2 shrink-0">

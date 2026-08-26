@@ -2,6 +2,7 @@
 'use client';
 
 import { useCallback, useState, useEffect, useRef, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useRefresh } from '@/utils/context/RefreshContext';
 
 type Word = {
@@ -71,6 +72,9 @@ export default function PracticeForm() {
     const [allTags, setAllTags] = useState<TagInfo[]>([]);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [solvedIds, setSolvedIds] = useState<Set<number>>(new Set());
+    const [roundComplete, setRoundComplete] = useState(false);
+    const router = useRouter();
 
     //전체 문장 조회 후 랜덤 문장 선택
     const fetchSentences = useCallback(async () => {
@@ -93,11 +97,13 @@ export default function PracticeForm() {
     }, [fetchSentences, refreshKey]); // refreshKey가 변경될 때마다 fetchSentences를 호출하여 문장 목록을 새로고침
 
     useEffect(() => {
+        setSolvedIds(new Set());       // 추가: 필터 바뀌면 새 라운드로
+        setRoundComplete(false);        // 추가
         if (filteredSentences.length === 0) {
             setCurrent(null);
             return;
         }
-        pickRandom(filteredSentences);
+        pickRandom(filteredSentences, new Set());
     }, [selectedTagIds, sortOrder, sentences.length]);
 
     // 전체 태그 목록 불러오기
@@ -169,14 +175,21 @@ export default function PracticeForm() {
 
 
     //문장 목록에서 랜덤으로 하나를 선택하는 함수
-    const pickRandom = (data: Sentence[]) => {
-        if (data.length === 0) return;
-        const random = data[Math.floor(Math.random() * data.length)];
+    const pickRandom = (data: Sentence[], excludeIds: Set<number> = solvedIds) => {
+        const remaining = data.filter(s => !excludeIds.has(s.id));
+
+        if (remaining.length === 0) {
+            setCurrent(null);
+            setRoundComplete(true);
+            return;
+        }
+        const random = remaining[Math.floor(Math.random() * remaining.length)];
         setCurrent(random);
         setInput('');
         setResults([]);
         setMessage('');
         setDone(false);
+        setRoundComplete(false);
         resetHints();   // 다음문제로 넘어갈때만 초기화
     }
 
@@ -210,7 +223,7 @@ export default function PracticeForm() {
         if (firstWrong === -1) {
             setMessage('Good Job !');
             setDone(true);
-
+            setSolvedIds(prev => new Set(prev).add(current.id));   // 추가
             // 공부 기록 남기기 (실패해도 사용자 경험에 영향 없도록 조용히 처리)
             fetch('/api/study-logs', { method: 'POST' }).catch(() => { });
         } else {
@@ -292,6 +305,32 @@ export default function PracticeForm() {
             </div>
             {sentences.length > 0 && filteredSentences.length === 0 ? (
                 <p className="text-gray-400 dark:text-gray-500">선택한 태그에 맞는 문장이 없어요.</p>
+            ) : roundComplete ? (
+                <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-4 py-8 text-center">
+                    <p className="text-lg font-semibold mb-2 dark:text-gray-200">🎉 모든 문장을 연습했어요!</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                        총 {filteredSentences.length}개의 문장을 다 풀었어요.
+                    </p>
+                    <div className="flex gap-2 justify-center">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSolvedIds(new Set());
+                                pickRandom(filteredSentences, new Set());
+                            }}
+                            className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-lg transition-colors"
+                        >
+                            다시 연습하기
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => router.push('/')}
+                            className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors"
+                        >
+                            종료하기
+                        </button>
+                    </div>
+                </div>
             ) : !current ? (
                 <p>문장을 불러오는 중입니다...</p>
             ) : (
@@ -299,6 +338,12 @@ export default function PracticeForm() {
                     {/* 기존 연습 카드 내용 그대로 */}
 
                     <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
+
+                    {!roundComplete && filteredSentences.length > 0 && (
+                        <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">
+                            {solvedIds.size} / {filteredSentences.length} 완료
+                        </p>
+                    )}
 
                     <input
                         ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
