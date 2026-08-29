@@ -398,9 +398,9 @@ export default function PracticeForm() {
                         }}
                         placeholder="한국어를 읽고 영문으로 영작해 보세요."
                         disabled={done}
-                        className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-700"
                     />
-                    <div className="flex gap-2">
+                    <div className="flex gap-4">
                         <button
                             type="button"
                             onClick={handleAllHint}
@@ -418,7 +418,7 @@ export default function PracticeForm() {
                                 ? canAdvance
                                     ? 'text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
                                     : 'text-gray-400 bg-gray-200 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                                : 'text-white bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
+                                : 'text-white bg-green-500 hover:bg-green-600 dark:bg-green-900 dark:hover:bg-green-800'
                                 }`}
                         >
                             {done ? '다음 문제' : '정답 확인'}
@@ -428,13 +428,13 @@ export default function PracticeForm() {
                     {showAllHint && (
                         // showAllHint 가 True일때 shuffled 배열의 모든 요소 보이기
                         // 조건부 렌더링 방식 : {조건 && 보여줄것}
-                        <div className="border rounded bg-yellow-50 border-gray-200 shadow-sm  flex px-2 pb-2">
+                        <div className="border rounded bg-yellow-50 dark:bg-black border-gray-200 dark:border-gray-700 shadow-sm  flex px-2 pb-2 mt-2">
                             <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
                                 {shuffled.map((sw, idx) => (
                                     // 
                                     <li
                                         key={idx}
-                                        className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded">
+                                        className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded-xl dark:text-yellow-600">
                                         {sw.word}
                                         {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
                                             ({sw.meaning})

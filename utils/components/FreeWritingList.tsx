@@ -61,14 +61,14 @@ export default function FreeWritingList({ writings, onDelete }: Props) {
                     <button
                         onClick={() => setPage(1)}
                         disabled={page === 1}
-                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                     >
                         «
                     </button>
                     <button
                         onClick={() => setPage(p => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                     >
                         ‹
                     </button>
@@ -88,7 +88,7 @@ export default function FreeWritingList({ writings, onDelete }: Props) {
                                     key={p}
                                     onClick={() => setPage(p)}
                                     className={`w-8 h-8 text-sm rounded-md transition-colors shrink-0 ${p === page
-                                        ? 'bg-blue-500 text-white'
+                                        ? 'bg-blue-500 text-white dark:bg-blue-900/40 dark:text-gray-400'
                                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                         }`}
                                 >
@@ -100,14 +100,14 @@ export default function FreeWritingList({ writings, onDelete }: Props) {
                     <button
                         onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                         disabled={page === totalPages}
-                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                     >
                         ›
                     </button>
                     <button
                         onClick={() => setPage(totalPages)}
                         disabled={page === totalPages}
-                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-400 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="px-2 py-1 text-sm text-gray-500 dark:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                     >
                         »
                     </button>
