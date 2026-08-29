@@ -141,7 +141,7 @@ export default function SentenceForm() {
                         disabled={!content.trim() || submitting}
                         className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                     >
-                        {submitting ? '저장 중 ...' : '저장되었습니다.'}
+                        {submitting ? '저장 중 ...' : '저장'}
                     </button>
                     <button
                         type="button"

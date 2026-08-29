@@ -53,7 +53,7 @@ export default function SideBar({ isOpen, onClose }: Props) {
                                 href={item.path}
                                 onClick={handleNavClick}
                                 className={`block px-3 py-2 rounded-md text-sm transition-colors ${pathname === item.path
-                                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-950 dark: text-blue-400 font-medium'
+                                    ? 'bg-green-50 text-green-600 dark:bg-green-950 dark: text-green-400 font-medium'
                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
                             >{item.label}</Link>
                         </li>))}

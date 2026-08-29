@@ -38,7 +38,7 @@ export function LineNumberedTextarea({ value, onChange, placeholder, className }
         <div className={`flex bg-background border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden ${className ?? ''}`}>
             <div
                 ref={lineNumbersRef}
-                className="select-none text-right pr-2 pl-3 py-2 text-sm text-gray-400 dark:text-gray-600 dark:bg-gray-900 overflow-hidden shrink-0"
+                className="select-none text-right pr-2 pl-3 py-2 text-sm text-gray-400 dark:text-gray-600 overflow-hidden shrink-0"
                 style={{ lineHeight: '1.5rem' }}
             >
                 {Array.from({ length: lineCount }, (_, i) => (
