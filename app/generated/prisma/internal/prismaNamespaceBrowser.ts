@@ -60,7 +60,8 @@ export const ModelName = {
   Expression: 'Expression',
   ExpressionSentence: 'ExpressionSentence',
   StudyLog: 'StudyLog',
-  FreeWriting: 'FreeWriting'
+  FreeWriting: 'FreeWriting',
+  ExpressionFavorite: 'ExpressionFavorite'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -185,6 +186,16 @@ export const FreeWritingScalarFieldEnum = {
 } as const
 
 export type FreeWritingScalarFieldEnum = (typeof FreeWritingScalarFieldEnum)[keyof typeof FreeWritingScalarFieldEnum]
+
+
+export const ExpressionFavoriteScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  expressionId: 'expressionId',
+  createdAt: 'createdAt'
+} as const
+
+export type ExpressionFavoriteScalarFieldEnum = (typeof ExpressionFavoriteScalarFieldEnum)[keyof typeof ExpressionFavoriteScalarFieldEnum]
 
 
 export const SortOrder = {

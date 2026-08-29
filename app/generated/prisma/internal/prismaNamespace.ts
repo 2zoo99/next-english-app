@@ -393,7 +393,8 @@ export const ModelName = {
   Expression: 'Expression',
   ExpressionSentence: 'ExpressionSentence',
   StudyLog: 'StudyLog',
-  FreeWriting: 'FreeWriting'
+  FreeWriting: 'FreeWriting',
+  ExpressionFavorite: 'ExpressionFavorite'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog" | "freeWriting"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog" | "freeWriting" | "expressionFavorite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1154,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ExpressionFavorite: {
+      payload: Prisma.$ExpressionFavoritePayload<ExtArgs>
+      fields: Prisma.ExpressionFavoriteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExpressionFavoriteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExpressionFavoriteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        findFirst: {
+          args: Prisma.ExpressionFavoriteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExpressionFavoriteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        findMany: {
+          args: Prisma.ExpressionFavoriteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>[]
+        }
+        create: {
+          args: Prisma.ExpressionFavoriteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        createMany: {
+          args: Prisma.ExpressionFavoriteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExpressionFavoriteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>[]
+        }
+        delete: {
+          args: Prisma.ExpressionFavoriteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        update: {
+          args: Prisma.ExpressionFavoriteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExpressionFavoriteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExpressionFavoriteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExpressionFavoriteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>[]
+        }
+        upsert: {
+          args: Prisma.ExpressionFavoriteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExpressionFavoritePayload>
+        }
+        aggregate: {
+          args: Prisma.ExpressionFavoriteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExpressionFavorite>
+        }
+        groupBy: {
+          args: Prisma.ExpressionFavoriteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionFavoriteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExpressionFavoriteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExpressionFavoriteCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1298,6 +1373,16 @@ export const FreeWritingScalarFieldEnum = {
 } as const
 
 export type FreeWritingScalarFieldEnum = (typeof FreeWritingScalarFieldEnum)[keyof typeof FreeWritingScalarFieldEnum]
+
+
+export const ExpressionFavoriteScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  expressionId: 'expressionId',
+  createdAt: 'createdAt'
+} as const
+
+export type ExpressionFavoriteScalarFieldEnum = (typeof ExpressionFavoriteScalarFieldEnum)[keyof typeof ExpressionFavoriteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1490,6 +1575,7 @@ export type GlobalOmitConfig = {
   expressionSentence?: Prisma.ExpressionSentenceOmit
   studyLog?: Prisma.StudyLogOmit
   freeWriting?: Prisma.FreeWritingOmit
+  expressionFavorite?: Prisma.ExpressionFavoriteOmit
 }
 
 /* Types for Logging */

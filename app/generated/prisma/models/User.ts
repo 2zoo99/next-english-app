@@ -228,6 +228,7 @@ export type UserWhereInput = {
   expressions?: Prisma.ExpressionListRelationFilter
   studyLogs?: Prisma.StudyLogListRelationFilter
   freeWritings?: Prisma.FreeWritingListRelationFilter
+  expressionFavorites?: Prisma.ExpressionFavoriteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -241,6 +242,7 @@ export type UserOrderByWithRelationInput = {
   expressions?: Prisma.ExpressionOrderByRelationAggregateInput
   studyLogs?: Prisma.StudyLogOrderByRelationAggregateInput
   freeWritings?: Prisma.FreeWritingOrderByRelationAggregateInput
+  expressionFavorites?: Prisma.ExpressionFavoriteOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +259,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   expressions?: Prisma.ExpressionListRelationFilter
   studyLogs?: Prisma.StudyLogListRelationFilter
   freeWritings?: Prisma.FreeWritingListRelationFilter
+  expressionFavorites?: Prisma.ExpressionFavoriteListRelationFilter
 }, "id" | "supabaseId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -295,6 +298,7 @@ export type UserCreateInput = {
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -308,6 +312,7 @@ export type UserUncheckedCreateInput = {
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -320,6 +325,7 @@ export type UserUpdateInput = {
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -333,6 +339,7 @@ export type UserUncheckedUpdateInput = {
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -477,6 +484,20 @@ export type UserUpdateOneRequiredWithoutFreeWritingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFreeWritingsInput, Prisma.UserUpdateWithoutFreeWritingsInput>, Prisma.UserUncheckedUpdateWithoutFreeWritingsInput>
 }
 
+export type UserCreateNestedOneWithoutExpressionFavoritesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpressionFavoritesInput, Prisma.UserUncheckedCreateWithoutExpressionFavoritesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpressionFavoritesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutExpressionFavoritesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutExpressionFavoritesInput, Prisma.UserUncheckedCreateWithoutExpressionFavoritesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutExpressionFavoritesInput
+  upsert?: Prisma.UserUpsertWithoutExpressionFavoritesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpressionFavoritesInput, Prisma.UserUpdateWithoutExpressionFavoritesInput>, Prisma.UserUncheckedUpdateWithoutExpressionFavoritesInput>
+}
+
 export type UserCreateWithoutSentencesInput = {
   supabaseId: string
   name?: string | null
@@ -486,6 +507,7 @@ export type UserCreateWithoutSentencesInput = {
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentencesInput = {
@@ -498,6 +520,7 @@ export type UserUncheckedCreateWithoutSentencesInput = {
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentencesInput = {
@@ -525,6 +548,7 @@ export type UserUpdateWithoutSentencesInput = {
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentencesInput = {
@@ -537,6 +561,7 @@ export type UserUncheckedUpdateWithoutSentencesInput = {
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpressionsInput = {
@@ -548,6 +573,7 @@ export type UserCreateWithoutExpressionsInput = {
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpressionsInput = {
@@ -560,6 +586,7 @@ export type UserUncheckedCreateWithoutExpressionsInput = {
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpressionsInput = {
@@ -587,6 +614,7 @@ export type UserUpdateWithoutExpressionsInput = {
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpressionsInput = {
@@ -599,6 +627,7 @@ export type UserUncheckedUpdateWithoutExpressionsInput = {
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStudyLogsInput = {
@@ -610,6 +639,7 @@ export type UserCreateWithoutStudyLogsInput = {
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudyLogsInput = {
@@ -622,6 +652,7 @@ export type UserUncheckedCreateWithoutStudyLogsInput = {
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudyLogsInput = {
@@ -649,6 +680,7 @@ export type UserUpdateWithoutStudyLogsInput = {
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudyLogsInput = {
@@ -661,6 +693,7 @@ export type UserUncheckedUpdateWithoutStudyLogsInput = {
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFreeWritingsInput = {
@@ -672,6 +705,7 @@ export type UserCreateWithoutFreeWritingsInput = {
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFreeWritingsInput = {
@@ -684,6 +718,7 @@ export type UserUncheckedCreateWithoutFreeWritingsInput = {
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFreeWritingsInput = {
@@ -711,6 +746,7 @@ export type UserUpdateWithoutFreeWritingsInput = {
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFreeWritingsInput = {
@@ -723,6 +759,73 @@ export type UserUncheckedUpdateWithoutFreeWritingsInput = {
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutExpressionFavoritesInput = {
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutExpressionFavoritesInput = {
+  id?: number
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutExpressionFavoritesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpressionFavoritesInput, Prisma.UserUncheckedCreateWithoutExpressionFavoritesInput>
+}
+
+export type UserUpsertWithoutExpressionFavoritesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExpressionFavoritesInput, Prisma.UserUncheckedUpdateWithoutExpressionFavoritesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExpressionFavoritesInput, Prisma.UserUncheckedCreateWithoutExpressionFavoritesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExpressionFavoritesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExpressionFavoritesInput, Prisma.UserUncheckedUpdateWithoutExpressionFavoritesInput>
+}
+
+export type UserUpdateWithoutExpressionFavoritesInput = {
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExpressionFavoritesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -735,6 +838,7 @@ export type UserCountOutputType = {
   expressions: number
   studyLogs: number
   freeWritings: number
+  expressionFavorites: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -742,6 +846,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   expressions?: boolean | UserCountOutputTypeCountExpressionsArgs
   studyLogs?: boolean | UserCountOutputTypeCountStudyLogsArgs
   freeWritings?: boolean | UserCountOutputTypeCountFreeWritingsArgs
+  expressionFavorites?: boolean | UserCountOutputTypeCountExpressionFavoritesArgs
 }
 
 /**
@@ -782,6 +887,13 @@ export type UserCountOutputTypeCountFreeWritingsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.FreeWritingWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExpressionFavoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExpressionFavoriteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -794,6 +906,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
   studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   freeWritings?: boolean | Prisma.User$freeWritingsArgs<ExtArgs>
+  expressionFavorites?: boolean | Prisma.User$expressionFavoritesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -830,6 +943,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
   studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   freeWritings?: boolean | Prisma.User$freeWritingsArgs<ExtArgs>
+  expressionFavorites?: boolean | Prisma.User$expressionFavoritesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -842,6 +956,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     expressions: Prisma.$ExpressionPayload<ExtArgs>[]
     studyLogs: Prisma.$StudyLogPayload<ExtArgs>[]
     freeWritings: Prisma.$FreeWritingPayload<ExtArgs>[]
+    expressionFavorites: Prisma.$ExpressionFavoritePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1248,6 +1363,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   expressions<T extends Prisma.User$expressionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expressionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studyLogs<T extends Prisma.User$studyLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studyLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudyLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   freeWritings<T extends Prisma.User$freeWritingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$freeWritingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FreeWritingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  expressionFavorites<T extends Prisma.User$expressionFavoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expressionFavoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionFavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1769,6 +1885,30 @@ export type User$freeWritingsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.FreeWritingScalarFieldEnum | Prisma.FreeWritingScalarFieldEnum[]
+}
+
+/**
+ * User.expressionFavorites
+ */
+export type User$expressionFavoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExpressionFavorite
+   */
+  select?: Prisma.ExpressionFavoriteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExpressionFavorite
+   */
+  omit?: Prisma.ExpressionFavoriteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExpressionFavoriteInclude<ExtArgs> | null
+  where?: Prisma.ExpressionFavoriteWhereInput
+  orderBy?: Prisma.ExpressionFavoriteOrderByWithRelationInput | Prisma.ExpressionFavoriteOrderByWithRelationInput[]
+  cursor?: Prisma.ExpressionFavoriteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExpressionFavoriteScalarFieldEnum | Prisma.ExpressionFavoriteScalarFieldEnum[]
 }
 
 /**

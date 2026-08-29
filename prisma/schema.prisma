@@ -27,6 +27,7 @@ model User {
   expressions Expression[]
   studyLogs     StudyLog[]
   freeWritings FreeWriting[]
+  expressionFavorites  ExpressionFavorite[]
 
   @@map("USER")
 }
@@ -95,6 +96,7 @@ model Expression {
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
   exampleLinks  ExpressionSentence[]
+  favoritedBy          ExpressionFavorite[]
 
   @@unique([content, userId])   // 같은 사용자 안에서 같은 표현 중복 금지
   @@map("EXPRESSION")
@@ -136,6 +138,18 @@ model FreeWriting {
   updatedAt DateTime @updatedAt
 
   @@map("FREE_WRITING")
+}
+
+model ExpressionFavorite {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  expressionId Int
+  expression   Expression @relation(fields: [expressionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([userId, expressionId])
+  @@map("EXPRESSION_FAVORITE")
 }
 
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 

@@ -1,5 +1,4 @@
 // utils/components/ExpressionReference.tsx
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -16,6 +15,7 @@ export default function ExpressionReference() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [loading, setLoading] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
@@ -52,16 +52,25 @@ export default function ExpressionReference() {
         };
     }, [query]);
 
+    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === 'Escape') {
+            setShowDropdown(false);
+            inputRef.current?.blur();   // 포커스도 같이 빼서, 다시 Tab/클릭 없이 Esc 한 번 더 눌러도 안 열리게
+        }
+    }
+
     return (
         <div ref={wrapperRef} className="relative">
             <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 block">
                 표현 참고하기
             </label>
             <input
+                ref={inputRef}
                 type="text"
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
                 onFocus={() => setShowDropdown(true)}
+                onKeyDown={handleKeyDown}
                 placeholder="등록한 표현을 검색해보세요"
                 className="w-full px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />

@@ -67,3 +67,8 @@ export type StudyLog = Prisma.StudyLogModel
  * 
  */
 export type FreeWriting = Prisma.FreeWritingModel
+/**
+ * Model ExpressionFavorite
+ * 
+ */
+export type ExpressionFavorite = Prisma.ExpressionFavoriteModel
