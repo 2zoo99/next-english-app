@@ -86,3 +86,8 @@ export type ExpressionSentence = Prisma.ExpressionSentenceModel
  * 
  */
 export type StudyLog = Prisma.StudyLogModel
+/**
+ * Model FreeWriting
+ * 
+ */
+export type FreeWriting = Prisma.FreeWritingModel

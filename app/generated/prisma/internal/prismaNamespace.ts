@@ -392,7 +392,8 @@ export const ModelName = {
   SentenceWord: 'SentenceWord',
   Expression: 'Expression',
   ExpressionSentence: 'ExpressionSentence',
-  StudyLog: 'StudyLog'
+  StudyLog: 'StudyLog',
+  FreeWriting: 'FreeWriting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog" | "freeWriting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1079,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FreeWriting: {
+      payload: Prisma.$FreeWritingPayload<ExtArgs>
+      fields: Prisma.FreeWritingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FreeWritingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FreeWritingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        findFirst: {
+          args: Prisma.FreeWritingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FreeWritingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        findMany: {
+          args: Prisma.FreeWritingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>[]
+        }
+        create: {
+          args: Prisma.FreeWritingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        createMany: {
+          args: Prisma.FreeWritingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FreeWritingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>[]
+        }
+        delete: {
+          args: Prisma.FreeWritingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        update: {
+          args: Prisma.FreeWritingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        deleteMany: {
+          args: Prisma.FreeWritingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FreeWritingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FreeWritingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>[]
+        }
+        upsert: {
+          args: Prisma.FreeWritingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FreeWritingPayload>
+        }
+        aggregate: {
+          args: Prisma.FreeWritingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFreeWriting>
+        }
+        groupBy: {
+          args: Prisma.FreeWritingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FreeWritingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FreeWritingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FreeWritingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1211,6 +1286,18 @@ export const StudyLogScalarFieldEnum = {
 } as const
 
 export type StudyLogScalarFieldEnum = (typeof StudyLogScalarFieldEnum)[keyof typeof StudyLogScalarFieldEnum]
+
+
+export const FreeWritingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  korean: 'korean',
+  english: 'english',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FreeWritingScalarFieldEnum = (typeof FreeWritingScalarFieldEnum)[keyof typeof FreeWritingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1402,6 +1489,7 @@ export type GlobalOmitConfig = {
   expression?: Prisma.ExpressionOmit
   expressionSentence?: Prisma.ExpressionSentenceOmit
   studyLog?: Prisma.StudyLogOmit
+  freeWriting?: Prisma.FreeWritingOmit
 }
 
 /* Types for Logging */

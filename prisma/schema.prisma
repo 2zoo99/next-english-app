@@ -26,6 +26,7 @@ model User {
   sentences   Sentence[]
   expressions Expression[]
   studyLogs     StudyLog[]
+  freeWritings FreeWriting[]
 
   @@map("USER")
 }
@@ -123,6 +124,18 @@ model StudyLog {
 
   @@unique([userId, date])
   @@map("STUDY_LOG")
+}
+
+model FreeWriting {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  korean    String
+  english   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("FREE_WRITING")
 }
 
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 

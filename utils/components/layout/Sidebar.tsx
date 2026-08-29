@@ -11,6 +11,7 @@ const navItems = [
     { path: '/create-sentence', label: 'Create Sentence' },
     { path: '/practice', label: 'Practice' },
     { path: '/common-expression', label: 'Common Expressions' },
+    { path: '/free-writing', label: 'Free Writing' },
     // 다른 페이지들도 여기에 추가 가능
 ];
 
