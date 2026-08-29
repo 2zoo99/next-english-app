@@ -75,6 +75,8 @@ export default function PracticeForm() {
     const [solvedIds, setSolvedIds] = useState<Set<number>>(new Set());
     const [roundComplete, setRoundComplete] = useState(false);
     const router = useRouter();
+    const [canAdvance, setCanAdvance] = useState(false);
+    const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     //전체 문장 조회 후 랜덤 문장 선택
     const fetchSentences = useCallback(async () => {
@@ -154,7 +156,7 @@ export default function PracticeForm() {
     //정답을 맞혔을때 enter를 누르면 다음 문제로 넘어가도록
     useEffect(() => {
         const handleEnterForNext = (e: KeyboardEvent) => {
-            if (!done) return;
+            if (!done || !canAdvance) return;
             if (e.key !== 'Enter') return;
             if (e.repeat) return;
             if (e.ctrlKey) return;  // ctrl이 아직 눌려있으면 다음문제로 넘기지 않음
@@ -164,7 +166,7 @@ export default function PracticeForm() {
         }
         window.addEventListener('keydown', handleEnterForNext);
         return () => window.removeEventListener('keydown', handleEnterForNext);
-    }, [done, filteredSentences]);
+    }, [done, canAdvance, filteredSentences]);
 
     //힌트 관련 상태를 한 번에 초기화 (기존에 3곳에서 반복되던 로직을 묶음)
     const resetHints = () => {
@@ -176,6 +178,8 @@ export default function PracticeForm() {
 
     //문장 목록에서 랜덤으로 하나를 선택하는 함수
     const pickRandom = (data: Sentence[], excludeIds: Set<number> = solvedIds) => {
+        if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);   // 추가
+        setCanAdvance(false);   // 추가
         const remaining = data.filter(s => !excludeIds.has(s.id));
 
         if (remaining.length === 0) {
@@ -223,6 +227,11 @@ export default function PracticeForm() {
         if (firstWrong === -1) {
             setMessage('Good Job !');
             setDone(true);
+            setCanAdvance(false);
+            if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+            advanceTimerRef.current = setTimeout(() => {
+                setCanAdvance(true);   // 0.8초 뒤에야 다음 문제로 넘어갈 수 있게
+            }, 800);
             setSolvedIds(prev => new Set(prev).add(current.id));   // 추가
             // 공부 기록 남기기 (실패해도 사용자 경험에 영향 없도록 조용히 처리)
             fetch('/api/study-logs', { method: 'POST' }).catch(() => { });
@@ -350,13 +359,26 @@ export default function PracticeForm() {
                         type="text"
                         value={input}
                         onChange={handleInputChange}
+                        enterKeyHint="done"
                         onKeyDown={(e) => {
                             if (e.repeat) return;
 
-                            if (e.key === 'Enter' && e.ctrlKey) {
+                            // if (e.key === 'Enter' && e.ctrlKey) {
+                            //     e.preventDefault();
+                            //     ctrlComboRef.current = true;
+                            //     handleSubmit();
+                            //     return;
+                            // }
+                            if (e.key === 'Enter') {
                                 e.preventDefault();
-                                ctrlComboRef.current = true;
-                                handleSubmit();
+                                if (done) {
+                                    if (canAdvance) {
+                                        pickRandom(filteredSentences);
+                                    }
+                                } else {
+                                    if (e.ctrlKey) ctrlComboRef.current = true;
+                                    handleSubmit();
+                                }
                                 return;
                             }
 
@@ -381,23 +403,27 @@ export default function PracticeForm() {
                     <div className="flex gap-2">
                         <button
                             type="button"
-                            onClick={handleSubmit}
-                            title="Ctrl+Enter"
-                            disabled={done}     //done이 True 면 비활성화 => 정답이 아니면 활성화
-                            className="hover:text-green-500 dark:text-gray-300 dark:hover:text-green-400 p-2 rounded">정답확인</button>
-                        <button
-                            type="button"
-                            onClick={() => pickRandom(filteredSentences)}
-                            title="Enter"
-                            className="hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 p-2 rounded">다음 문제</button>
-                        <button
-                            type="button"
                             onClick={handleAllHint}
                             title="Alt"
                             className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
                         >
                             {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
                         </button>
+                        <button
+                            type="button"
+                            onClick={done ? () => pickRandom(filteredSentences) : handleSubmit}
+                            disabled={done && !canAdvance}
+                            title="Enter"
+                            className={`px-3 py-1 rounded transition-colors ${done
+                                ? canAdvance
+                                    ? 'text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
+                                    : 'text-gray-400 bg-gray-200 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
+                                : 'text-white bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
+                                }`}
+                        >
+                            {done ? '다음 문제' : '정답 확인'}
+                        </button>
+
                     </div>
                     {showAllHint && (
                         // showAllHint 가 True일때 shuffled 배열의 모든 요소 보이기
