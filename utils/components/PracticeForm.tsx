@@ -30,6 +30,7 @@ type WordResult = {
 type ShuffledWord = {
     word: string;
     meaning: string | null;
+    order: number;
 }
 type TagInfo = {
     id: number;
@@ -130,6 +131,35 @@ export default function PracticeForm() {
             return sortOrder === 'asc' ? diff : -diff;
         })
     }, [sentences, selectedTagIds, sortOrder]);
+
+    // 입력창 내용을 정답과 앞에서부터 비교해서, 몇 번째 단어까지 맞았는지 계산
+    // const correctPrefixCount = useMemo(() => {
+    //     if (!current) return 0;
+    //     const inputWords = input.trim().split(' ').filter(w => w !== '');
+    //     const answerWords = current.sentenceWords.map(sw => sw.word.word);
+
+    //     let count = 0;
+    //     for (let i = 0; i < answerWords.length && i < inputWords.length; i++) {
+    //         if (normalize(inputWords[i]) === normalize(answerWords[i])) {
+    //             count++;
+    //         } else {
+    //             break;
+    //         }
+    //     }
+    //     return count;
+    // }, [input, current]);
+
+    // 입력창에 있는 단어들을 정규화해서 "단어별 몇 번 등장했는지" 세어둠
+    const typedWordCounts = useMemo(() => {
+        const map = new Map<string, number>();
+        const inputWords = input.trim().split(' ').filter(w => w !== '');
+        inputWords.forEach(w => {
+            const key = normalize(w);
+            if (!key) return;
+            map.set(key, (map.get(key) ?? 0) + 1);
+        });
+        return map;
+    }, [input]);
 
     //전역 스페이스바 감지
     useEffect(() => {
@@ -253,9 +283,10 @@ export default function PracticeForm() {
     const handleAllHint = () => {
         if (!showAllHint && shuffled.length === 0 && current) {
             const allWords: ShuffledWord[] = current.sentenceWords
-                .map(sw => ({
+                .map((sw, index) => ({
                     word: sw.word.word,
                     meaning: sw.word.meaning,
+                    order: index,   // 추가: 원래 순서 기억
                 }));
             setShuffled(shuffleWords(allWords));
         }
@@ -430,17 +461,31 @@ export default function PracticeForm() {
                         // 조건부 렌더링 방식 : {조건 && 보여줄것}
                         <div className="border rounded bg-yellow-50 dark:bg-black border-gray-200 dark:border-gray-700 shadow-sm  flex px-2 pb-2 mt-2">
                             <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
-                                {shuffled.map((sw, idx) => (
-                                    // 
-                                    <li
-                                        key={idx}
-                                        className="px-2.5 py-1 border border-gray-300 dark:border-gray-700 rounded-xl dark:text-yellow-600">
-                                        {sw.word}
-                                        {sw.meaning && (<span className="text-gray-500 dark:text-gray-400 text-sm ml-1">
-                                            ({sw.meaning})
-                                        </span>)}
-                                    </li>
-                                ))}
+                                {(() => {
+                                    // 렌더링할 때마다 "남은 개수" 맵을 복사해서, 위에서부터 하나씩 소진시키며 체크
+                                    const remaining = new Map(typedWordCounts);
+
+                                    return shuffled.map((sw, idx) => {
+                                        const key = normalize(sw.word);
+                                        const available = remaining.get(key) ?? 0;
+                                        const isTyped = available > 0;
+                                        if (isTyped) remaining.set(key, available - 1);
+
+                                        return (
+                                            <li
+                                                key={idx}
+                                                className={`px-2.5 py-1 border rounded-xl transition-colors ${isTyped
+                                                        ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-600 line-through'
+                                                        : 'border-gray-300 dark:border-gray-700 dark:text-yellow-600'
+                                                    }`}>
+                                                {sw.word}
+                                                {sw.meaning && (<span className={`text-sm ml-1 ${isTyped ? 'text-gray-300 dark:text-gray-700' : 'text-gray-500 dark:text-gray-400'}`}>
+                                                    ({sw.meaning})
+                                                </span>)}
+                                            </li>
+                                        );
+                                    });
+                                })()}
                             </ul>
                         </div>
                     )}
