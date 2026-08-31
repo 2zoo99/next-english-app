@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "SENTENCE" ADD COLUMN     "hint" TEXT;

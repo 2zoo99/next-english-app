@@ -43,7 +43,7 @@ export default function SentenceForm() {
     const translateRef = useRef<HTMLTextAreaElement>(null);
     const contentRef = useRef<HTMLTextAreaElement>(null);
     const [submitting, setSubmitting] = useState(false);
-
+    const [hint, setHint] = useState('');
 
 
 
@@ -57,7 +57,7 @@ export default function SentenceForm() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ content, translate, tags }),
+            body: JSON.stringify({ content, translate, hint, tags }),
         });
 
         if (res.ok) {
@@ -65,6 +65,7 @@ export default function SentenceForm() {
             setResult(data);
             setContent('');
             setTranslate('');
+            setHint('');
             setTags([]); // 태그 입력 초기화
             setMessage('문장이 저장되었습니다.');
             setIsSuccess(true); // 성공 상태로 설정
@@ -81,6 +82,7 @@ export default function SentenceForm() {
     const handleReset = () => {
         setContent('');
         setTranslate('');
+        setHint('');
         setTags([]); // 태그 입력 초기화
         setResult(null);
         setMessage('');
@@ -123,6 +125,18 @@ export default function SentenceForm() {
                             }
                         }}
                         placeholder="한국어 번역을 입력하세요 (선택)"
+                        className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                        해석 힌트 <span className="text-gray-400 font-normal">(선택)</span>
+                    </label>
+                    <AutoResizeTextarea
+                        value={hint}
+                        onChange={(e) => setHint(e.target.value)}
+                        placeholder="예: 내가 하지 않아도 / 특별한 것"
                         className="px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                 </div>

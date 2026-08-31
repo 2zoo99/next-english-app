@@ -18,10 +18,21 @@ export async function GET() {
             },
             sentenceTags: {
                 include: { tag: true }
-            }
+            },
+            practicedBy: currentUser
+                ? { where: { userId: currentUser.id } }
+                : false
         }
     })
-    return Response.json(sentences);
+
+    const result = sentences.map(s => ({
+        ...s,
+        isPracticed: s.practicedBy ? s.practicedBy.length > 0 : false,
+        practiceCount: s.practicedBy?.[0]?.correctCount ?? 0,
+        practicedBy: undefined,   // 원본 관계 필드는 응답에서 제거
+    }));
+
+    return Response.json(result);
 }
 // 생성
 export async function POST(request: Request) {
@@ -37,6 +48,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const content: string = body.content;
     const translate: string = body.translate || '';
+    const hint: string = body.hint?.trim() || '';   // 추가
+
     const tagNames: string[] = body.tags || [];
 
     const normalize = (word: string) => {
@@ -55,6 +68,7 @@ export async function POST(request: Request) {
             data: {
                 content,
                 translate,
+                hint: hint || null,
                 userId: currentUser.id,   // 추가
             }
         });

@@ -63,6 +63,7 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const currentUser = await getCurrentUser();
+
     if (!currentUser) {
         return Response.json({ error: '로그인이 필요해요.' }, { status: 401 });
     }
@@ -81,7 +82,7 @@ export async function PATCH(
         return Response.json({ error: '이 문장을 수정할 권한이 없어요.' }, { status: 403 });
     }
 
-    const { content, translate } = await request.json();
+    const { content, translate, hint } = await request.json();
 
     const normalize = (word: string) => {
         return word.replace(/[^a-zA-Z0-9가-힣']/g, '') // 특수문자, 공백 제거
@@ -94,6 +95,7 @@ export async function PATCH(
             //수정되는 것이기 때문에 content와 translate 중 하나만 수정할 수도 있다. 따라서 content와 translate가 존재할 때만 업데이트하도록 조건부로 작성한다.
             ...(content && { content }),
             ...(translate !== undefined && { translate }), //translate는 빈 문자열도 허용하기 때문에 undefined 여부로 체크한다.
+            ...(hint !== undefined && { hint: hint || null }),
         }
     })
 

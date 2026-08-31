@@ -23,8 +23,11 @@ type Sentence = {
     id: number;
     content: string;
     translate: string;
+    hint: string | null;
     sentenceWords: SentenceWord[];
     sentenceTags: SentenceTag[];
+    isPracticed: boolean;      // 추가
+    practiceCount: number;     // 추가
 }
 
 function SentenceSkeleton() {
@@ -49,6 +52,7 @@ export default function SentenceList() {
     const [editedTranslate, setEditedTranslate] = useState('');
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [editedHint, setEditedHint] = useState('');
 
     //전체 조회
     const fetchSentences = useCallback(async () => {
@@ -96,6 +100,7 @@ export default function SentenceList() {
         setEditingId(sentence.id);
         setEditedContent(sentence.content);
         setEditedTranslate(sentence.translate);
+        setEditedHint(sentence.hint ?? '');
         setMessage('');
     }
 
@@ -104,6 +109,7 @@ export default function SentenceList() {
         setEditingId(null);
         setEditedContent('');
         setEditedTranslate('');
+        setEditedHint('');
     }
 
     //수정 저장 기능
@@ -114,6 +120,7 @@ export default function SentenceList() {
             body: JSON.stringify({
                 content: editedContent,
                 translate: editedTranslate,
+                hint: editedHint,
             })
         })
 
@@ -158,6 +165,7 @@ export default function SentenceList() {
                     </svg>
                 </button>
             </div>
+
             <input
                 type="text"
                 value={searchQuery}
@@ -170,6 +178,7 @@ export default function SentenceList() {
                     &quot;{searchQuery}&quot;에 대한 검색 결과가 없어요.
                 </p>
             )}
+
             <ul>
                 {filteredSentences.map(sentence => (
                     <li key={sentence.id}>
@@ -193,6 +202,12 @@ export default function SentenceList() {
                                         value={editedTranslate}
                                         onChange={(e) => setEditedTranslate(e.target.value)}
                                         className="w-full p-1 border border-gray-200 rounded text-base" />
+                                    <AutoResizeTextarea
+                                        value={editedHint}
+                                        onChange={(e) => setEditedHint(e.target.value)}
+                                        placeholder="해석 힌트 (선택)"
+                                        className="w-full p-1 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-600 dark:text-gray-400" />
+
                                     <TagEditor
                                         sentenceId={sentence.id}
                                         currentTags={sentence.sentenceTags}
@@ -216,8 +231,18 @@ export default function SentenceList() {
                             ) : (
                                 <>
                                     <div className="flex flex-col gap-1 border-none rounded-md px-2 ">
-                                        <p className="dark:text-gray-300">{sentence.content}</p>
+                                        <div className="flex items-center gap-2">
+                                            <p className="dark:text-gray-300">{sentence.content}</p>
+                                            {sentence.isPracticed && (
+                                                <span className='shrink-0 px-2 py-0.5 text-xs rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                                                    title={`${sentence.practiceCount}번 맞춤`}>✓ 연습함</span>
+                                            )}
+
+                                        </div>
                                         <p className="dark:text-gray-300">{sentence.translate}</p>
+                                        {sentence.hint && (
+                                            <p className="w-max px-1.5 py-0.5 rounded-md text-sm text-gray-500 dark:text-gray-300 bg-yellow-200/20">🗒️ {sentence.hint}</p>
+                                        )}
                                         <div className="w-fit align-items flex gap-2 rounded-md py-1 pt-2">
                                             <button className="bg-gray-200 dark:bg-gray-400 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
                                             <button className="bg-red-200 dark:bg-red-300 text-black text-sm py-1 px-2 rounded-full hover:bg-red-300 dark:hover:bg-red-400" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
@@ -229,10 +254,11 @@ export default function SentenceList() {
                                 </>
                             )}
                         </div>
-                    </li>
-                ))}
-            </ul>
+                    </li >
+                ))
+                }
+            </ul >
 
-        </div>
+        </div >
     )
 }

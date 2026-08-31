@@ -21,6 +21,7 @@ type Sentence = {
     content: string;
     translate: string;
     createdAt: string;
+    hint: string | null;
     sentenceWords: SentenceWord[];
     sentenceTags: SentenceTag[];
 }
@@ -83,6 +84,7 @@ export default function PracticeForm() {
     const [showResumePrompt, setShowResumePrompt] = useState(false);
     const [savedSolvedIds, setSavedSolvedIds] = useState<number[]>([]);
     const initializedRef = useRef(false);
+    const [showSentenceHint, setShowSentenceHint] = useState(false);
 
     //전체 문장 조회 후 랜덤 문장 선택
     const fetchSentences = useCallback(async () => {
@@ -479,6 +481,12 @@ export default function PracticeForm() {
 
                         <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
 
+                        {showSentenceHint && current.hint && (
+                            <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 px-2">
+                                💡 {current.hint}
+                            </p>
+                        )}
+
                         {!roundComplete && filteredSentences.length > 0 && (
                             <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">
                                 {solvedIds.size} / {filteredSentences.length} 완료
@@ -548,6 +556,15 @@ export default function PracticeForm() {
                             >
                                 {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
                             </button>
+                            {current.hint && (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowSentenceHint(prev => !prev)}
+                                    className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
+                                >
+                                    {showSentenceHint ? '해석 힌트 숨기기' : '해석 힌트 보기'}
+                                </button>
+                            )}
                             <button
                                 type="button"
                                 onClick={done ? () => pickRandom(filteredSentences) : handleSubmit}

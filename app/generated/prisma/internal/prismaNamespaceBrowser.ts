@@ -98,6 +98,7 @@ export const SentenceScalarFieldEnum = {
   id: 'id',
   content: 'content',
   translate: 'translate',
+  hint: 'hint',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'
