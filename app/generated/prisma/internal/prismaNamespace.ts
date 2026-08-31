@@ -394,7 +394,9 @@ export const ModelName = {
   ExpressionSentence: 'ExpressionSentence',
   StudyLog: 'StudyLog',
   FreeWriting: 'FreeWriting',
-  ExpressionFavorite: 'ExpressionFavorite'
+  ExpressionFavorite: 'ExpressionFavorite',
+  PracticeProgress: 'PracticeProgress',
+  SentencePractice: 'SentencePractice'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog" | "freeWriting" | "expressionFavorite"
+    modelProps: "user" | "sentence" | "tag" | "sentenceTag" | "word" | "sentenceWord" | "expression" | "expressionSentence" | "studyLog" | "freeWriting" | "expressionFavorite" | "practiceProgress" | "sentencePractice"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PracticeProgress: {
+      payload: Prisma.$PracticeProgressPayload<ExtArgs>
+      fields: Prisma.PracticeProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PracticeProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PracticeProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.PracticeProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PracticeProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        findMany: {
+          args: Prisma.PracticeProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>[]
+        }
+        create: {
+          args: Prisma.PracticeProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        createMany: {
+          args: Prisma.PracticeProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PracticeProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.PracticeProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        update: {
+          args: Prisma.PracticeProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.PracticeProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PracticeProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PracticeProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.PracticeProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PracticeProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.PracticeProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePracticeProgress>
+        }
+        groupBy: {
+          args: Prisma.PracticeProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PracticeProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PracticeProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PracticeProgressCountAggregateOutputType> | number
+        }
+      }
+    }
+    SentencePractice: {
+      payload: Prisma.$SentencePracticePayload<ExtArgs>
+      fields: Prisma.SentencePracticeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SentencePracticeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SentencePracticeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        findFirst: {
+          args: Prisma.SentencePracticeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SentencePracticeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        findMany: {
+          args: Prisma.SentencePracticeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>[]
+        }
+        create: {
+          args: Prisma.SentencePracticeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        createMany: {
+          args: Prisma.SentencePracticeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SentencePracticeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>[]
+        }
+        delete: {
+          args: Prisma.SentencePracticeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        update: {
+          args: Prisma.SentencePracticeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        deleteMany: {
+          args: Prisma.SentencePracticeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SentencePracticeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SentencePracticeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>[]
+        }
+        upsert: {
+          args: Prisma.SentencePracticeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SentencePracticePayload>
+        }
+        aggregate: {
+          args: Prisma.SentencePracticeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSentencePractice>
+        }
+        groupBy: {
+          args: Prisma.SentencePracticeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SentencePracticeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SentencePracticeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SentencePracticeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1383,6 +1533,27 @@ export const ExpressionFavoriteScalarFieldEnum = {
 } as const
 
 export type ExpressionFavoriteScalarFieldEnum = (typeof ExpressionFavoriteScalarFieldEnum)[keyof typeof ExpressionFavoriteScalarFieldEnum]
+
+
+export const PracticeProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  solvedIds: 'solvedIds',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PracticeProgressScalarFieldEnum = (typeof PracticeProgressScalarFieldEnum)[keyof typeof PracticeProgressScalarFieldEnum]
+
+
+export const SentencePracticeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  sentenceId: 'sentenceId',
+  correctCount: 'correctCount',
+  lastPracticedAt: 'lastPracticedAt'
+} as const
+
+export type SentencePracticeScalarFieldEnum = (typeof SentencePracticeScalarFieldEnum)[keyof typeof SentencePracticeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1576,6 +1747,8 @@ export type GlobalOmitConfig = {
   studyLog?: Prisma.StudyLogOmit
   freeWriting?: Prisma.FreeWritingOmit
   expressionFavorite?: Prisma.ExpressionFavoriteOmit
+  practiceProgress?: Prisma.PracticeProgressOmit
+  sentencePractice?: Prisma.SentencePracticeOmit
 }
 
 /* Types for Logging */

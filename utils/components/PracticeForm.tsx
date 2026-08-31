@@ -79,43 +79,23 @@ export default function PracticeForm() {
     const router = useRouter();
     const [canAdvance, setCanAdvance] = useState(false);
     const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [progressChecked, setProgressChecked] = useState(false);
+    const [showResumePrompt, setShowResumePrompt] = useState(false);
+    const [savedSolvedIds, setSavedSolvedIds] = useState<number[]>([]);
+    const initializedRef = useRef(false);
 
     //전체 문장 조회 후 랜덤 문장 선택
     const fetchSentences = useCallback(async () => {
-        const res = await fetch('/api/sentences');
-
-        if (res.ok) {
-            const data = await res.json();
-            setSentences(data);
+        try {
+            const res = await fetch('/api/sentences');
+            if (res.ok) {
+                const data = await res.json();
+                setSentences(data);
+            }
+        } catch (error) {
+            console.error('문장 목록을 불러오지 못했어요:', error);
+            // 조용히 넘어감 — 다음 주기(30초 뒤)에 다시 시도되니까 화면을 막을 필요 없음
         }
-    }, []);
-    //컴포넌트 처음 마운트때 전체 문장 조회
-    useEffect(() => {
-        fetchSentences();
-
-        const interval = setInterval(() => {
-            fetchSentences();
-        }, 30000);
-
-        return () => clearInterval(interval);
-    }, [fetchSentences, refreshKey]); // refreshKey가 변경될 때마다 fetchSentences를 호출하여 문장 목록을 새로고침
-
-    useEffect(() => {
-        setSolvedIds(new Set());       // 추가: 필터 바뀌면 새 라운드로
-        setRoundComplete(false);        // 추가
-        if (filteredSentences.length === 0) {
-            setCurrent(null);
-            return;
-        }
-        pickRandom(filteredSentences, new Set());
-    }, [selectedTagIds, sortOrder, sentences.length]);
-
-    // 전체 태그 목록 불러오기
-    useEffect(() => {
-        fetch('/api/tags')
-            .then(res => res.json())
-            .then(setAllTags)
-            .catch(() => { })
     }, []);
 
     const filteredSentences = useMemo(() => {
@@ -132,6 +112,72 @@ export default function PracticeForm() {
             return sortOrder === 'asc' ? diff : -diff;
         })
     }, [sentences, selectedTagIds, sortOrder]);
+
+    //컴포넌트 처음 마운트때 전체 문장 조회
+    useEffect(() => {
+        fetchSentences();
+
+        const interval = setInterval(() => {
+            fetchSentences();
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [fetchSentences, refreshKey]); // refreshKey가 변경될 때마다 fetchSentences를 호출하여 문장 목록을 새로고침
+
+    // ① 최초 시작 (이어서하기/처음부터하기 프롬프트가 없을 때만, 딱 한 번)
+    useEffect(() => {
+        if (!progressChecked) return;
+        if (showResumePrompt) return;
+        if (initializedRef.current) return;
+        if (sentences.length === 0) return; // 문장 목록이 아직 로딩 중이면 대기
+
+        initializedRef.current = true;
+
+        if (filteredSentences.length === 0) {
+            setCurrent(null);
+            return;
+        }
+        pickRandom(filteredSentences, solvedIds);
+    }, [progressChecked, showResumePrompt, sentences.length, filteredSentences]);
+
+    // ② 사용자가 실제로 태그/정렬을 바꿨을 때만 라운드 리셋 (최초 시작 이후에만 동작)
+    useEffect(() => {
+        if (!initializedRef.current) return;
+
+        setSolvedIds(new Set());
+        setRoundComplete(false);
+        fetch('/api/practice-progress', { method: 'DELETE' }).catch(() => { });
+
+        if (filteredSentences.length === 0) {
+            setCurrent(null);
+            return;
+        }
+        pickRandom(filteredSentences, new Set());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedTagIds, sortOrder]);
+
+    // 전체 태그 목록 불러오기
+    useEffect(() => {
+        fetch('/api/tags')
+            .then(res => res.json())
+            .then(setAllTags)
+            .catch(() => { })
+    }, []);
+
+    //마운트 시 저장된 진행 상황 한 번만 조회
+    useEffect(() => {
+        fetch('/api/practice-progress')
+            .then(res => res.ok ? res.json() : { solvedIds: [] })
+            .then(data => {
+                const ids: number[] = data.solvedIds ?? [];
+                if (ids.length > 0) {
+                    setSavedSolvedIds(ids);
+                    setShowResumePrompt(true);
+                }
+                setProgressChecked(true);
+            })
+            .catch(() => setProgressChecked(true));
+    }, []);
 
     // 입력창 내용을 정답과 앞에서부터 비교해서, 몇 번째 단어까지 맞았는지 계산
     // const correctPrefixCount = useMemo(() => {
@@ -216,6 +262,7 @@ export default function PracticeForm() {
         if (remaining.length === 0) {
             setCurrent(null);
             setRoundComplete(true);
+            fetch('/api/practice-progress', { method: 'DELETE' }).catch(() => { });
             return;
         }
         const random = remaining[Math.floor(Math.random() * remaining.length)];
@@ -263,9 +310,19 @@ export default function PracticeForm() {
             advanceTimerRef.current = setTimeout(() => {
                 setCanAdvance(true);   // 0.8초 뒤에야 다음 문제로 넘어갈 수 있게
             }, 800);
-            setSolvedIds(prev => new Set(prev).add(current.id));   // 추가
-            // 공부 기록 남기기 (실패해도 사용자 경험에 영향 없도록 조용히 처리)
+
+            setSolvedIds(prev => { // 추가
+                // 공부 기록 남기기 (실패해도 사용자 경험에 영향 없도록 조용히 처리)
+                const next = new Set(prev).add(current.id);
+                fetch('/api/practice-progress', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ solvedIds: Array.from(next) }),
+                }).catch(() => { });
+                return next;
+            });
             fetch('/api/study-logs', { method: 'POST' }).catch(() => { });
+            fetch(`/api/sentences/${current.id}/practiced`, { method: 'POST' }).catch(() => { });
         } else {
             setMessage('틀린 단어가 있어요.');
             const correctWords = inputWords.slice(0, firstWrong);
@@ -297,6 +354,23 @@ export default function PracticeForm() {
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInput(e.target.value);
         //resetHints();
+    }
+
+    //이어서 하기 / 처음부터 하기 핸들러
+    function handleResume() {
+        initializedRef.current = true;
+        const resumedSet = new Set(savedSolvedIds);
+        setSolvedIds(resumedSet);
+        setShowResumePrompt(false);
+        pickRandom(filteredSentences, resumedSet);
+    }
+
+    function handleStartOver() {
+        initializedRef.current = true;
+        setSolvedIds(new Set());
+        setShowResumePrompt(false);
+        fetch('/api/practice-progress', { method: 'DELETE' }).catch(() => { });
+        pickRandom(filteredSentences, new Set());
     }
 
     return (
@@ -344,202 +418,227 @@ export default function PracticeForm() {
                     <option value="asc">오래된순</option>
                 </select>
             </div>
-            {sentences.length > 0 && filteredSentences.length === 0 ? (
-                <p className="text-gray-400 dark:text-gray-500">선택한 태그에 맞는 문장이 없어요.</p>
-            ) : roundComplete ? (
+            {showResumePrompt ? (
                 <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-4 py-8 text-center">
-                    <p className="text-lg font-semibold mb-2 dark:text-gray-200">🎉 모든 문장을 연습했어요!</p>
+                    <p className="text-lg font-semibold mb-2 dark:text-gray-200">📝 이어서 할 연습이 있어요</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                        총 {filteredSentences.length}개의 문장을 다 풀었어요.
+                        지난번에 {savedSolvedIds.length}개를 풀었어요. 이어서 할까요?
                     </p>
                     <div className="flex gap-2 justify-center">
                         <button
                             type="button"
-                            onClick={() => {
-                                setSolvedIds(new Set());
-                                pickRandom(filteredSentences, new Set());
-                            }}
+                            onClick={handleResume}
                             className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-lg transition-colors"
                         >
-                            다시 연습하기
+                            이어서 하기
                         </button>
                         <button
                             type="button"
-                            onClick={() => router.push('/')}
+                            onClick={handleStartOver}
                             className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors"
                         >
-                            종료하기
+                            처음부터 하기
                         </button>
                     </div>
                 </div>
-            ) : !current ? (
-                <p>문장을 불러오는 중입니다...</p>
-            ) : (
-                <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-2 py-4">
-                    {/* 기존 연습 카드 내용 그대로 */}
-
-                    <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
-
-                    {!roundComplete && filteredSentences.length > 0 && (
-                        <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">
-                            {solvedIds.size} / {filteredSentences.length} 완료
+            ) :
+                sentences.length > 0 && filteredSentences.length === 0 ? (
+                    <p className="text-gray-400 dark:text-gray-500">선택한 태그에 맞는 문장이 없어요.</p>
+                ) : roundComplete ? (
+                    <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-4 py-8 text-center">
+                        <p className="text-lg font-semibold mb-2 dark:text-gray-200">🎉 모든 문장을 연습했어요!</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                            총 {filteredSentences.length}개의 문장을 다 풀었어요.
                         </p>
-                    )}
-
-                    <div className="relative">
-                        <AutoResizeTextarea
-                            ref={inputRef}
-                            value={input}
-                            onChange={handleInputChange}
-                            enterKeyHint="done"
-                            onKeyDown={(e) => {
-                                if (e.repeat) return;
-
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    if (done) {
-                                        if (canAdvance) {
-                                            pickRandom(filteredSentences);
-                                        }
-                                    } else {
-                                        if (e.ctrlKey) ctrlComboRef.current = true;
-                                        handleSubmit();
-                                    }
-                                    return;
-                                }
-
-                                if (e.key === 'Alt') {
-                                    e.preventDefault();
-                                    handleAllHint();
-                                }
-                            }}
-                            onKeyUp={(e) => {
-                                if (e.key === 'Control') {
-                                    e.preventDefault();
-                                    if (!ctrlComboRef.current) {
-                                        handleWrongHint();
-                                    }
-                                    ctrlComboRef.current = false;
-                                }
-                            }}
-                            placeholder="한국어를 읽고 영문으로 영작해 보세요."
-                            disabled={done}
-                            className="w-full p-2 pr-8 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-700"
-                        />
-                        {input && !done && (
+                        <div className="flex gap-2 justify-center">
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setInput('');
-                                    inputRef.current?.focus();
+                                    setSolvedIds(new Set());
+                                    fetch('/api/practice-progress', { method: 'DELETE' }).catch(() => { });
+                                    pickRandom(filteredSentences, new Set());
                                 }}
-                                aria-label="입력 초기화"
-                                className="absolute right-2 top-1/2 -translate-y-2/3 w-5 h-5 flex items-center justify-start text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                                className="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-lg transition-colors"
                             >
-                                ✕
+                                다시 연습하기
                             </button>
-                        )}
-                    </div>
-                    <div className="flex gap-4">
-                        <button
-                            type="button"
-                            onClick={handleAllHint}
-                            title="Alt"
-                            className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
-                        >
-                            {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={done ? () => pickRandom(filteredSentences) : handleSubmit}
-                            disabled={done && !canAdvance}
-                            title="Enter"
-                            className={`px-3 py-1 rounded transition-colors ${done
-                                ? canAdvance
-                                    ? 'text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
-                                    : 'text-gray-400 bg-gray-200 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
-                                : 'text-white bg-green-500 hover:bg-green-600 dark:bg-green-900 dark:hover:bg-green-800'
-                                }`}
-                        >
-                            {done ? '다음 문제' : '정답 확인'}
-                        </button>
-
-                    </div>
-                    {showAllHint && (
-                        // showAllHint 가 True일때 shuffled 배열의 모든 요소 보이기
-                        // 조건부 렌더링 방식 : {조건 && 보여줄것}
-                        <div className="border rounded bg-yellow-50 dark:bg-black border-gray-200 dark:border-gray-700 shadow-sm  flex px-2 pb-2 mt-2">
-                            <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
-                                {(() => {
-                                    // 렌더링할 때마다 "남은 개수" 맵을 복사해서, 위에서부터 하나씩 소진시키며 체크
-                                    const remaining = new Map(typedWordCounts);
-
-                                    return shuffled.map((sw, idx) => {
-                                        const key = normalize(sw.word);
-                                        const available = remaining.get(key) ?? 0;
-                                        const isTyped = available > 0;
-                                        if (isTyped) remaining.set(key, available - 1);
-
-                                        return (
-                                            <li
-                                                key={idx}
-                                                className={`px-2.5 py-1 border rounded-xl transition-colors ${isTyped
-                                                    ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-600 line-through'
-                                                    : 'border-gray-300 dark:border-gray-700 dark:text-yellow-600'
-                                                    }`}>
-                                                {sw.word}
-                                                {sw.meaning && (<span className={`text-sm ml-1 ${isTyped ? 'text-gray-300 dark:text-gray-700' : 'text-gray-500 dark:text-gray-400'}`}>
-                                                    ({sw.meaning})
-                                                </span>)}
-                                            </li>
-                                        );
-                                    });
-                                })()}
-                            </ul>
+                            <button
+                                type="button"
+                                onClick={() => router.push('/')}
+                                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors"
+                            >
+                                종료하기
+                            </button>
                         </div>
-                    )}
-                    {message && <p className='py-2'>{message}</p>}
+                    </div>
+                ) : !current ? (
+                    <p>문장을 불러오는 중입니다...</p>
+                ) : (
+                    <div className="w-full bg-background border rounded-xl shadow-sm border-gray-200 dark:border-gray-800 px-2 py-4">
+                        {/* 기존 연습 카드 내용 그대로 */}
 
-                    {results.length > 0 && (
-                        // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
-                        <div>
-                            <p>
-                                {results.map((r, idx) => (
-                                    <span
-                                        key={idx}
-                                        className={
-                                            r.status === 'correct'
-                                                ? 'text-green-600 dark:text-green-400'
-                                                : 'text-red-600 dark:text-red-400'
-                                        }>
-                                        {r.word + ' '}
-                                    </span>
-                                ))}
+                        <p className="text-lg mb-2 mt-2 dark:text-gray-300">{current?.translate}</p>
+
+                        {!roundComplete && filteredSentences.length > 0 && (
+                            <p className="text-sm text-gray-400 dark:text-gray-500 mb-2">
+                                {solvedIds.size} / {filteredSentences.length} 완료
                             </p>
-                            {wrongIndex !== -1 && (
-                                <div>
-                                    <button
-                                        type="button"
-                                        onClick={handleWrongHint}
-                                        title="Ctrl"
-                                        className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded">
-                                        {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
-                                    </button>
+                        )}
 
+                        <div className="relative">
+                            <AutoResizeTextarea
+                                ref={inputRef}
+                                value={input}
+                                onChange={handleInputChange}
+                                enterKeyHint="done"
+                                onKeyDown={(e) => {
+                                    if (e.repeat) return;
 
-                                    {showWrongHint && hintWord && (
-                                        <p>
-                                            틀린 단어 정답: <span className="text-blue-600 dark:text-blue-400">{hintWord}</span>
-                                            {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
-                                        </p>
-                                    )}
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        if (done) {
+                                            if (canAdvance) {
+                                                pickRandom(filteredSentences);
+                                            }
+                                        } else {
+                                            if (e.ctrlKey) ctrlComboRef.current = true;
+                                            handleSubmit();
+                                        }
+                                        return;
+                                    }
 
-                                </div>
+                                    if (e.key === 'Alt') {
+                                        e.preventDefault();
+                                        handleAllHint();
+                                    }
+                                }}
+                                onKeyUp={(e) => {
+                                    if (e.key === 'Control') {
+                                        e.preventDefault();
+                                        if (!ctrlComboRef.current) {
+                                            handleWrongHint();
+                                        }
+                                        ctrlComboRef.current = false;
+                                    }
+                                }}
+                                placeholder="한국어를 읽고 영문으로 영작해 보세요."
+                                disabled={done}
+                                className="w-full p-2 pr-8 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-700"
+                            />
+                            {input && !done && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setInput('');
+                                        inputRef.current?.focus();
+                                    }}
+                                    aria-label="입력 초기화"
+                                    className="absolute right-2 top-1/2 -translate-y-2/3 w-5 h-5 flex items-center justify-start text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                                >
+                                    ✕
+                                </button>
                             )}
                         </div>
-                    )}
-                </div>
-            )}
+                        <div className="flex gap-4">
+                            <button
+                                type="button"
+                                onClick={handleAllHint}
+                                title="Alt"
+                                className="hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 p-2 rounded"
+                            >
+                                {showAllHint ? '모든 단어 힌트 숨기기' : '모든 단어 힌트 보기'}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={done ? () => pickRandom(filteredSentences) : handleSubmit}
+                                disabled={done && !canAdvance}
+                                title="Enter"
+                                className={`px-3 py-1 rounded transition-colors ${done
+                                    ? canAdvance
+                                        ? 'text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700'
+                                        : 'text-gray-400 bg-gray-200 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed'
+                                    : 'text-white bg-green-500 hover:bg-green-600 dark:bg-green-900 dark:hover:bg-green-800'
+                                    }`}
+                            >
+                                {done ? '다음 문제' : '정답 확인'}
+                            </button>
+
+                        </div>
+                        {showAllHint && (
+                            // showAllHint 가 True일때 shuffled 배열의 모든 요소 보이기
+                            // 조건부 렌더링 방식 : {조건 && 보여줄것}
+                            <div className="border rounded bg-yellow-50 dark:bg-black border-gray-200 dark:border-gray-700 shadow-sm  flex px-2 pb-2 mt-2">
+                                <ul className="list-none p-0 flex flex-wrap gap-2 mt-2">
+                                    {(() => {
+                                        // 렌더링할 때마다 "남은 개수" 맵을 복사해서, 위에서부터 하나씩 소진시키며 체크
+                                        const remaining = new Map(typedWordCounts);
+
+                                        return shuffled.map((sw, idx) => {
+                                            const key = normalize(sw.word);
+                                            const available = remaining.get(key) ?? 0;
+                                            const isTyped = available > 0;
+                                            if (isTyped) remaining.set(key, available - 1);
+
+                                            return (
+                                                <li
+                                                    key={idx}
+                                                    className={`px-2.5 py-1 border rounded-xl transition-colors ${isTyped
+                                                        ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-600 line-through'
+                                                        : 'border-gray-300 dark:border-gray-700 dark:text-yellow-600'
+                                                        }`}>
+                                                    {sw.word}
+                                                    {sw.meaning && (<span className={`text-sm ml-1 ${isTyped ? 'text-gray-300 dark:text-gray-700' : 'text-gray-500 dark:text-gray-400'}`}>
+                                                        ({sw.meaning})
+                                                    </span>)}
+                                                </li>
+                                            );
+                                        });
+                                    })()}
+                                </ul>
+                            </div>
+                        )}
+                        {message && <p className='py-2'>{message}</p>}
+
+                        {results.length > 0 && (
+                            // 정답 확인 버튼을 눌러야 렌더링되도록 되어 있음.
+                            <div>
+                                <p>
+                                    {results.map((r, idx) => (
+                                        <span
+                                            key={idx}
+                                            className={
+                                                r.status === 'correct'
+                                                    ? 'text-green-600 dark:text-green-400'
+                                                    : 'text-red-600 dark:text-red-400'
+                                            }>
+                                            {r.word + ' '}
+                                        </span>
+                                    ))}
+                                </p>
+                                {wrongIndex !== -1 && (
+                                    <div>
+                                        <button
+                                            type="button"
+                                            onClick={handleWrongHint}
+                                            title="Ctrl"
+                                            className="hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded">
+                                            {showWrongHint ? '틀린 단어 힌트 숨기기' : '틀린 단어 힌트 보기'}
+                                        </button>
+
+
+                                        {showWrongHint && hintWord && (
+                                            <p>
+                                                틀린 단어 정답: <span className="text-blue-600 dark:text-blue-400">{hintWord}</span>
+                                                {current.sentenceWords[wrongIndex]?.word.meaning && `(${current.sentenceWords[wrongIndex].word.meaning})`}
+                                            </p>
+                                        )}
+
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
         </div >
     )
 }

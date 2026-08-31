@@ -61,7 +61,9 @@ export const ModelName = {
   ExpressionSentence: 'ExpressionSentence',
   StudyLog: 'StudyLog',
   FreeWriting: 'FreeWriting',
-  ExpressionFavorite: 'ExpressionFavorite'
+  ExpressionFavorite: 'ExpressionFavorite',
+  PracticeProgress: 'PracticeProgress',
+  SentencePractice: 'SentencePractice'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,6 +198,27 @@ export const ExpressionFavoriteScalarFieldEnum = {
 } as const
 
 export type ExpressionFavoriteScalarFieldEnum = (typeof ExpressionFavoriteScalarFieldEnum)[keyof typeof ExpressionFavoriteScalarFieldEnum]
+
+
+export const PracticeProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  solvedIds: 'solvedIds',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PracticeProgressScalarFieldEnum = (typeof PracticeProgressScalarFieldEnum)[keyof typeof PracticeProgressScalarFieldEnum]
+
+
+export const SentencePracticeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  sentenceId: 'sentenceId',
+  correctCount: 'correctCount',
+  lastPracticedAt: 'lastPracticedAt'
+} as const
+
+export type SentencePracticeScalarFieldEnum = (typeof SentencePracticeScalarFieldEnum)[keyof typeof SentencePracticeScalarFieldEnum]
 
 
 export const SortOrder = {

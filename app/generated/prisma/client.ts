@@ -96,3 +96,13 @@ export type FreeWriting = Prisma.FreeWritingModel
  * 
  */
 export type ExpressionFavorite = Prisma.ExpressionFavoriteModel
+/**
+ * Model PracticeProgress
+ * 
+ */
+export type PracticeProgress = Prisma.PracticeProgressModel
+/**
+ * Model SentencePractice
+ * 
+ */
+export type SentencePractice = Prisma.SentencePracticeModel

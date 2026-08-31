@@ -224,11 +224,13 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   role?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  practiceProgress?: Prisma.XOR<Prisma.PracticeProgressNullableScalarRelationFilter, Prisma.PracticeProgressWhereInput> | null
   sentences?: Prisma.SentenceListRelationFilter
   expressions?: Prisma.ExpressionListRelationFilter
   studyLogs?: Prisma.StudyLogListRelationFilter
   freeWritings?: Prisma.FreeWritingListRelationFilter
   expressionFavorites?: Prisma.ExpressionFavoriteListRelationFilter
+  sentencePractices?: Prisma.SentencePracticeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -238,11 +240,13 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  practiceProgress?: Prisma.PracticeProgressOrderByWithRelationInput
   sentences?: Prisma.SentenceOrderByRelationAggregateInput
   expressions?: Prisma.ExpressionOrderByRelationAggregateInput
   studyLogs?: Prisma.StudyLogOrderByRelationAggregateInput
   freeWritings?: Prisma.FreeWritingOrderByRelationAggregateInput
   expressionFavorites?: Prisma.ExpressionFavoriteOrderByRelationAggregateInput
+  sentencePractices?: Prisma.SentencePracticeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -255,11 +259,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  practiceProgress?: Prisma.XOR<Prisma.PracticeProgressNullableScalarRelationFilter, Prisma.PracticeProgressWhereInput> | null
   sentences?: Prisma.SentenceListRelationFilter
   expressions?: Prisma.ExpressionListRelationFilter
   studyLogs?: Prisma.StudyLogListRelationFilter
   freeWritings?: Prisma.FreeWritingListRelationFilter
   expressionFavorites?: Prisma.ExpressionFavoriteListRelationFilter
+  sentencePractices?: Prisma.SentencePracticeListRelationFilter
 }, "id" | "supabaseId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -294,11 +300,13 @@ export type UserCreateInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -308,11 +316,13 @@ export type UserUncheckedCreateInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -321,11 +331,13 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -335,11 +347,13 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -498,16 +512,46 @@ export type UserUpdateOneRequiredWithoutExpressionFavoritesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExpressionFavoritesInput, Prisma.UserUpdateWithoutExpressionFavoritesInput>, Prisma.UserUncheckedUpdateWithoutExpressionFavoritesInput>
 }
 
+export type UserCreateNestedOneWithoutPracticeProgressInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPracticeProgressInput, Prisma.UserUncheckedCreateWithoutPracticeProgressInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPracticeProgressInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPracticeProgressNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPracticeProgressInput, Prisma.UserUncheckedCreateWithoutPracticeProgressInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPracticeProgressInput
+  upsert?: Prisma.UserUpsertWithoutPracticeProgressInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPracticeProgressInput, Prisma.UserUpdateWithoutPracticeProgressInput>, Prisma.UserUncheckedUpdateWithoutPracticeProgressInput>
+}
+
+export type UserCreateNestedOneWithoutSentencePracticesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentencePracticesInput, Prisma.UserUncheckedCreateWithoutSentencePracticesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentencePracticesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSentencePracticesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentencePracticesInput, Prisma.UserUncheckedCreateWithoutSentencePracticesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentencePracticesInput
+  upsert?: Prisma.UserUpsertWithoutSentencePracticesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSentencePracticesInput, Prisma.UserUpdateWithoutSentencePracticesInput>, Prisma.UserUncheckedUpdateWithoutSentencePracticesInput>
+}
+
 export type UserCreateWithoutSentencesInput = {
   supabaseId: string
   name?: string | null
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentencesInput = {
@@ -517,10 +561,12 @@ export type UserUncheckedCreateWithoutSentencesInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentencesInput = {
@@ -545,10 +591,12 @@ export type UserUpdateWithoutSentencesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentencesInput = {
@@ -558,10 +606,12 @@ export type UserUncheckedUpdateWithoutSentencesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpressionsInput = {
@@ -570,10 +620,12 @@ export type UserCreateWithoutExpressionsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpressionsInput = {
@@ -583,10 +635,12 @@ export type UserUncheckedCreateWithoutExpressionsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpressionsInput = {
@@ -611,10 +665,12 @@ export type UserUpdateWithoutExpressionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpressionsInput = {
@@ -624,10 +680,12 @@ export type UserUncheckedUpdateWithoutExpressionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStudyLogsInput = {
@@ -636,10 +694,12 @@ export type UserCreateWithoutStudyLogsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudyLogsInput = {
@@ -649,10 +709,12 @@ export type UserUncheckedCreateWithoutStudyLogsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudyLogsInput = {
@@ -677,10 +739,12 @@ export type UserUpdateWithoutStudyLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudyLogsInput = {
@@ -690,10 +754,12 @@ export type UserUncheckedUpdateWithoutStudyLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFreeWritingsInput = {
@@ -702,10 +768,12 @@ export type UserCreateWithoutFreeWritingsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFreeWritingsInput = {
@@ -715,10 +783,12 @@ export type UserUncheckedCreateWithoutFreeWritingsInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFreeWritingsInput = {
@@ -743,10 +813,12 @@ export type UserUpdateWithoutFreeWritingsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFreeWritingsInput = {
@@ -756,10 +828,12 @@ export type UserUncheckedUpdateWithoutFreeWritingsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExpressionFavoritesInput = {
@@ -768,10 +842,12 @@ export type UserCreateWithoutExpressionFavoritesInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExpressionFavoritesInput = {
@@ -781,10 +857,12 @@ export type UserUncheckedCreateWithoutExpressionFavoritesInput = {
   email: string
   role?: string
   createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
   sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
   expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
   studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
   freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExpressionFavoritesInput = {
@@ -809,13 +887,89 @@ export type UserUpdateWithoutExpressionFavoritesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
   sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
   expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpressionFavoritesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
+  sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPracticeProgressInput = {
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPracticeProgressInput = {
+  id?: number
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPracticeProgressInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPracticeProgressInput, Prisma.UserUncheckedCreateWithoutPracticeProgressInput>
+}
+
+export type UserUpsertWithoutPracticeProgressInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPracticeProgressInput, Prisma.UserUncheckedUpdateWithoutPracticeProgressInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPracticeProgressInput, Prisma.UserUncheckedCreateWithoutPracticeProgressInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPracticeProgressInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPracticeProgressInput, Prisma.UserUncheckedUpdateWithoutPracticeProgressInput>
+}
+
+export type UserUpdateWithoutPracticeProgressInput = {
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPracticeProgressInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -826,6 +980,82 @@ export type UserUncheckedUpdateWithoutExpressionFavoritesInput = {
   expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
   studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
   freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
+  sentencePractices?: Prisma.SentencePracticeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSentencePracticesInput = {
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressCreateNestedOneWithoutUserInput
+  sentences?: Prisma.SentenceCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSentencePracticesInput = {
+  id?: number
+  supabaseId: string
+  name?: string | null
+  email: string
+  role?: string
+  createdAt?: Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedCreateNestedOneWithoutUserInput
+  sentences?: Prisma.SentenceUncheckedCreateNestedManyWithoutUserInput
+  expressions?: Prisma.ExpressionUncheckedCreateNestedManyWithoutUserInput
+  studyLogs?: Prisma.StudyLogUncheckedCreateNestedManyWithoutUserInput
+  freeWritings?: Prisma.FreeWritingUncheckedCreateNestedManyWithoutUserInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSentencePracticesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentencePracticesInput, Prisma.UserUncheckedCreateWithoutSentencePracticesInput>
+}
+
+export type UserUpsertWithoutSentencePracticesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSentencePracticesInput, Prisma.UserUncheckedUpdateWithoutSentencePracticesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentencePracticesInput, Prisma.UserUncheckedCreateWithoutSentencePracticesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSentencePracticesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSentencePracticesInput, Prisma.UserUncheckedUpdateWithoutSentencePracticesInput>
+}
+
+export type UserUpdateWithoutSentencePracticesInput = {
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUpdateOneWithoutUserNestedInput
+  sentences?: Prisma.SentenceUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSentencePracticesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  supabaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  practiceProgress?: Prisma.PracticeProgressUncheckedUpdateOneWithoutUserNestedInput
+  sentences?: Prisma.SentenceUncheckedUpdateManyWithoutUserNestedInput
+  expressions?: Prisma.ExpressionUncheckedUpdateManyWithoutUserNestedInput
+  studyLogs?: Prisma.StudyLogUncheckedUpdateManyWithoutUserNestedInput
+  freeWritings?: Prisma.FreeWritingUncheckedUpdateManyWithoutUserNestedInput
+  expressionFavorites?: Prisma.ExpressionFavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -839,6 +1069,7 @@ export type UserCountOutputType = {
   studyLogs: number
   freeWritings: number
   expressionFavorites: number
+  sentencePractices: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -847,6 +1078,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   studyLogs?: boolean | UserCountOutputTypeCountStudyLogsArgs
   freeWritings?: boolean | UserCountOutputTypeCountFreeWritingsArgs
   expressionFavorites?: boolean | UserCountOutputTypeCountExpressionFavoritesArgs
+  sentencePractices?: boolean | UserCountOutputTypeCountSentencePracticesArgs
 }
 
 /**
@@ -894,6 +1126,13 @@ export type UserCountOutputTypeCountExpressionFavoritesArgs<ExtArgs extends runt
   where?: Prisma.ExpressionFavoriteWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSentencePracticesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SentencePracticeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -902,11 +1141,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   role?: boolean
   createdAt?: boolean
+  practiceProgress?: boolean | Prisma.User$practiceProgressArgs<ExtArgs>
   sentences?: boolean | Prisma.User$sentencesArgs<ExtArgs>
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
   studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   freeWritings?: boolean | Prisma.User$freeWritingsArgs<ExtArgs>
   expressionFavorites?: boolean | Prisma.User$expressionFavoritesArgs<ExtArgs>
+  sentencePractices?: boolean | Prisma.User$sentencePracticesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -939,11 +1180,13 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "supabaseId" | "name" | "email" | "role" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  practiceProgress?: boolean | Prisma.User$practiceProgressArgs<ExtArgs>
   sentences?: boolean | Prisma.User$sentencesArgs<ExtArgs>
   expressions?: boolean | Prisma.User$expressionsArgs<ExtArgs>
   studyLogs?: boolean | Prisma.User$studyLogsArgs<ExtArgs>
   freeWritings?: boolean | Prisma.User$freeWritingsArgs<ExtArgs>
   expressionFavorites?: boolean | Prisma.User$expressionFavoritesArgs<ExtArgs>
+  sentencePractices?: boolean | Prisma.User$sentencePracticesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -952,11 +1195,13 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    practiceProgress: Prisma.$PracticeProgressPayload<ExtArgs> | null
     sentences: Prisma.$SentencePayload<ExtArgs>[]
     expressions: Prisma.$ExpressionPayload<ExtArgs>[]
     studyLogs: Prisma.$StudyLogPayload<ExtArgs>[]
     freeWritings: Prisma.$FreeWritingPayload<ExtArgs>[]
     expressionFavorites: Prisma.$ExpressionFavoritePayload<ExtArgs>[]
+    sentencePractices: Prisma.$SentencePracticePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1359,11 +1604,13 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  practiceProgress<T extends Prisma.User$practiceProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$practiceProgressArgs<ExtArgs>>): Prisma.Prisma__PracticeProgressClient<runtime.Types.Result.GetResult<Prisma.$PracticeProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sentences<T extends Prisma.User$sentencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SentencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expressions<T extends Prisma.User$expressionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expressionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studyLogs<T extends Prisma.User$studyLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studyLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudyLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   freeWritings<T extends Prisma.User$freeWritingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$freeWritingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FreeWritingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expressionFavorites<T extends Prisma.User$expressionFavoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expressionFavoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpressionFavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentencePractices<T extends Prisma.User$sentencePracticesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentencePracticesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SentencePracticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1792,6 +2039,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.practiceProgress
+ */
+export type User$practiceProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PracticeProgress
+   */
+  select?: Prisma.PracticeProgressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PracticeProgress
+   */
+  omit?: Prisma.PracticeProgressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PracticeProgressInclude<ExtArgs> | null
+  where?: Prisma.PracticeProgressWhereInput
+}
+
+/**
  * User.sentences
  */
 export type User$sentencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1909,6 +2175,30 @@ export type User$expressionFavoritesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.ExpressionFavoriteScalarFieldEnum | Prisma.ExpressionFavoriteScalarFieldEnum[]
+}
+
+/**
+ * User.sentencePractices
+ */
+export type User$sentencePracticesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SentencePractice
+   */
+  select?: Prisma.SentencePracticeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SentencePractice
+   */
+  omit?: Prisma.SentencePracticeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SentencePracticeInclude<ExtArgs> | null
+  where?: Prisma.SentencePracticeWhereInput
+  orderBy?: Prisma.SentencePracticeOrderByWithRelationInput | Prisma.SentencePracticeOrderByWithRelationInput[]
+  cursor?: Prisma.SentencePracticeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SentencePracticeScalarFieldEnum | Prisma.SentencePracticeScalarFieldEnum[]
 }
 
 /**

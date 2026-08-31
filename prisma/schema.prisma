@@ -23,11 +23,14 @@ model User {
   email       String    @unique
   role        String    @default("USER")  // "USER" | "ADMIN"
   createdAt   DateTime  @default(now())
+  practiceProgress PracticeProgress?
   sentences   Sentence[]
   expressions Expression[]
   studyLogs     StudyLog[]
   freeWritings FreeWriting[]
   expressionFavorites  ExpressionFavorite[]
+  sentencePractices SentencePractice[]
+ 
 
   @@map("USER")
 }
@@ -43,6 +46,7 @@ model Sentence {
   sentenceWords SentenceWord[]
   sentenceTags  SentenceTag[]
   expressionSentences ExpressionSentence[]
+  practicedBy SentencePractice[]
   
   @@unique([content, userId])   // 같은 사용자 안에서 중복 문장 금지
   @@map("SENTENCE")
@@ -150,6 +154,29 @@ model ExpressionFavorite {
 
   @@unique([userId, expressionId])
   @@map("EXPRESSION_FAVORITE")
+}
+
+model PracticeProgress {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  solvedIds Int[]    // 이번 라운드에서 푼 문장 id들
+  updatedAt DateTime @updatedAt
+
+  @@map("PRACTICE_PROGRESS")
+}
+
+model SentencePractice {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  sentenceId      Int
+  sentence        Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+  correctCount    Int      @default(0)
+  lastPracticedAt DateTime @default(now())
+
+  @@unique([userId, sentenceId])
+  @@map("SENTENCE_PRACTICE")
 }
 
 // @@map은 prisma 모델이름은 User이지만 실제 DB에 테이블 이름을 USER로 생성하는 것임. 
