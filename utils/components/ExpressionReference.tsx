@@ -72,7 +72,7 @@ export default function ExpressionReference() {
                 onFocus={() => setShowDropdown(true)}
                 onKeyDown={handleKeyDown}
                 placeholder="등록한 표현을 검색해보세요"
-                className="w-full px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-3 py-2 bg-background border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
 
             {showDropdown && query.trim() && (

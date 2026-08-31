@@ -54,6 +54,22 @@ export default function FreeWritingForm({ onCreated }: Props) {
 
     return (
         <>
+            <div className="border border-gray-200 rounded-lg p-3 bg-gray-100">
+                <p className="text-xs font-medium mb-2 text-yellow-800/70">
+                    💭 머릿속 사고 순서
+                </p>
+
+                <ol className="text-xs text-gray-600 dark:text-gray-400 list-decimal list-inside space-y-1">
+                    <li>시작 멘트</li>
+                    <li>누가? / 무엇이?</li>
+                    <li>뭘 해?</li>
+                    <li>왜?</li>
+                    <li>왜 좋아해? / 왜 싫어해?</li>
+                    <li>구체적인 특징은?</li>
+                    <li>직접 경험해봤어?</li>
+                    <li>어떤 느낌이었어?</li>
+                </ol>
+            </div>
             <ExpressionReference />
             <div className="p-6 bg-background rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col gap-4">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">자유 영작 연습</h2>
