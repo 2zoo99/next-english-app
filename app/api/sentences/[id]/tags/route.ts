@@ -6,6 +6,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+import { cleanupOrphanTags } from "@/utils/cleanupOrphanTags";
+
 
 
 export async function POST(
@@ -113,6 +115,7 @@ export async function DELETE(
         await prisma.sentenceTag.deleteMany({
             where: { sentenceId, tagId }
         });
+        await cleanupOrphanTags([tagId]);
         return Response.json({ message: "태그가 제거되었습니다." });
     } catch (error) {
         console.error(error);

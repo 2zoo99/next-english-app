@@ -4,6 +4,7 @@
 import { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRefresh } from '@/utils/context/RefreshContext';
+import { AutoResizeTextarea } from './AutoResizeTextarea';
 
 type Word = {
     id: number;
@@ -67,7 +68,7 @@ export default function PracticeForm() {
     const [message, setMessage] = useState('');
     const [done, setDone] = useState(false);
     const [shuffled, setShuffled] = useState<ShuffledWord[]>([]);
-    const inputRef = useRef<HTMLInputElement>(null);    //입력 참조용
+    const inputRef = useRef<HTMLTextAreaElement>(null);    //입력 참조용
     const { refreshKey } = useRefresh(); // 새로고침 키를 가져옴
     const ctrlComboRef = useRef(false);
     const [allTags, setAllTags] = useState<TagInfo[]>([]);
@@ -293,7 +294,7 @@ export default function PracticeForm() {
         setShowAllHint(prev => !prev);
     }
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInput(e.target.value);
         //resetHints();
     }
@@ -385,52 +386,60 @@ export default function PracticeForm() {
                         </p>
                     )}
 
-                    <input
-                        ref={inputRef}  // 입력 참조 연결: inputRef.current를 통해 DOM 요소에 접근 가능
-                        type="text"
-                        value={input}
-                        onChange={handleInputChange}
-                        enterKeyHint="done"
-                        onKeyDown={(e) => {
-                            if (e.repeat) return;
+                    <div className="relative">
+                        <AutoResizeTextarea
+                            ref={inputRef}
+                            value={input}
+                            onChange={handleInputChange}
+                            enterKeyHint="done"
+                            onKeyDown={(e) => {
+                                if (e.repeat) return;
 
-                            // if (e.key === 'Enter' && e.ctrlKey) {
-                            //     e.preventDefault();
-                            //     ctrlComboRef.current = true;
-                            //     handleSubmit();
-                            //     return;
-                            // }
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                if (done) {
-                                    if (canAdvance) {
-                                        pickRandom(filteredSentences);
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    if (done) {
+                                        if (canAdvance) {
+                                            pickRandom(filteredSentences);
+                                        }
+                                    } else {
+                                        if (e.ctrlKey) ctrlComboRef.current = true;
+                                        handleSubmit();
                                     }
-                                } else {
-                                    if (e.ctrlKey) ctrlComboRef.current = true;
-                                    handleSubmit();
+                                    return;
                                 }
-                                return;
-                            }
 
-                            if (e.key === 'Alt') {
-                                e.preventDefault();
-                                handleAllHint();
-                            }
-                        }}
-                        onKeyUp={(e) => {
-                            if (e.key === 'Control') {
-                                e.preventDefault();
-                                if (!ctrlComboRef.current) {
-                                    handleWrongHint();
+                                if (e.key === 'Alt') {
+                                    e.preventDefault();
+                                    handleAllHint();
                                 }
-                                ctrlComboRef.current = false;
-                            }
-                        }}
-                        placeholder="한국어를 읽고 영문으로 영작해 보세요."
-                        disabled={done}
-                        className="w-full p-2 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-700"
-                    />
+                            }}
+                            onKeyUp={(e) => {
+                                if (e.key === 'Control') {
+                                    e.preventDefault();
+                                    if (!ctrlComboRef.current) {
+                                        handleWrongHint();
+                                    }
+                                    ctrlComboRef.current = false;
+                                }
+                            }}
+                            placeholder="한국어를 읽고 영문으로 영작해 보세요."
+                            disabled={done}
+                            className="w-full p-2 pr-8 bg-background border border-gray-200 dark:border-gray-700 rounded my-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:focus:ring-yellow-700"
+                        />
+                        {input && !done && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setInput('');
+                                    inputRef.current?.focus();
+                                }}
+                                aria-label="입력 초기화"
+                                className="absolute right-2 top-1/2 -translate-y-2/3 w-5 h-5 flex items-center justify-start text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
                     <div className="flex gap-4">
                         <button
                             type="button"
@@ -475,8 +484,8 @@ export default function PracticeForm() {
                                             <li
                                                 key={idx}
                                                 className={`px-2.5 py-1 border rounded-xl transition-colors ${isTyped
-                                                        ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-600 line-through'
-                                                        : 'border-gray-300 dark:border-gray-700 dark:text-yellow-600'
+                                                    ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-600 line-through'
+                                                    : 'border-gray-300 dark:border-gray-700 dark:text-yellow-600'
                                                     }`}>
                                                 {sw.word}
                                                 {sw.meaning && (<span className={`text-sm ml-1 ${isTyped ? 'text-gray-300 dark:text-gray-700' : 'text-gray-500 dark:text-gray-400'}`}>

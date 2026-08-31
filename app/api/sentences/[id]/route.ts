@@ -1,6 +1,8 @@
 // app/api/sentences/[id]/route.ts
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
+import { cleanupOrphanTags } from "@/utils/cleanupOrphanTags";
+
 
 
 //조회
@@ -35,7 +37,8 @@ export async function DELETE(
     const { id } = await params;
     const sentenceId = Number(id);
     const sentence = await prisma.sentence.findUnique({
-        where: { id: sentenceId }
+        where: { id: sentenceId },
+        include: { sentenceTags: true }
     });
     if (!sentence) {
         return Response.json({ error: '존재하지 않는 문장이에요.' }, { status: 404 });
@@ -45,10 +48,12 @@ export async function DELETE(
     if (!canEdit) {
         return Response.json({ error: '이 문장을 삭제할 권한이 없어요.' }, { status: 403 });
     }
+    const tagIds = sentence.sentenceTags.map(st => st.tagId);
 
     await prisma.sentence.delete({
         where: { id: Number(id) }
     })
+    await cleanupOrphanTags(tagIds);
     return new Response(null, { status: 204 });
 }
 
