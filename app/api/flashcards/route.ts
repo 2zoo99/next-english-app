@@ -26,7 +26,10 @@ export async function GET(request: Request) {
         include: {
             favoritedBy: currentUser
                 ? { where: { userId: currentUser.id } }
-                : false
+                : false,
+            exampleLinks: {           // 추가
+                include: { sentence: true }
+            }
         }
     });
 
@@ -35,6 +38,10 @@ export async function GET(request: Request) {
         content: exp.content,
         meaning: exp.meaning,
         isFavorite: exp.favoritedBy.length > 0,
+        examples: exp.exampleLinks.map(link => ({    // 추가
+            content: link.sentence.content,
+            translate: link.sentence.translate,
+        })),
     }));
 
     return Response.json(result);

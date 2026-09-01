@@ -5,11 +5,17 @@ import { useState, useEffect, useCallback } from 'react'
 import Flashcard from '@/utils/components/Flashcard'
 import ToggleSwitch from '@/utils/components/ToggleSwitch'
 
+type ExampleSentence = {
+    content: string;
+    translate: string;
+}
+
 type Expression = {
     id: number;
     content: string;
     meaning: string;
     isFavorite: boolean;
+    examples: ExampleSentence[];
 }
 
 export default function FlashcardsPage() {
@@ -115,14 +121,24 @@ export default function FlashcardsPage() {
                 </p>
             ) : (
                 <div className="w-full max-w-md flex flex-col gap-4">
-                    <Flashcard
-                        frontText={meaningFirst ? cards[index].meaning : cards[index].content}
-                        backText={meaningFirst ? cards[index].content : cards[index].meaning}
-                        flipped={flipped}
-                        isFavorite={cards[index].isFavorite}
-                        onFlip={() => setFlipped(prev => !prev)}
-                        onToggleFavorite={() => toggleFavorite(cards[index].id)}
-                    />
+                    {(() => {
+                        const currentCard = cards[index];
+                        const frontExamples = currentCard.examples.map(ex => meaningFirst ? ex.translate : ex.content);
+                        const backExamples = currentCard.examples.map(ex => meaningFirst ? ex.content : ex.translate);
+
+                        return (
+                            <Flashcard
+                                frontText={meaningFirst ? currentCard.meaning : currentCard.content}
+                                backText={meaningFirst ? currentCard.content : currentCard.meaning}
+                                frontExamples={frontExamples}
+                                backExamples={backExamples}
+                                flipped={flipped}
+                                isFavorite={currentCard.isFavorite}
+                                onFlip={() => setFlipped(prev => !prev)}
+                                onToggleFavorite={() => toggleFavorite(currentCard.id)}
+                            />
+                        );
+                    })()}
 
                     <div className="flex items-center justify-between">
                         <button
