@@ -85,18 +85,19 @@ export default function FlashcardsPage() {
         <div className="px-4 py-6 w-full flex flex-col gap-4 items-center">
             <h2 className="text-lg font-bold dark:text-gray-200">낱말 카드</h2>
 
-            <div className="w-1/2 flex flex-row flex-wrap justify-between items-center">
+            <div className="w-full max-w-md flex flex-wrap items-center justify-center gap-3">
 
                 <button
                     type="button"
                     onClick={() => setFavoritesOnly(prev => !prev)}
-                    className={`text-sm px-2 py-2 border rounded-lg transition-colors ${favoritesOnly
+                    className={`inline-flex items-center gap-1.5 text-sm px-3 py-1.5 border rounded-full whitespace-nowrap transition-colors ${favoritesOnly
                         ? 'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-700 text-yellow-700 dark:text-yellow-400'
-                        : 'text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+                        : 'text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                         }`}
                 >
                     즐겨찾기만 보기
                 </button>
+                <div className="hidden sm:block w-px h-5 bg-gray-200 dark:bg-gray-700" />
 
                 <ToggleSwitch
                     checked={meaningFirst}
