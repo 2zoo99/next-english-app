@@ -354,7 +354,12 @@ export default function SentenceList() {
                                             </div>
                                             <p className="dark:text-gray-300">{sentence.translate}</p>
                                             {sentence.hint && (
-                                                <p className="w-max px-1.5 py-0.5 rounded-md text-sm text-gray-500 dark:text-gray-300 bg-yellow-200/20">🗒️ {sentence.hint}</p>
+                                                <AutoResizeTextarea
+                                                    value={`🗒️ ${sentence.hint}`}
+                                                    onChange={() => { }}
+                                                    readOnly
+                                                    className="w-full px-1.5 py-1 rounded-md text-sm text-gray-500 dark:text-gray-300 bg-yellow-200/20 border-none focus:outline-none cursor-default"
+                                                />
                                             )}
                                             <div className="w-fit align-items flex gap-2 rounded-md py-1 pt-2">
                                                 <button className="bg-gray-200 dark:bg-gray-400 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
