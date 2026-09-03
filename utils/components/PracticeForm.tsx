@@ -17,14 +17,25 @@ type SentenceWord = {
     order: number;
     word: Word;
 }
+type ExpressionInfo = {
+    id: number;
+    content: string;
+    meaning: string;
+}
+type ExpressionLink = {
+    id: number;
+    startIndex: number;
+    endIndex: number;
+    expression: ExpressionInfo;
+}
 type Sentence = {
     id: number;
     content: string;
     translate: string;
-    createdAt: string;
     hint: string | null;
     sentenceWords: SentenceWord[];
     sentenceTags: SentenceTag[];
+    expressionSentences: ExpressionLink[];   // 추가
 }
 type WordResult = {
     word: string;
@@ -95,6 +106,7 @@ export default function PracticeForm() {
     const [showResumePrompt, setShowResumePrompt] = useState(false);
     const [savedSolvedIds, setSavedSolvedIds] = useState<number[]>([]);
     const initializedRef = useRef(false);
+    const [showExpressionHint, setShowExpressionHint] = useState(false);
 
     // 전체 태그 목록 불러오기
     useEffect(() => {
@@ -150,6 +162,7 @@ export default function PracticeForm() {
                     setShowWrongHint(false);
                     setShowAllHint(false);
                     setShowSentenceHint(false);
+                    setShowExpressionHint(false);
                     setShuffled([]);
                     setWrongAnswerIndex(null);
                 }
@@ -570,6 +583,16 @@ export default function PracticeForm() {
                             💡 {current.hint}
                         </p>
                     )}
+                    {showExpressionHint && current.expressionSentences.length > 0 && (
+                        <div className="flex flex-col gap-1 mb-1">
+                            {current.expressionSentences.map(link => (
+                                <p key={link.id} className="text-sm text-yellow-700 dark:text-yellow-400 break-words">
+                                    🔑 <span className="font-medium">{link.expression.content}</span>
+                                    <span className="text-yellow-600 dark:text-yellow-500"> - {link.expression.meaning}</span>
+                                </p>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="flex flex-wrap gap-2 sm:gap-4">
                         <button
@@ -587,6 +610,15 @@ export default function PracticeForm() {
                                 className="text-sm hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 px-2 py-2 rounded whitespace-nowrap"
                             >
                                 {showSentenceHint ? '해석 힌트 숨기기' : '해석 힌트 보기'}
+                            </button>
+                        )}
+                        {current.expressionSentences.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => setShowExpressionHint(prev => !prev)}
+                                className="text-sm hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 px-2 py-2 rounded whitespace-nowrap"
+                            >
+                                {showExpressionHint ? '표현 힌트 숨기기' : '표현 힌트 보기'}
                             </button>
                         )}
                         <button

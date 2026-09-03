@@ -5,6 +5,8 @@ import { Tag } from '@/app/generated/prisma/client';
 import TagEditor from './TagEditor';
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { AutoResizeTextarea } from './AutoResizeTextarea';
+import AttachExpressionForm from './AttachExpressionForm'
+import { HighlightedSentence } from './HighlightedSentence'
 
 type Word = {
     id: number;
@@ -30,8 +32,21 @@ type Sentence = {
     hint: string | null;
     sentenceWords: SentenceWord[];
     sentenceTags: SentenceTag[];
+    expressionSentences: ExpressionLink[];
     isPracticed: boolean;
     practiceCount: number;
+}
+
+type ExpressionInfo = {
+    id: number;
+    content: string;
+    meaning: string;
+}
+type ExpressionLink = {
+    id: number;
+    startIndex: number;
+    endIndex: number;
+    expression: ExpressionInfo;
 }
 
 function SentenceSkeleton() {
@@ -60,6 +75,7 @@ export default function SentenceList() {
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
     const [hideContent, setHideContent] = useState(false);
     const [revealedIds, setRevealedIds] = useState<Set<number>>(new Set());
+    const [attachingFor, setAttachingFor] = useState<number | null>(null);
 
     //전체 조회
     const fetchSentences = useCallback(async () => {
@@ -167,6 +183,18 @@ export default function SentenceList() {
             fetchSentences();
         } else {
             setMessage('수정 실패!');
+        }
+    }
+
+    // 연결 해제 함수 
+    async function handleDetachExpression(expressionId: number, sentenceId: number) {
+        const res = await fetch(`/api/expressions/${expressionId}/sentences`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sentenceId }),
+        });
+        if (res.ok) {
+            fetchSentences();
         }
     }
 
@@ -332,11 +360,18 @@ export default function SentenceList() {
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleReveal(sentence.id)}
-                                                        className="text-left w-full h-6 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                                                        className="text-left w-full h-6 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
                                                         aria-label="클릭해서 문장 보기"
                                                     />
                                                 ) : (
-                                                    <p className="dark:text-gray-300">{sentence.content}</p>
+                                                    <HighlightedSentence
+                                                        content={sentence.content}
+                                                        ranges={sentence.expressionSentences.map(link => ({
+                                                            startIndex: link.startIndex,
+                                                            endIndex: link.endIndex,
+                                                            label: link.expression.content,
+                                                        }))}
+                                                    />
                                                 )}
                                                 {sentence.isPracticed && (
                                                     <span className='shrink-0 px-2 py-0.5 text-xs rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
@@ -364,7 +399,41 @@ export default function SentenceList() {
                                             <div className="w-fit align-items flex gap-2 rounded-md py-1 pt-2">
                                                 <button className="bg-gray-200 dark:bg-gray-400 text-black text-sm py-1 px-2 rounded-full hover:bg-gray-300" type="button" onClick={() => handleEditStart(sentence)}>수정</button>
                                                 <button className="bg-red-200 dark:bg-red-300 text-black text-sm py-1 px-2 rounded-full hover:bg-red-300 dark:hover:bg-red-400" type="button" onClick={() => handleDelete(sentence.id)}>삭제</button>
+                                                <button className="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-sm py-1 px-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800" type="button" onClick={() => setAttachingFor(sentence.id)}>표현 연결</button>
                                             </div>
+
+                                            {/* 연결된 표현 목록 */}
+                                            {sentence.expressionSentences.length > 0 && (
+                                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                                    {sentence.expressionSentences.map(link => (
+                                                        <span
+                                                            key={link.id}
+                                                            className="flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300"
+                                                        >
+                                                            {link.expression.content}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleDetachExpression(link.expression.id, sentence.id)}
+                                                                className="text-yellow-600 dark:text-yellow-500 hover:text-red-500"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {attachingFor === sentence.id && (
+                                                <AttachExpressionForm
+                                                    sentenceId={sentence.id}
+                                                    sentenceContent={sentence.content}
+                                                    onCancel={() => setAttachingFor(null)}
+                                                    onAttached={() => {
+                                                        setAttachingFor(null);
+                                                        fetchSentences();
+                                                    }}
+                                                />
+                                            )}
                                         </div>
                                     </>
                                 )}

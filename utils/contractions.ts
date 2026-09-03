@@ -18,6 +18,7 @@ const CONTRACTIONS: Record<string, string> = {
     "don't": "do not", "doesn't": "does not", "didn't": "did not",
     "can't": "can not", "couldn't": "could not",
     "shouldn't": "should not", "mightn't": "might not", "mustn't": "must not",
+    "traveled": "travelled",
 };
 
 function normalizeApostrophes(text: string) {

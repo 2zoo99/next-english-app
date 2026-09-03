@@ -19,6 +19,9 @@ export async function GET() {
             sentenceTags: {
                 include: { tag: true }
             },
+            expressionSentences: {
+                include: { expression: true }
+            },
             practicedBy: currentUser
                 ? { where: { userId: currentUser.id } }
                 : false

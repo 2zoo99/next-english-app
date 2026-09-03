@@ -52,6 +52,9 @@ export async function GET(request: Request) {
         include: {
             sentenceWords: { orderBy: { order: 'asc' }, include: { word: true } },
             sentenceTags: { include: { tag: true } },
+            expressionSentences: {          // 추가
+                include: { expression: true }
+            },
         },
         skip: randomOffset,
         take: 1,
